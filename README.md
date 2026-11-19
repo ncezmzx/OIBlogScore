@@ -9,7 +9,7 @@ OIBlogScore 由九个 Agent Skills 和一个 Python CLI 组成。**Agent** 阅�
 需要 Python **3.8+** 与 Git，运行时无第三方 Python 依赖。
 
 ```sh
-git clone --branch arena/28288e09-oiblogscore https://github.com/ncezmzx/OIBlogScore.git
+git clone https://github.com/ncezmzx/OIBlogScore.git
 cd OIBlogScore
 python3 -m venv .venv
 . .venv/bin/activate
@@ -71,8 +71,8 @@ oiblogscore rollback . --path notes/article.md
 ## 开发与边界
 
 - [架构](docs/architecture.md) · [工作流](docs/audit-workflow.md) · [修复政策](docs/repair-policy.md) · [报告字段](docs/report-format.md)
-- [十类算法检查方向](resources/algorithm-catalog/README.md) · [样例审查](examples/dijkstra-review.md) · [贡献指南](CONTRIBUTING.md)
-- `python -m unittest discover -s tests -v`；CI 覆盖 Python 3.8 与 3.12。
+- [模块化算法知识库](resources/algorithm-catalog/README.md) · [样例审查](examples/dijkstra-review.md) · [贡献指南](CONTRIBUTING.md)
+- `python tools/check_quality.py` 与 `python -m unittest discover -s tests -v`；CI 覆盖 Python 3.8 与 3.12。
 - 发现和依赖提取是启发式的，不解析所有生成器、动态引用、复杂 YAML/MDX 或所有构建依赖；请配置隐式依赖。技术结论依赖实际审查证据。文风统计只供参考，不自动生成替换句子。
 
-受 [CPscore](https://github.com/SemsueZhang/CPscore) 的独立 Skills、共享 Reference 和可选确定性脚本架构启发。MIT License。
+受 [CPscore](https://github.com/SemsueZhang/CPscore) 的独立 Skills、共享 Reference 和可选确定性脚本架构启发。详见 [工程验收与覆盖范围](docs/engineering-quality.md)。MIT License。

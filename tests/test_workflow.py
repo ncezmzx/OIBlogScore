@@ -199,7 +199,7 @@ class Workflow(unittest.TestCase):
         p = self.write('x.md', before)
         self.commit()
         repo = Repo(self.root)
-        with contextlib.redirect_stdout(io.StringIO()), patch('oiblogscore.repair.reconcile', side_effect=[None, RuntimeError('interrupted')]):
+        with contextlib.redirect_stdout(io.StringIO()), patch('oiblogscore.repair.journal.reconcile', side_effect=RuntimeError('interrupted')):
             with self.assertRaisesRegex(RuntimeError, 'interrupted'):
                 repair(repo, discover(repo), 'safe')
         self.assertIn('pending', repo.read('repairs.json', [])[0])
@@ -320,3 +320,19 @@ class Workflow(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'Reserved'):
             Repo(self.root)
         self.assertEqual(p.read_text(), 'user-owned file')
+
+    def test_external_reference_update_invalidates_cached_task(self):
+        self.write('article.md', '# An article')
+        self.commit()
+        repo = Repo(self.root)
+        with tempfile.TemporaryDirectory() as references, patch.dict('os.environ', {'OIBLOGSCORE_REFERENCE_ROOT': references}):
+            external = Path(references)
+            (external / 'skills').mkdir()
+            (external / 'resources').mkdir()
+            rule = external / 'resources' / 'catalog.md'
+            rule.write_text('first version')
+            task = schedule(repo, discover(repo))[0]
+            self.submit(repo, task)
+            rule.write_text('updated version')
+            replacement = schedule(repo, discover(repo), 'resume')[0]
+            self.assertNotEqual(task['fingerprint'], replacement['fingerprint'])
