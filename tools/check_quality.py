@@ -7,6 +7,7 @@ import re
 import sys
 from urllib.parse import unquote, urlsplit
 
+from catalog_quality import check_sources
 from catalog import ROOT as CATALOG, load, normalize
 
 
@@ -137,6 +138,8 @@ def check(root):
         if (not meta or meta[1] != name or len(name) > 64 or not 1 <= len(meta[2].strip()) <= 1024
                 or meta[2].lstrip()[0] in '!&*{}[],#|>@`"\'' or ': ' in meta[2] or ' #' in meta[2]):
             issues.append(f'{path}: invalid Agent Skills metadata or unsupported local YAML style')
+        if name not in {'oi-blog-repair', 'oi-repair-verify'} and ('Catalog 检索' not in sections(text) or 'python tools/catalog.py' not in text or 'refs <id>' not in text):
+            issues.append(f'{path}: missing Catalog workflow and provenance lookup')
         if '工作流' not in sections(text):
             issues.append(f'{path}: missing workflow entry point')
         require_sections(directory / 'references' / 'workflow.md', WORKFLOW_SECTIONS, 12)
@@ -191,6 +194,7 @@ def check(root):
     for category in sorted(CATEGORIES):
         if per_category[category] == 0:
             issues.append(f'{category}: category has no topics')
+    issues.extend(check_sources(catalog))
     return issues, per_category
 
 

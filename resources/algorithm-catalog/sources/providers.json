@@ -1,0 +1,167 @@
+{
+  "oi-wiki": {
+    "title": "OI Wiki",
+    "repository": "OI-wiki/OI-wiki",
+    "revision": "f80d6d6f780ced1c216c71ad96cabaea9308a62c",
+    "language": "zh",
+    "policy_path": "README.md",
+    "policy_sha256": "8f1aa5870e462d1420b9bc950e412104e41a3cf091a67f67eb8e8639ffcad137",
+    "license": "CC-BY-SA-4.0 + SATA",
+    "mode": "metadata-only",
+    "url": "https://oi-wiki.org/",
+    "retrieved": "2026-11-19",
+    "policy_url": "https://github.com/OI-wiki/OI-wiki/blob/f80d6d6f780ced1c216c71ad96cabaea9308a62c/README.md",
+    "permissions": {
+      "copy": "license-conditional",
+      "modify": "license-conditional",
+      "redistribute": "license-conditional"
+    },
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/"
+  },
+  "cp-algorithms": {
+    "title": "cp-algorithms",
+    "repository": "cp-algorithms/cp-algorithms",
+    "revision": "9392ad98aabadd2bc2feab65b91881918dfe560e",
+    "language": "en",
+    "policy_path": "LICENSE",
+    "policy_sha256": "bae5ccc863235f984a52c07d011e48a86c0c12f923be2dedd8624c7abdc22c6c",
+    "license": "CC-BY-SA-4.0",
+    "mode": "selected-verbatim",
+    "url": "https://cp-algorithms.com/",
+    "retrieved": "2026-11-19",
+    "policy_url": "https://github.com/cp-algorithms/cp-algorithms/blob/9392ad98aabadd2bc2feab65b91881918dfe560e/LICENSE",
+    "permissions": {
+      "copy": "license-conditional",
+      "modify": "license-conditional",
+      "redistribute": "license-conditional"
+    },
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/"
+  },
+  "usaco-guide": {
+    "title": "USACO Guide",
+    "repository": "cpinitiative/usaco-guide",
+    "revision": "7fc23cb8c5d93e1857f503933c41b103e258d40b",
+    "language": "en",
+    "policy_path": "LICENSE",
+    "policy_sha256": "307280ea2daffa166e49c940ad253bdb559f5c88fec04b04bef7217e3b093bb1",
+    "license": "CC-BY-NC-SA-4.0",
+    "mode": "metadata-only",
+    "url": "https://usaco.guide/",
+    "retrieved": "2026-11-19",
+    "policy_url": "https://github.com/cpinitiative/usaco-guide/blob/7fc23cb8c5d93e1857f503933c41b103e258d40b/LICENSE",
+    "permissions": {
+      "copy": "license-conditional",
+      "modify": "license-conditional",
+      "redistribute": "license-conditional"
+    },
+    "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+  },
+  "library-checker": {
+    "title": "Library Checker",
+    "repository": "yosupo06/library-checker-problems",
+    "revision": "73876f1cbcf082d2b22722924b924d3d65a2f00e",
+    "language": "en",
+    "policy_path": "LICENSE",
+    "policy_sha256": "629e9441670a58ce23132259eaaedfc5d364253b72d9d5c6f75046d3c8b23b77",
+    "license": "Apache-2.0",
+    "mode": "metadata-only",
+    "url": "https://judge.yosupo.jp/",
+    "retrieved": "2026-11-19",
+    "policy_url": "https://github.com/yosupo06/library-checker-problems/blob/73876f1cbcf082d2b22722924b924d3d65a2f00e/LICENSE",
+    "permissions": {
+      "copy": "license-conditional",
+      "modify": "license-conditional",
+      "redistribute": "license-conditional"
+    },
+    "license_url": "https://www.apache.org/licenses/LICENSE-2.0"
+  },
+  "kactl": {
+    "title": "KACTL",
+    "repository": "kth-competitive-programming/kactl",
+    "revision": "2477f65afd5fed842f9fb5ee8d6998053c7cea39",
+    "language": "en",
+    "policy_path": "README.md",
+    "policy_sha256": "40d693cca6c03c2afac5065d9f7ee1cccefec8307676341a685a562b49af7244",
+    "license": "file-specific",
+    "mode": "metadata-only",
+    "url": "https://github.com/kth-competitive-programming/kactl",
+    "retrieved": "2026-11-19",
+    "policy_url": "https://github.com/kth-competitive-programming/kactl/blob/2477f65afd5fed842f9fb5ee8d6998053c7cea39/README.md",
+    "permissions": {
+      "copy": "not-established",
+      "modify": "not-established",
+      "redistribute": "not-established"
+    },
+    "license_url": null
+  },
+  "codeforces": {
+    "title": "Codeforces",
+    "url": "https://codeforces.com/",
+    "mode": "metadata-only",
+    "license": "not-established",
+    "retrieved": "2026-11-19",
+    "policy_url": null,
+    "permissions": {
+      "copy": "not-established",
+      "modify": "not-established",
+      "redistribute": "not-established"
+    },
+    "license_url": null
+  },
+  "atcoder": {
+    "title": "AtCoder",
+    "url": "https://atcoder.jp/",
+    "mode": "metadata-only",
+    "license": "not-established",
+    "retrieved": "2026-11-19",
+    "policy_url": null,
+    "permissions": {
+      "copy": "not-established",
+      "modify": "not-established",
+      "redistribute": "not-established"
+    },
+    "license_url": null
+  },
+  "doi": {
+    "title": "Published research (DOI)",
+    "url": "https://doi.org/",
+    "mode": "metadata-only",
+    "license": "not-established",
+    "retrieved": "2026-11-19",
+    "policy_url": null,
+    "permissions": {
+      "copy": "not-established",
+      "modify": "not-established",
+      "redistribute": "not-established"
+    },
+    "license_url": null
+  },
+  "cmu": {
+    "title": "Carnegie Mellon University",
+    "url": "https://www.cs.cmu.edu/",
+    "mode": "metadata-only",
+    "license": "not-established",
+    "retrieved": "2026-11-19",
+    "policy_url": null,
+    "permissions": {
+      "copy": "not-established",
+      "modify": "not-established",
+      "redistribute": "not-established"
+    },
+    "license_url": null
+  },
+  "uoj-blog": {
+    "title": "Universal OJ — immortalCO",
+    "url": "https://immortalco.blog.uoj.ac/",
+    "mode": "metadata-only",
+    "license": "not-established",
+    "retrieved": "2026-11-19",
+    "policy_url": null,
+    "license_url": null,
+    "permissions": {
+      "copy": "not-established",
+      "modify": "not-established",
+      "redistribute": "not-established"
+    }
+  }
+}

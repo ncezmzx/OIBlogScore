@@ -246,9 +246,7 @@
       "path": "mathematics/number-theory.md",
       "aliases": [
         "number theory",
-        "数论",
-        "crt",
-        "模逆元"
+        "数论"
       ]
     },
     {
@@ -271,9 +269,7 @@
       "path": "mathematics/linear-algebra.md",
       "aliases": [
         "linear algebra",
-        "matrix exponentiation",
-        "高斯消元",
-        "矩阵快速幂"
+        "高斯消元"
       ]
     },
     {

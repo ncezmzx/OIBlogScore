@@ -1,0 +1,2 @@
+# Preserve the exact reviewed bytes and formatting of verbatim upstream material.
+resources/algorithm-catalog/sources/upstream/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab

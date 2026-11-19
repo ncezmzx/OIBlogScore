@@ -1,0 +1,44 @@
+[
+  {
+    "id": "dijkstra-negative-edge",
+    "query": "Dijkstra",
+    "algorithm": "shortest-paths",
+    "source": "cp-algorithms:graph/dijkstra.md",
+    "excerpt": "The weights of all edges are non-negative.",
+    "dimension": "proof",
+    "correct": "在非负边图中，从最短路径首次离开已定点集合的位置开始，后缀长度不能小于前缀长度，因此可安全定点最小的暂定值。",
+    "incorrect": "同一证明也适用于含负边但无负环的图：后缀不可能使总长度比当前暂定值小。",
+    "expected": "必须使用边非负而非无负环。边 0→1:1、0→2:2、2→1:−2，定点 1 收到 1，真实为 0。",
+    "witness": {"edges":[[0,1,1],[0,2,2],[2,1,-2]], "vertex":1, "distance":0}
+  },
+  {
+    "id": "range-lazy-composition",
+    "query": "Segment Tree",
+    "algorithm": "segment-tree",
+    "source": "cp-algorithms:data_structures/segment_tree.md",
+    "dimension": "code",
+    "correct": "两个全段标记先加 2 后覆盖 4，子节点回放时覆盖会丢弃先前的加。",
+    "incorrect": "叠加标记后无条件保留加法，回放时先赋值为 4 再加 2。",
+    "expected": "单点初值 1，经两次操作结果为 4。错误的标签合成结果为 6。"
+  },
+  {
+    "id": "mo-ordering-cost-model",
+    "query": "莫队",
+    "algorithm": "mo",
+    "source": "codeforces:61203",
+    "dimension": "complexity",
+    "correct": "把排序、相邻查询间端点位移和每次增删代价分开计量；改 Hilbert 顺序不自动降低给定输入的绝对操作量。",
+    "incorrect": "博客报告运行更快，因此 Hilbert 排序对任意查询集都给出每次 O(1) 修改。",
+    "expected": "博客贡献是排序方法；需要给端点位移独立上界。两个查询 [0,0] 与 [n−1,n−1] 无论何种顺序，两端都至少各移动 n−1。"
+  },
+  {
+    "id": "digit-dp-leading-zero",
+    "query": "Digit DP",
+    "algorithm": "digit-dp",
+    "source": "usaco-guide:4_Gold/Digit_DP.mdx",
+    "dimension": "counterexample",
+    "correct": "统计 1 到 10 中十进制通常表示含 0 的数：只计 10。",
+    "incorrect": "给一位数补零到两位并把前导零计入性质，所以所有数都合格。",
+    "expected": "应区分 started 与数值中的实际零。独立枚举的合格集合为 {10}。"
+  }
+]

@@ -1,0 +1,170 @@
+[
+  {
+    "id": "codeforces:105658",
+    "provider": "codeforces",
+    "title": "[Tutorial] More about minimum cost flows: potentials and Dinitz",
+    "authors": [
+      "-is-this-fft-"
+    ],
+    "url": "https://codeforces.com/blog/entry/105658",
+    "original_language": "en",
+    "content_language": "zh",
+    "kind": "blog",
+    "scope": "费用流的势与分层增广结合。",
+    "review_use": "追问何时对残量边有非负约化费用；迭代次数界需绑定容量与费用模型。",
+    "published": "2022-08-25",
+    "trust": "upstream-unreviewed",
+    "metadata_status": "indexed-from-public-metadata",
+    "mode": "external-index",
+    "modified": false,
+    "retrieved": "2026-11-19",
+    "license": "not-established"
+  },
+  {
+    "id": "codeforces:61203",
+    "provider": "codeforces",
+    "title": "An alternative sorting order for Mo's algorithm",
+    "authors": [
+      "gepardo"
+    ],
+    "url": "https://codeforces.com/blog/entry/61203",
+    "original_language": "en",
+    "content_language": "zh",
+    "kind": "blog",
+    "scope": "离线区间查询的空间填充曲线排序。",
+    "review_use": "区分指针移动代价、排序代价与实测常数；不把经验优势写成最坏界。",
+    "published": null,
+    "trust": "upstream-unreviewed",
+    "metadata_status": "indexed-from-public-metadata",
+    "mode": "external-index",
+    "modified": false,
+    "retrieved": "2026-11-19",
+    "license": "not-established"
+  },
+  {
+    "id": "codeforces:19193",
+    "provider": "codeforces",
+    "title": "A bit more about palindromes",
+    "authors": [
+      "adamant"
+    ],
+    "url": "https://codeforces.com/blog/entry/19193",
+    "original_language": "en",
+    "content_language": "zh",
+    "kind": "blog",
+    "scope": "在回文树中使用等差系列链接加速回文划分。",
+    "review_use": "检查 diff 与 series link 在前缀位置变化时是否仍对应正确候选。",
+    "published": null,
+    "trust": "upstream-unreviewed",
+    "metadata_status": "indexed-from-public-metadata",
+    "mode": "external-index",
+    "modified": false,
+    "retrieved": "2026-11-19",
+    "license": "not-established"
+  },
+  {
+    "id": "codeforces:13959",
+    "provider": "codeforces",
+    "title": "Palindromic tree: behind the scenes",
+    "authors": [
+      "adamant"
+    ],
+    "url": "https://codeforces.com/blog/entry/13959",
+    "original_language": "en",
+    "content_language": "zh",
+    "kind": "blog",
+    "scope": "在线构建回文树及两类哨兵根。",
+    "review_use": "验证偶长/奇长哨兵、后缀链接、末尾添加时的数组边界。",
+    "published": null,
+    "trust": "upstream-unreviewed",
+    "metadata_status": "indexed-from-public-metadata",
+    "mode": "external-index",
+    "modified": false,
+    "retrieved": "2026-11-19",
+    "license": "not-established"
+  },
+  {
+    "id": "atcoder:abc217-2584",
+    "provider": "atcoder",
+    "title": "F - Make Pair Editorial",
+    "authors": [
+      "mechanicalpenciI"
+    ],
+    "url": "https://atcoder.jp/contests/abc217/editorial/2584",
+    "original_language": "ja",
+    "content_language": "zh",
+    "kind": "editorial",
+    "scope": "区间配对的计数 DP 与操作序列交错。",
+    "review_use": "核对同一配对能否对应多个合法执行顺序，组合系数和空区间初值。",
+    "published": "2021-09-04",
+    "trust": "upstream-unreviewed",
+    "metadata_status": "indexed-from-public-metadata",
+    "mode": "external-index",
+    "modified": false,
+    "retrieved": "2026-11-19",
+    "license": "not-established"
+  },
+  {
+    "id": "doi:hopcroft-karp",
+    "provider": "doi",
+    "title": "An n^5/2 Algorithm for Maximum Matchings in Bipartite Graphs",
+    "authors": [
+      "John E. Hopcroft; Richard M. Karp"
+    ],
+    "url": "https://doi.org/10.1137/0202019",
+    "original_language": "en",
+    "content_language": "zh",
+    "kind": "paper",
+    "scope": "分层增广的经典出处。",
+    "review_use": "区分最大匹配与极大匹配；核对最短增广路径阶段数的证明。",
+    "published": null,
+    "trust": "upstream-unreviewed",
+    "metadata_status": "cited-by-local-reference",
+    "mode": "external-index",
+    "modified": false,
+    "retrieved": "2026-11-19",
+    "license": "not-established"
+  },
+  {
+    "id": "cmu:splay",
+    "provider": "cmu",
+    "title": "Self-Adjusting Binary Search Trees",
+    "authors": [
+      "Daniel D. Sleator; Robert E. Tarjan"
+    ],
+    "url": "https://www.cs.cmu.edu/~sleator/papers/self-adjusting.pdf",
+    "original_language": "en",
+    "content_language": "zh",
+    "kind": "paper",
+    "scope": "伸展树与访问引理。",
+    "review_use": "核对势函数、初态代价和单次最坏代价与摊还上界的区别。",
+    "published": null,
+    "trust": "upstream-unreviewed",
+    "metadata_status": "cited-by-local-reference",
+    "mode": "external-index",
+    "modified": false,
+    "retrieved": "2026-11-19",
+    "license": "not-established"
+  },
+  {
+    "id": "uoj-blog:1955",
+    "provider": "uoj-blog",
+    "title": "圆方树——处理仙人掌的利器",
+    "authors": [
+      "immortalCO"
+    ],
+    "url": "https://immortalco.blog.uoj.ac/blog/1955",
+    "original_language": "zh",
+    "content_language": "zh",
+    "kind": "blog",
+    "published": "2016-08-01",
+    "scope": "圆方树把仙人掌的环压缩为方点，并用于路径距离、链剖分与虚树。",
+    "review_use": "在 LCA 为方点时单独检查同环两入口的距离，不能把经过环根的两个预处理距离直接相加。",
+    "trust": "upstream-unreviewed",
+    "metadata_status": "indexed-from-public-metadata",
+    "mode": "external-index",
+    "modified": false,
+    "retrieved": "2026-11-19",
+    "license": "not-established"
+  }
+]

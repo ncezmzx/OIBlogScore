@@ -1,0 +1,1357 @@
+[
+  {
+    "id": "segment-tree",
+    "aliases": [],
+    "sources": [
+      "oi-wiki:ds/seg.md",
+      "cp-algorithms:data_structures/segment_tree.md",
+      "usaco-guide:4_Gold/PURS.mdx"
+    ]
+  },
+  {
+    "id": "fenwick-tree",
+    "aliases": [],
+    "sources": [
+      "oi-wiki:ds/fenwick.md",
+      "cp-algorithms:data_structures/fenwick.md",
+      "library-checker:data_structure/point_add_range_sum/info.toml"
+    ]
+  },
+  {
+    "id": "persistent-segment-tree",
+    "aliases": [],
+    "sources": [
+      "oi-wiki:ds/persistent-seg.md",
+      "library-checker:data_structure/persistent_range_affine_range_sum/info.toml"
+    ]
+  },
+  {
+    "id": "persistent-data-structures",
+    "category": "data-structures",
+    "title": "可持久化数据结构",
+    "aliases": [
+      "Persistence",
+      "Persistent Data Structures"
+    ],
+    "sources": [
+      "oi-wiki:ds/persistent.md",
+      "usaco-guide:6_Advanced/Persistent.mdx"
+    ]
+  },
+  {
+    "id": "sparse-table",
+    "category": "data-structures",
+    "title": "ST 表",
+    "aliases": [
+      "Sparse Table",
+      "稀疏表"
+    ],
+    "sources": [
+      "oi-wiki:ds/sparse-table.md",
+      "cp-algorithms:data_structures/sparse-table.md",
+      "library-checker:data_structure/staticrmq/info.toml"
+    ]
+  },
+  {
+    "id": "segment-tree-beats",
+    "category": "data-structures",
+    "title": "区间最值操作",
+    "aliases": [
+      "Segment Tree Beats",
+      "吉司机线段树"
+    ],
+    "sources": [
+      "oi-wiki:ds/seg-beats.md",
+      "library-checker:data_structure/range_chmin_chmax_add_range_sum/info.toml"
+    ]
+  },
+  {
+    "id": "segment-tree-merge-split",
+    "category": "data-structures",
+    "title": "线段树合并与分裂",
+    "aliases": [
+      "线段树合并",
+      "线段树分裂",
+      "Segment Tree Merge",
+      "Segment Tree Split"
+    ],
+    "sources": [
+      "oi-wiki:ds/seg-merge-split.md"
+    ]
+  },
+  {
+    "id": "balanced-trees",
+    "category": "data-structures",
+    "title": "平衡搜索树",
+    "aliases": [
+      "Balanced BST",
+      "平衡树"
+    ],
+    "sources": [
+      "oi-wiki:ds/bst.md",
+      "oi-wiki:ds/avl.md",
+      "oi-wiki:ds/rbtree.md"
+    ]
+  },
+  {
+    "id": "link-cut-tree",
+    "category": "data-structures",
+    "title": "链剖动态树",
+    "aliases": [
+      "Link-Cut Tree",
+      "Link Cut Tree",
+      "LCT",
+      "动态树"
+    ],
+    "sources": [
+      "oi-wiki:ds/lct.md",
+      "kactl:graph/LinkCutTree.h"
+    ]
+  },
+  {
+    "id": "wavelet",
+    "category": "data-structures",
+    "title": "Wavelet Tree / Wavelet Matrix",
+    "aliases": [
+      "Wavelet Tree",
+      "Wavelet Matrix",
+      "小波树",
+      "小波矩阵"
+    ],
+    "sources": [
+      "usaco-guide:6_Advanced/Wavelet.mdx",
+      "library-checker:data_structure/range_kth_smallest/info.toml"
+    ]
+  },
+  {
+    "id": "disjoint-set",
+    "category": "data-structures",
+    "title": "并查集",
+    "aliases": [
+      "DSU",
+      "Union Find",
+      "Disjoint Set Union"
+    ],
+    "sources": [
+      "oi-wiki:ds/dsu.md",
+      "oi-wiki:ds/dsu-complexity.md",
+      "oi-wiki:topic/dsu-app.md",
+      "cp-algorithms:data_structures/disjoint_set_union.md",
+      "library-checker:data_structure/unionfind/info.toml",
+      "library-checker:data_structure/unionfind_with_potential/info.toml"
+    ]
+  },
+  {
+    "id": "k-d-tree",
+    "category": "data-structures",
+    "title": "K-D Tree",
+    "aliases": [
+      "KD Tree",
+      "K-D 树"
+    ],
+    "sources": [
+      "oi-wiki:ds/kdt.md"
+    ]
+  },
+  {
+    "id": "binary-trie",
+    "category": "data-structures",
+    "title": "01 Trie",
+    "aliases": [
+      "0-1 Trie",
+      "二进制字典树"
+    ],
+    "sources": [
+      "oi-wiki:string/trie.md",
+      "library-checker:data_structure/set_xor_min/info.toml"
+    ]
+  },
+  {
+    "id": "mergeable-heaps",
+    "category": "data-structures",
+    "title": "可并堆",
+    "aliases": [
+      "Meldable Heap",
+      "Mergeable Heap",
+      "可合并堆"
+    ],
+    "sources": [
+      "oi-wiki:ds/leftist-tree.md",
+      "oi-wiki:ds/pairing-heap.md",
+      "cp-algorithms:data_structures/randomized_heap.md"
+    ]
+  },
+  {
+    "id": "segment-tree-dp",
+    "category": "dp",
+    "title": "线段树优化 DP",
+    "aliases": [
+      "Segment Tree Optimized DP",
+      "线段树优化动态规划"
+    ],
+    "sources": [
+      "oi-wiki:ds/seg.md",
+      "cp-algorithms:data_structures/segment_tree.md",
+      "cp-algorithms:dynamic_programming/longest_increasing_subsequence.md"
+    ]
+  },
+  {
+    "id": "mo",
+    "category": "divide-and-conquer",
+    "title": "莫队",
+    "aliases": [
+      "Mo",
+      "Mo's Algorithm",
+      "莫队算法",
+      "带修莫队",
+      "回滚莫队",
+      "树上莫队"
+    ],
+    "sources": [
+      "oi-wiki:misc/mo-algo.md",
+      "oi-wiki:misc/mo-algo-intro.md",
+      "oi-wiki:misc/modifiable-mo-algo.md",
+      "oi-wiki:misc/rollback-mo-algo.md",
+      "oi-wiki:misc/mo-algo-on-tree.md",
+      "oi-wiki:misc/mo-algo-2dimen.md",
+      "oi-wiki:misc/mo-algo-secondary-offline.md",
+      "oi-wiki:misc/mo-algo-with-bitset.md",
+      "cp-algorithms:data_structures/sqrt_decomposition.md",
+      "codeforces:61203"
+    ]
+  },
+  {
+    "id": "cdq",
+    "aliases": [],
+    "sources": [
+      "oi-wiki:misc/cdq-divide.md"
+    ]
+  },
+  {
+    "id": "parallel-binary-search",
+    "aliases": [],
+    "sources": [
+      "oi-wiki:misc/parallel-binsearch.md"
+    ]
+  },
+  {
+    "id": "centroid",
+    "aliases": [
+      "点分治"
+    ],
+    "sources": [
+      "oi-wiki:graph/tree-divide.md",
+      "cp-algorithms:graph/centroid_decomposition.md"
+    ]
+  },
+  {
+    "id": "edge-divide",
+    "category": "divide-and-conquer",
+    "title": "树上边分治",
+    "aliases": [
+      "Edge Divide and Conquer",
+      "边分治"
+    ],
+    "sources": [
+      "oi-wiki:graph/tree-divide.md"
+    ]
+  },
+  {
+    "id": "fft-ntt",
+    "aliases": [],
+    "sources": [
+      "oi-wiki:math/poly/fft.md",
+      "oi-wiki:math/poly/ntt.md",
+      "cp-algorithms:algebra/fft.md",
+      "library-checker:convolution/convolution_mod/info.toml"
+    ]
+  },
+  {
+    "id": "heavy-light",
+    "aliases": [
+      "树链剖分",
+      "Heavy Light Decomposition"
+    ],
+    "sources": [
+      "oi-wiki:graph/hld.md",
+      "cp-algorithms:graph/hld.md",
+      "usaco-guide:5_Plat/HLD.mdx"
+    ]
+  },
+  {
+    "id": "virtual-tree",
+    "aliases": [],
+    "sources": [
+      "oi-wiki:graph/virtual-tree.md"
+    ]
+  },
+  {
+    "id": "splay",
+    "aliases": [],
+    "sources": [
+      "oi-wiki:ds/splay.md",
+      "cmu:splay"
+    ]
+  },
+  {
+    "id": "treap",
+    "aliases": [
+      "FHQ Treap",
+      "无旋 Treap"
+    ],
+    "sources": [
+      "oi-wiki:ds/treap.md",
+      "cp-algorithms:data_structures/treap.md"
+    ]
+  },
+  {
+    "id": "dynamic-segment-tree",
+    "aliases": [],
+    "sources": [
+      "oi-wiki:ds/seg.md",
+      "usaco-guide:5_Plat/Sparse_Segtree.mdx"
+    ]
+  },
+  {
+    "id": "li-chao",
+    "aliases": [],
+    "sources": [
+      "oi-wiki:ds/li-chao-tree.md",
+      "cp-algorithms:geometry/convex_hull_trick.md",
+      "library-checker:data_structure/line_add_get_min/info.toml"
+    ]
+  },
+  {
+    "id": "shortest-paths",
+    "aliases": [
+      "Shortest Path"
+    ],
+    "sources": [
+      "oi-wiki:graph/shortest-path.md",
+      "cp-algorithms:graph/dijkstra.md",
+      "cp-algorithms:graph/dijkstra_sparse.md",
+      "cp-algorithms:graph/bellman_ford.md",
+      "cp-algorithms:graph/01_bfs.md",
+      "cp-algorithms:graph/all-pair-shortest-path-floyd-warshall.md",
+      "library-checker:graph/shortest_path/info.toml"
+    ]
+  },
+  {
+    "id": "mst",
+    "aliases": [],
+    "sources": [
+      "oi-wiki:graph/mst.md",
+      "cp-algorithms:graph/mst_kruskal.md",
+      "cp-algorithms:graph/mst_kruskal_with_dsu.md",
+      "cp-algorithms:graph/mst_prim.md",
+      "library-checker:graph/minimum_spanning_tree/info.toml"
+    ]
+  },
+  {
+    "id": "scc",
+    "aliases": [
+      "强连通分量"
+    ],
+    "sources": [
+      "oi-wiki:graph/scc.md",
+      "cp-algorithms:graph/strongly-connected-components.md",
+      "library-checker:graph/scc/info.toml"
+    ]
+  },
+  {
+    "id": "biconnected",
+    "aliases": [],
+    "sources": [
+      "oi-wiki:graph/bcc.md",
+      "cp-algorithms:graph/bridge-searching.md",
+      "cp-algorithms:graph/cutpoints.md",
+      "library-checker:graph/biconnected_components/info.toml"
+    ]
+  },
+  {
+    "id": "max-flow",
+    "aliases": [
+      "最小割",
+      "Minimum Cut"
+    ],
+    "sources": [
+      "oi-wiki:graph/flow.md",
+      "oi-wiki:graph/flow/max-flow.md",
+      "oi-wiki:graph/flow/min-cut.md",
+      "cp-algorithms:graph/dinic.md",
+      "cp-algorithms:graph/edmonds_karp.md",
+      "cp-algorithms:graph/mpm.md",
+      "cp-algorithms:graph/push-relabel.md",
+      "cp-algorithms:graph/push-relabel-faster.md"
+    ]
+  },
+  {
+    "id": "min-cost-flow",
+    "category": "graph",
+    "title": "最小费用流",
+    "aliases": [
+      "Min Cost Flow",
+      "Minimum Cost Flow",
+      "费用流",
+      "Primal-Dual",
+      "原始对偶"
+    ],
+    "sources": [
+      "oi-wiki:graph/flow/min-cost.md",
+      "cp-algorithms:graph/min_cost_flow.md",
+      "library-checker:graph/min_cost_b_flow/info.toml",
+      "codeforces:105658"
+    ]
+  },
+  {
+    "id": "matching",
+    "aliases": [],
+    "sources": [
+      "oi-wiki:graph/graph-matching/graph-match.md",
+      "oi-wiki:graph/graph-matching/bigraph-match.md",
+      "cp-algorithms:graph/kuhn_maximum_bipartite_matching.md",
+      "doi:hopcroft-karp",
+      "library-checker:graph/bipartitematching/info.toml"
+    ]
+  },
+  {
+    "id": "general-matching",
+    "category": "graph",
+    "title": "一般图匹配",
+    "aliases": [
+      "Blossom",
+      "General Matching",
+      "带花树"
+    ],
+    "sources": [
+      "oi-wiki:graph/graph-matching/general-match.md",
+      "oi-wiki:graph/graph-matching/general-weight-match.md",
+      "library-checker:graph/general_matching/info.toml"
+    ]
+  },
+  {
+    "id": "lca",
+    "category": "graph",
+    "title": "最近公共祖先",
+    "aliases": [
+      "Lowest Common Ancestor",
+      "LCA",
+      "倍增 LCA"
+    ],
+    "sources": [
+      "oi-wiki:graph/lca.md",
+      "cp-algorithms:graph/lca.md",
+      "cp-algorithms:graph/lca_binary_lifting.md",
+      "cp-algorithms:graph/lca_farachcoltonbender.md",
+      "cp-algorithms:graph/lca_tarjan.md",
+      "library-checker:tree/lca/info.toml",
+      "usaco-guide:5_Plat/Binary_Jump.mdx"
+    ]
+  },
+  {
+    "id": "dominator-tree",
+    "category": "graph",
+    "title": "支配树",
+    "aliases": [
+      "Dominator Tree",
+      "Lengauer-Tarjan"
+    ],
+    "sources": [
+      "oi-wiki:graph/dominator-tree.md",
+      "library-checker:graph/dominatortree/info.toml"
+    ]
+  },
+  {
+    "id": "two-sat",
+    "aliases": [],
+    "sources": [
+      "oi-wiki:graph/2-sat.md",
+      "cp-algorithms:graph/2SAT.md",
+      "library-checker:other/two_sat/info.toml"
+    ]
+  },
+  {
+    "id": "euler-tour",
+    "category": "graph",
+    "title": "欧拉路径与回路",
+    "aliases": [
+      "Eulerian Path",
+      "Eulerian Circuit",
+      "欧拉回路",
+      "Hierholzer"
+    ],
+    "sources": [
+      "oi-wiki:graph/euler.md",
+      "cp-algorithms:graph/euler_path.md"
+    ]
+  },
+  {
+    "id": "toposort",
+    "category": "graph",
+    "title": "拓扑排序",
+    "aliases": [
+      "Topological Sort",
+      "Kahn"
+    ],
+    "sources": [
+      "oi-wiki:graph/topo.md",
+      "cp-algorithms:graph/topological-sort.md"
+    ]
+  },
+  {
+    "id": "minimum-cycle",
+    "category": "graph",
+    "title": "最小环",
+    "aliases": [
+      "Minimum Cycle",
+      "Shortest Cycle"
+    ],
+    "sources": [
+      "oi-wiki:graph/min-cycle.md",
+      "cp-algorithms:graph/finding-negative-cycle-in-graph.md"
+    ]
+  },
+  {
+    "id": "difference-constraints",
+    "category": "graph",
+    "title": "差分约束",
+    "aliases": [
+      "Difference Constraints"
+    ],
+    "sources": [
+      "oi-wiki:graph/diff-constraints.md"
+    ]
+  },
+  {
+    "id": "connectivity",
+    "category": "graph",
+    "title": "图的连通性",
+    "aliases": [
+      "Graph Connectivity",
+      "Connected Components"
+    ],
+    "sources": [
+      "oi-wiki:graph/connectivity.md",
+      "cp-algorithms:graph/edge_vertex_connectivity.md",
+      "cp-algorithms:graph/search-for-connected-components.md"
+    ]
+  },
+  {
+    "id": "dynamic-connectivity",
+    "category": "graph",
+    "title": "动态图连通性",
+    "aliases": [
+      "Dynamic Connectivity",
+      "Rollback DSU",
+      "可撤销并查集"
+    ],
+    "sources": [
+      "cp-algorithms:data_structures/deleting_in_log_n.md",
+      "cp-algorithms:graph/bridge-searching-online.md"
+    ]
+  },
+  {
+    "id": "functional-graph",
+    "category": "graph",
+    "title": "基环树与内向森林",
+    "aliases": [
+      "Functional Graph",
+      "Pseudotree",
+      "基环森林",
+      "基环树"
+    ],
+    "sources": [
+      "oi-wiki:graph/concept.md"
+    ]
+  },
+  {
+    "id": "cactus",
+    "category": "graph",
+    "title": "仙人掌与圆方树",
+    "aliases": [
+      "Cactus Graph",
+      "Block-Cut Tree",
+      "圆方树"
+    ],
+    "sources": [
+      "oi-wiki:graph/block-forest.md",
+      "uoj-blog:1955"
+    ]
+  },
+  {
+    "id": "state-and-transition",
+    "aliases": [],
+    "sources": [
+      "oi-wiki:dp/basic.md",
+      "cp-algorithms:dynamic_programming/intro-to-dp.md",
+      "oi-wiki:dp/knapsack/basic.md"
+    ]
+  },
+  {
+    "id": "knapsack",
+    "category": "dp",
+    "title": "背包 DP",
+    "aliases": [
+      "Knapsack DP",
+      "0/1 Knapsack",
+      "完全背包"
+    ],
+    "sources": [
+      "oi-wiki:dp/knapsack/basic.md",
+      "oi-wiki:dp/knapsack/advanced.md",
+      "cp-algorithms:dynamic_programming/knapsack.md",
+      "usaco-guide:4_Gold/Knapsack_DP.mdx"
+    ]
+  },
+  {
+    "id": "interval-dp",
+    "category": "dp",
+    "title": "区间 DP",
+    "aliases": [
+      "Interval DP",
+      "Range DP"
+    ],
+    "sources": [
+      "oi-wiki:dp/interval.md",
+      "usaco-guide:4_Gold/DP_Ranges.mdx",
+      "atcoder:abc217-2584"
+    ]
+  },
+  {
+    "id": "tree-dp",
+    "category": "dp",
+    "title": "树形 DP",
+    "aliases": [
+      "Tree DP",
+      "DP on Trees",
+      "Rerooting",
+      "换根 DP"
+    ],
+    "sources": [
+      "oi-wiki:dp/tree.md",
+      "usaco-guide:4_Gold/DP_Trees.mdx"
+    ]
+  },
+  {
+    "id": "bitmask-dp",
+    "aliases": [],
+    "sources": [
+      "oi-wiki:dp/state.md",
+      "cp-algorithms:algebra/all-submasks.md",
+      "usaco-guide:4_Gold/DP_Bitmasks.mdx"
+    ]
+  },
+  {
+    "id": "digit-dp",
+    "category": "dp",
+    "title": "数位 DP",
+    "aliases": [
+      "Digit DP",
+      "数字 DP"
+    ],
+    "sources": [
+      "oi-wiki:dp/number.md",
+      "usaco-guide:4_Gold/Digit_DP.mdx"
+    ]
+  },
+  {
+    "id": "probability-dp",
+    "category": "dp",
+    "title": "概率与期望 DP",
+    "aliases": [
+      "Probability DP",
+      "Expected Value DP",
+      "概率 DP",
+      "期望 DP"
+    ],
+    "sources": [
+      "oi-wiki:dp/probability.md",
+      "oi-wiki:graph/graph-random-walk.md"
+    ]
+  },
+  {
+    "id": "plug-dp",
+    "category": "dp",
+    "title": "插头 DP 与轮廓线",
+    "aliases": [
+      "Plug DP",
+      "Profile DP",
+      "轮廓线 DP"
+    ],
+    "sources": [
+      "oi-wiki:dp/plug.md",
+      "cp-algorithms:dynamic_programming/profile-dynamics.md"
+    ]
+  },
+  {
+    "id": "count-dp",
+    "category": "dp",
+    "title": "计数 DP",
+    "aliases": [
+      "Counting DP"
+    ],
+    "sources": [
+      "oi-wiki:dp/count.md",
+      "atcoder:abc217-2584"
+    ]
+  },
+  {
+    "id": "automaton-dp",
+    "category": "dp",
+    "title": "自动机与状态 DP",
+    "aliases": [
+      "Automaton DP",
+      "DP Automaton",
+      "DP 自动机"
+    ],
+    "sources": [
+      "oi-wiki:dp/dp-of-dp.md",
+      "oi-wiki:string/ac-automaton.md",
+      "oi-wiki:dp/number.md"
+    ]
+  },
+  {
+    "id": "convex-hull",
+    "aliases": [
+      "Convex Hull Optimization"
+    ],
+    "sources": [
+      "oi-wiki:dp/opt/slope.md",
+      "cp-algorithms:geometry/convex_hull_trick.md"
+    ]
+  },
+  {
+    "id": "divide-conquer-dp",
+    "aliases": [],
+    "sources": [
+      "oi-wiki:dp/opt/quadrangle.md",
+      "cp-algorithms:dynamic_programming/divide-and-conquer-dp.md"
+    ]
+  },
+  {
+    "id": "knuth-optimization",
+    "category": "dp",
+    "title": "Knuth 优化",
+    "aliases": [
+      "Knuth Optimization",
+      "Knuth-Yao Optimization"
+    ],
+    "sources": [
+      "cp-algorithms:dynamic_programming/knuth-optimization.md",
+      "oi-wiki:dp/opt/quadrangle.md"
+    ]
+  },
+  {
+    "id": "slope-trick",
+    "category": "dp",
+    "title": "Slope Trick",
+    "aliases": [
+      "斜率技巧"
+    ],
+    "sources": [
+      "oi-wiki:dp/opt/slope-trick.md",
+      "usaco-guide:6_Advanced/Slope_Trick.mdx"
+    ]
+  },
+  {
+    "id": "monotone-queue",
+    "aliases": [],
+    "sources": [
+      "oi-wiki:dp/opt/monotonic-queue-stack.md",
+      "oi-wiki:ds/monotonic-queue.md"
+    ]
+  },
+  {
+    "id": "kmp",
+    "aliases": [],
+    "sources": [
+      "oi-wiki:string/kmp.md",
+      "cp-algorithms:string/prefix-function.md"
+    ]
+  },
+  {
+    "id": "z-function",
+    "category": "strings",
+    "title": "Z 函数",
+    "aliases": [
+      "Z Function",
+      "Z Algorithm",
+      "扩展 KMP",
+      "exKMP"
+    ],
+    "sources": [
+      "oi-wiki:string/z-func.md",
+      "cp-algorithms:string/z-function.md",
+      "library-checker:string/zalgorithm/info.toml"
+    ]
+  },
+  {
+    "id": "trie",
+    "category": "strings",
+    "title": "字典树",
+    "aliases": [
+      "Trie",
+      "前缀树"
+    ],
+    "sources": [
+      "oi-wiki:string/trie.md"
+    ]
+  },
+  {
+    "id": "ac-automaton",
+    "aliases": [],
+    "sources": [
+      "oi-wiki:string/ac-automaton.md",
+      "cp-algorithms:string/aho_corasick.md"
+    ]
+  },
+  {
+    "id": "suffix-array",
+    "aliases": [],
+    "sources": [
+      "oi-wiki:string/sa.md",
+      "cp-algorithms:string/suffix-array.md",
+      "library-checker:string/suffixarray/info.toml"
+    ]
+  },
+  {
+    "id": "suffix-automaton",
+    "aliases": [],
+    "sources": [
+      "oi-wiki:string/sam.md",
+      "cp-algorithms:string/suffix-automaton.md"
+    ]
+  },
+  {
+    "id": "general-sam",
+    "category": "strings",
+    "title": "广义后缀自动机",
+    "aliases": [
+      "Generalized Suffix Automaton",
+      "Generalized SAM",
+      "广义 SAM"
+    ],
+    "sources": [
+      "oi-wiki:string/general-sam.md"
+    ]
+  },
+  {
+    "id": "palindromic-tree",
+    "category": "strings",
+    "title": "回文自动机",
+    "aliases": [
+      "Eertree",
+      "Palindromic Tree",
+      "PAM"
+    ],
+    "sources": [
+      "oi-wiki:string/pam.md",
+      "codeforces:19193",
+      "codeforces:13959"
+    ]
+  },
+  {
+    "id": "manacher",
+    "category": "strings",
+    "title": "Manacher",
+    "aliases": [
+      "马拉车",
+      "Manacher Algorithm"
+    ],
+    "sources": [
+      "oi-wiki:string/manacher.md",
+      "cp-algorithms:string/manacher.md",
+      "library-checker:string/enumerate_palindromes/info.toml"
+    ]
+  },
+  {
+    "id": "lyndon",
+    "category": "strings",
+    "title": "Lyndon 分解",
+    "aliases": [
+      "Lyndon Factorization",
+      "Duval"
+    ],
+    "sources": [
+      "oi-wiki:string/lyndon.md",
+      "cp-algorithms:string/lyndon_factorization.md",
+      "library-checker:string/lyndon_factorization/info.toml"
+    ]
+  },
+  {
+    "id": "hashing",
+    "aliases": [],
+    "sources": [
+      "oi-wiki:string/hash.md",
+      "cp-algorithms:string/string-hashing.md",
+      "cp-algorithms:string/rabin-karp.md"
+    ]
+  },
+  {
+    "id": "pattern-matching",
+    "category": "strings",
+    "title": "模式匹配",
+    "aliases": [
+      "Pattern Matching",
+      "String Matching",
+      "字符串匹配"
+    ],
+    "sources": [
+      "oi-wiki:string/match.md",
+      "library-checker:string/wildcard_pattern_matching/info.toml"
+    ]
+  },
+  {
+    "id": "number-theory",
+    "aliases": [],
+    "sources": [
+      "oi-wiki:math/number-theory/mod-arithmetic.md",
+      "cp-algorithms:algebra/module-inverse.md",
+      "cp-algorithms:algebra/chinese-remainder-theorem.md"
+    ]
+  },
+  {
+    "id": "binary-exponentiation",
+    "category": "mathematics",
+    "title": "快速幂",
+    "aliases": [
+      "Binary Exponentiation",
+      "Fast Power"
+    ],
+    "sources": [
+      "oi-wiki:math/binary-exponentiation.md",
+      "cp-algorithms:algebra/binary-exp.md"
+    ]
+  },
+  {
+    "id": "modular-inverse",
+    "category": "mathematics",
+    "title": "模逆",
+    "aliases": [
+      "Modular Inverse",
+      "逆元"
+    ],
+    "sources": [
+      "cp-algorithms:algebra/module-inverse.md",
+      "oi-wiki:math/number-theory/mod-arithmetic.md"
+    ]
+  },
+  {
+    "id": "crt",
+    "category": "mathematics",
+    "title": "中国剩余定理",
+    "aliases": [
+      "Chinese Remainder Theorem",
+      "CRT",
+      "扩展 CRT"
+    ],
+    "sources": [
+      "oi-wiki:math/number-theory/crt.md",
+      "cp-algorithms:algebra/chinese-remainder-theorem.md"
+    ]
+  },
+  {
+    "id": "extended-gcd",
+    "category": "mathematics",
+    "title": "扩展欧几里得",
+    "aliases": [
+      "Extended Euclid",
+      "exgcd",
+      "Extended GCD"
+    ],
+    "sources": [
+      "oi-wiki:math/number-theory/gcd.md",
+      "cp-algorithms:algebra/extended-euclid-algorithm.md"
+    ]
+  },
+  {
+    "id": "totient",
+    "category": "mathematics",
+    "title": "欧拉函数",
+    "aliases": [
+      "Euler Totient",
+      "Euler Phi"
+    ],
+    "sources": [
+      "oi-wiki:math/number-theory/euler-totient.md",
+      "cp-algorithms:algebra/phi-function.md"
+    ]
+  },
+  {
+    "id": "mobius",
+    "category": "mathematics",
+    "title": "莫比乌斯反演",
+    "aliases": [
+      "Möbius Inversion",
+      "Mobius Inversion"
+    ],
+    "sources": [
+      "oi-wiki:math/number-theory/mobius.md"
+    ]
+  },
+  {
+    "id": "convolution-dirichlet",
+    "category": "mathematics",
+    "title": "狄利克雷卷积",
+    "aliases": [
+      "Dirichlet Convolution"
+    ],
+    "sources": [
+      "oi-wiki:math/number-theory/dirichlet.md"
+    ]
+  },
+  {
+    "id": "sieve",
+    "category": "mathematics",
+    "title": "素数筛法",
+    "aliases": [
+      "Sieve of Eratosthenes",
+      "Linear Sieve",
+      "线性筛"
+    ],
+    "sources": [
+      "oi-wiki:math/number-theory/sieve.md",
+      "cp-algorithms:algebra/prime-sieve-linear.md",
+      "cp-algorithms:algebra/sieve-of-eratosthenes.md"
+    ]
+  },
+  {
+    "id": "polynomial",
+    "aliases": [],
+    "sources": [
+      "oi-wiki:math/poly/intro.md",
+      "cp-algorithms:algebra/polynomial.md",
+      "library-checker:polynomial/inv_of_formal_power_series/info.toml"
+    ]
+  },
+  {
+    "id": "counting",
+    "aliases": [],
+    "sources": [
+      "oi-wiki:math/probability/exp-var.md",
+      "oi-wiki:math/combinatorics/inclusion-exclusion-principle.md",
+      "cp-algorithms:combinatorics/inclusion-exclusion.md",
+      "usaco-guide:4_Gold/Combinatorics.mdx"
+    ]
+  },
+  {
+    "id": "burnside",
+    "category": "mathematics",
+    "title": "群作用计数",
+    "aliases": [
+      "Burnside",
+      "Pólya",
+      "Polya",
+      "Burnside 引理",
+      "Polya 定理"
+    ],
+    "sources": [
+      "oi-wiki:math/combinatorics/polya.md",
+      "cp-algorithms:combinatorics/burnside.md"
+    ]
+  },
+  {
+    "id": "linear-algebra",
+    "aliases": [],
+    "sources": [
+      "cp-algorithms:linear_algebra/linear-system-gauss.md",
+      "cp-algorithms:linear_algebra/determinant-gauss.md",
+      "cp-algorithms:linear_algebra/rank-matrix.md",
+      "cp-algorithms:algebra/binary-exp.md"
+    ]
+  },
+  {
+    "id": "matrix-power",
+    "category": "mathematics",
+    "title": "矩阵幂与递推",
+    "aliases": [
+      "Matrix Power",
+      "Matrix Exponentiation",
+      "矩阵快速幂"
+    ],
+    "sources": [
+      "cp-algorithms:algebra/binary-exp.md"
+    ]
+  },
+  {
+    "id": "xor-basis",
+    "category": "mathematics",
+    "title": "线性基",
+    "aliases": [
+      "Xor Basis",
+      "Linear Basis",
+      "异或线性基"
+    ],
+    "sources": [
+      "oi-wiki:math/linear-algebra/basis.md",
+      "library-checker:linear_algebra/intersection_of_f2_vector_spaces/info.toml"
+    ]
+  },
+  {
+    "id": "game-theory",
+    "category": "mathematics",
+    "title": "博弈论",
+    "aliases": [
+      "Game Theory",
+      "Sprague-Grundy",
+      "SG 函数"
+    ],
+    "sources": [
+      "oi-wiki:math/game-theory/intro.md",
+      "cp-algorithms:game_theory/sprague-grundy-nim.md"
+    ]
+  },
+  {
+    "id": "convex-hull-geometry",
+    "category": "geometry",
+    "title": "平面凸包",
+    "aliases": [
+      "Convex Hull",
+      "Monotone Chain",
+      "Graham Scan"
+    ],
+    "sources": [
+      "oi-wiki:geometry/convex-hull.md",
+      "cp-algorithms:geometry/convex-hull.md"
+    ]
+  },
+  {
+    "id": "half-plane",
+    "category": "geometry",
+    "title": "半平面交",
+    "aliases": [
+      "Half-Plane Intersection",
+      "Half Plane Intersection"
+    ],
+    "sources": [
+      "oi-wiki:geometry/half-plane.md",
+      "cp-algorithms:geometry/halfplane-intersection.md"
+    ]
+  },
+  {
+    "id": "calipers",
+    "category": "geometry",
+    "title": "旋转卡壳",
+    "aliases": [
+      "Rotating Calipers"
+    ],
+    "sources": [
+      "oi-wiki:geometry/rotating-calipers.md"
+    ]
+  },
+  {
+    "id": "closest-pair",
+    "category": "geometry",
+    "title": "最近点对",
+    "aliases": [
+      "Closest Pair",
+      "Nearest Points"
+    ],
+    "sources": [
+      "oi-wiki:geometry/nearest-points.md",
+      "cp-algorithms:geometry/nearest_points.md"
+    ]
+  },
+  {
+    "id": "circle-line",
+    "category": "geometry",
+    "title": "圆与直线",
+    "aliases": [
+      "Circle-Line Intersection",
+      "圆线交"
+    ],
+    "sources": [
+      "cp-algorithms:geometry/circle-line-intersection.md",
+      "cp-algorithms:geometry/circle-circle-intersection.md"
+    ]
+  },
+  {
+    "id": "polygon",
+    "category": "geometry",
+    "title": "多边形面积和位置判定",
+    "aliases": [
+      "Polygon",
+      "Point in Polygon",
+      "鞋带公式",
+      "多边形"
+    ],
+    "sources": [
+      "oi-wiki:geometry/2d.md",
+      "cp-algorithms:geometry/area-of-simple-polygon.md",
+      "cp-algorithms:geometry/point-in-convex-polygon.md"
+    ]
+  },
+  {
+    "id": "sweep-line",
+    "category": "geometry",
+    "title": "平面扫描线",
+    "aliases": [
+      "Sweep Line",
+      "扫描线"
+    ],
+    "sources": [
+      "oi-wiki:geometry/scanning.md",
+      "cp-algorithms:geometry/intersecting_segments.md"
+    ]
+  },
+  {
+    "id": "predicates",
+    "category": "geometry",
+    "title": "几何判定",
+    "aliases": [
+      "Geometric Predicates",
+      "Orientation",
+      "叉积",
+      "点积"
+    ],
+    "sources": [
+      "oi-wiki:geometry/2d.md",
+      "cp-algorithms:geometry/basic-geometry.md",
+      "cp-algorithms:geometry/oriented-triangle-area.md"
+    ]
+  },
+  {
+    "id": "triangulation",
+    "category": "geometry",
+    "title": "三角剖分",
+    "aliases": [
+      "Triangulation",
+      "Delaunay"
+    ],
+    "sources": [
+      "oi-wiki:geometry/triangulation.md",
+      "cp-algorithms:geometry/delaunay.md"
+    ]
+  },
+  {
+    "id": "greedy",
+    "category": "foundations",
+    "title": "贪心算法",
+    "aliases": [
+      "Greedy Algorithm",
+      "交换论证"
+    ],
+    "sources": [
+      "oi-wiki:basic/greedy.md"
+    ]
+  },
+  {
+    "id": "construction",
+    "category": "foundations",
+    "title": "构造算法",
+    "aliases": [
+      "Constructive Algorithms",
+      "构造"
+    ],
+    "sources": [
+      "oi-wiki:basic/construction.md"
+    ]
+  },
+  {
+    "id": "sorting",
+    "category": "foundations",
+    "title": "排序与选择",
+    "aliases": [
+      "Sorting and Selection",
+      "排序",
+      "选择算法"
+    ],
+    "sources": [
+      "oi-wiki:basic/sort-intro.md",
+      "oi-wiki:basic/selection-sort.md",
+      "cp-algorithms:sequences/k-th.md"
+    ]
+  },
+  {
+    "id": "bfs",
+    "category": "search",
+    "title": "广度优先搜索",
+    "aliases": [
+      "BFS",
+      "Breadth First Search"
+    ],
+    "sources": [
+      "oi-wiki:search/bfs.md",
+      "oi-wiki:graph/bfs.md",
+      "cp-algorithms:graph/breadth-first-search.md"
+    ]
+  },
+  {
+    "id": "dfs",
+    "category": "search",
+    "title": "深度优先搜索",
+    "aliases": [
+      "DFS",
+      "Depth First Search"
+    ],
+    "sources": [
+      "oi-wiki:search/dfs.md",
+      "oi-wiki:graph/dfs.md",
+      "cp-algorithms:graph/depth-first-search.md"
+    ]
+  },
+  {
+    "id": "pruning",
+    "category": "search",
+    "title": "搜索与剪枝",
+    "aliases": [
+      "Pruning",
+      "Alpha–Beta",
+      "搜索剪枝"
+    ],
+    "sources": [
+      "oi-wiki:search/opt.md",
+      "oi-wiki:search/alpha-beta.md"
+    ]
+  },
+  {
+    "id": "randomized",
+    "category": "randomized",
+    "title": "随机化算法",
+    "aliases": [
+      "Randomized Algorithms",
+      "随机算法"
+    ],
+    "sources": [
+      "oi-wiki:misc/random.md",
+      "oi-wiki:geometry/random-incremental.md",
+      "cp-algorithms:num_methods/simulated_annealing.md"
+    ]
+  },
+  {
+    "id": "interactive",
+    "category": "techniques",
+    "title": "交互题",
+    "aliases": [
+      "Interactive Problems",
+      "交互协议"
+    ],
+    "sources": [
+      "oi-wiki:contest/interaction.md"
+    ]
+  },
+  {
+    "id": "amortized",
+    "category": "foundations",
+    "title": "摊还分析",
+    "aliases": [
+      "Amortized Analysis",
+      "Potential Method"
+    ],
+    "sources": [
+      "oi-wiki:basic/amortized-analysis.md"
+    ]
+  },
+  {
+    "id": "bits",
+    "category": "foundations",
+    "title": "位运算",
+    "aliases": [
+      "Bit Manipulation",
+      "Bit Operations"
+    ],
+    "sources": [
+      "cp-algorithms:algebra/bit-manipulation.md"
+    ]
+  }
+]
