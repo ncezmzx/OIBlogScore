@@ -1,0 +1,407 @@
+{
+  "version": 1,
+  "categories": {
+    "data-structures": "数据结构",
+    "divide-and-conquer": "分治",
+    "graph": "图论",
+    "dp": "动态规划",
+    "mathematics": "数学",
+    "strings": "字符串"
+  },
+  "topics": [
+    {
+      "id": "segment-tree",
+      "title": "线段树：聚合与懒标记",
+      "category": "data-structures",
+      "path": "data-structures/segment-tree.md",
+      "aliases": [
+        "segment tree",
+        "线段树"
+      ]
+    },
+    {
+      "id": "fenwick-tree",
+      "title": "Fenwick：前缀与逆操作",
+      "category": "data-structures",
+      "path": "data-structures/fenwick-tree.md",
+      "aliases": [
+        "fenwick tree",
+        "树状数组",
+        "binary indexed tree"
+      ]
+    },
+    {
+      "id": "persistent-segment-tree",
+      "title": "持久化线段树：版本与值域计数",
+      "category": "data-structures",
+      "path": "data-structures/persistent-segment-tree.md",
+      "aliases": [
+        "persistent segment tree",
+        "主席树",
+        "可持久化线段树"
+      ]
+    },
+    {
+      "id": "dynamic-segment-tree",
+      "title": "动态开点线段树：隐式默认值",
+      "category": "data-structures",
+      "path": "data-structures/dynamic-segment-tree.md",
+      "aliases": [
+        "dynamic segment tree",
+        "动态开点"
+      ]
+    },
+    {
+      "id": "heavy-light",
+      "title": "重链剖分：路径拆解",
+      "category": "data-structures",
+      "path": "data-structures/heavy-light.md",
+      "aliases": [
+        "heavy-light decomposition",
+        "树链剖分",
+        "重链剖分",
+        "hld"
+      ]
+    },
+    {
+      "id": "virtual-tree",
+      "title": "虚树：关键点的 LCA 闭包",
+      "category": "data-structures",
+      "path": "data-structures/virtual-tree.md",
+      "aliases": [
+        "virtual tree",
+        "虚树"
+      ]
+    },
+    {
+      "id": "li-chao",
+      "title": "Li Chao 树：单交性质",
+      "category": "data-structures",
+      "path": "data-structures/li-chao.md",
+      "aliases": [
+        "li chao tree",
+        "李超线段树"
+      ]
+    },
+    {
+      "id": "cdq",
+      "title": "CDQ：跨半贡献与回滚",
+      "category": "divide-and-conquer",
+      "path": "divide-and-conquer/cdq.md",
+      "aliases": [
+        "cdq",
+        "cdq divide and conquer",
+        "cdq分治"
+      ]
+    },
+    {
+      "id": "parallel-binary-search",
+      "title": "并行二分与整体二分：时间域和答案域",
+      "category": "divide-and-conquer",
+      "path": "divide-and-conquer/parallel-binary-search.md",
+      "aliases": [
+        "parallel binary search",
+        "overall binary search",
+        "整体二分",
+        "并行二分"
+      ]
+    },
+    {
+      "id": "centroid",
+      "title": "树分治：重心与路径计数",
+      "category": "divide-and-conquer",
+      "path": "divide-and-conquer/centroid.md",
+      "aliases": [
+        "centroid decomposition",
+        "tree divide and conquer",
+        "点分治",
+        "重心分解"
+      ]
+    },
+    {
+      "id": "fft-ntt",
+      "title": "蝶形分治：FFT/NTT 的根与补零",
+      "category": "divide-and-conquer",
+      "path": "divide-and-conquer/fft-ntt.md",
+      "aliases": [
+        "fft",
+        "ntt",
+        "快速傅里叶变换",
+        "快速数论变换"
+      ]
+    },
+    {
+      "id": "shortest-paths",
+      "title": "最短路：松弛、定点与负环",
+      "category": "graph",
+      "path": "graph/shortest-paths.md",
+      "aliases": [
+        "shortest paths",
+        "dijkstra",
+        "bellman-ford",
+        "最短路"
+      ]
+    },
+    {
+      "id": "mst",
+      "title": "最小生成树：割与交换",
+      "category": "graph",
+      "path": "graph/mst.md",
+      "aliases": [
+        "minimum spanning tree",
+        "mst",
+        "最小生成树",
+        "kruskal"
+      ]
+    },
+    {
+      "id": "scc",
+      "title": "SCC：低链值与未出栈顶点",
+      "category": "graph",
+      "path": "graph/scc.md",
+      "aliases": [
+        "strongly connected components",
+        "scc",
+        "强连通分量",
+        "tarjan scc"
+      ]
+    },
+    {
+      "id": "two-sat",
+      "title": "2-SAT：蕴含图与赋值方向",
+      "category": "graph",
+      "path": "graph/two-sat.md",
+      "aliases": [
+        "2-sat",
+        "2sat",
+        "二元可满足性"
+      ]
+    },
+    {
+      "id": "max-flow",
+      "title": "最大流：残量、割证书和 Dinic 分层",
+      "category": "graph",
+      "path": "graph/max-flow.md",
+      "aliases": [
+        "maximum flow",
+        "dinic",
+        "最大流",
+        "网络流"
+      ]
+    },
+    {
+      "id": "state-and-transition",
+      "title": "DP 状态与转移：语义、顺序和背包",
+      "category": "dp",
+      "path": "dp/state-and-transition.md",
+      "aliases": [
+        "dynamic programming",
+        "state design",
+        "state transition",
+        "动态规划",
+        "dp"
+      ]
+    },
+    {
+      "id": "divide-conquer-dp",
+      "title": "分治 DP：最优决策单调性",
+      "category": "dp",
+      "path": "dp/divide-conquer-dp.md",
+      "aliases": [
+        "divide and conquer dp",
+        "divide and conquer optimization",
+        "decision monotonicity",
+        "quadrangle inequality optimization",
+        "决策单调性",
+        "四边形不等式",
+        "分治优化"
+      ]
+    },
+    {
+      "id": "convex-hull",
+      "title": "凸包优化：直线化与单调队列",
+      "category": "dp",
+      "path": "dp/convex-hull.md",
+      "aliases": [
+        "convex hull optimization",
+        "convex hull trick",
+        "cht",
+        "斜率优化"
+      ]
+    },
+    {
+      "id": "monotone-queue",
+      "title": "单调队列优化：候选支配与窗口",
+      "category": "dp",
+      "path": "dp/monotone-queue.md",
+      "aliases": [
+        "monotone queue optimization",
+        "单调队列优化"
+      ]
+    },
+    {
+      "id": "number-theory",
+      "title": "数论：同余、逆元和非互素 CRT",
+      "category": "mathematics",
+      "path": "mathematics/number-theory.md",
+      "aliases": [
+        "number theory",
+        "数论",
+        "crt",
+        "模逆元"
+      ]
+    },
+    {
+      "id": "polynomial",
+      "title": "形式幂级数与多项式：截断和乘法",
+      "category": "mathematics",
+      "path": "mathematics/polynomial.md",
+      "aliases": [
+        "generating functions",
+        "polynomial algorithms",
+        "多项式",
+        "生成函数",
+        "形式幂级数"
+      ]
+    },
+    {
+      "id": "linear-algebra",
+      "title": "线性代数：消元、秩和矩阵幂",
+      "category": "mathematics",
+      "path": "mathematics/linear-algebra.md",
+      "aliases": [
+        "linear algebra",
+        "matrix exponentiation",
+        "高斯消元",
+        "矩阵快速幂"
+      ]
+    },
+    {
+      "id": "counting",
+      "title": "组合计数：容斥和指示变量",
+      "category": "mathematics",
+      "path": "mathematics/counting.md",
+      "aliases": [
+        "combinatorics",
+        "inclusion-exclusion",
+        "probability and expectation",
+        "组合数学",
+        "容斥",
+        "数学期望"
+      ]
+    },
+    {
+      "id": "kmp",
+      "title": "KMP：最长真边界与匹配回退",
+      "category": "strings",
+      "path": "strings/kmp.md",
+      "aliases": [
+        "kmp",
+        "knuth-morris-pratt",
+        "前缀函数"
+      ]
+    },
+    {
+      "id": "ac-automaton",
+      "title": "AC 自动机：失配转移和输出链",
+      "category": "strings",
+      "path": "strings/ac-automaton.md",
+      "aliases": [
+        "ac automaton",
+        "aho-corasick",
+        "ac 自动机"
+      ]
+    },
+    {
+      "id": "suffix-array",
+      "title": "后缀数组：倍增、哨兵与 LCP",
+      "category": "strings",
+      "path": "strings/suffix-array.md",
+      "aliases": [
+        "suffix array",
+        "后缀数组",
+        "kasai"
+      ]
+    },
+    {
+      "id": "hashing",
+      "title": "字符串哈希：规范化、碰撞与证据强度",
+      "category": "strings",
+      "path": "strings/hashing.md",
+      "aliases": [
+        "string hashing",
+        "string hash",
+        "字符串哈希"
+      ]
+    },
+    {
+      "id": "treap",
+      "title": "Treap：双序与随机树高",
+      "category": "data-structures",
+      "path": "data-structures/treap.md",
+      "aliases": [
+        "treap",
+        "树堆",
+        "fhq treap"
+      ]
+    },
+    {
+      "id": "splay",
+      "title": "Splay：访问引理与旋转次序",
+      "category": "data-structures",
+      "path": "data-structures/splay.md",
+      "aliases": [
+        "splay",
+        "伸展树"
+      ]
+    },
+    {
+      "id": "biconnected",
+      "title": "无向双连通：桥、割点与边栈",
+      "category": "graph",
+      "path": "graph/biconnected.md",
+      "aliases": [
+        "biconnected components",
+        "bcc",
+        "双连通分量",
+        "割点",
+        "桥"
+      ]
+    },
+    {
+      "id": "matching",
+      "title": "二分图匹配：增广与层次界",
+      "category": "graph",
+      "path": "graph/matching.md",
+      "aliases": [
+        "matching",
+        "bipartite matching",
+        "hopcroft-karp",
+        "二分图匹配"
+      ]
+    },
+    {
+      "id": "bitmask-dp",
+      "title": "状态压缩：集合语义与子集枚举",
+      "category": "dp",
+      "path": "dp/bitmask-dp.md",
+      "aliases": [
+        "bitmask dp",
+        "subset dp",
+        "状压dp",
+        "状态压缩动态规划"
+      ]
+    },
+    {
+      "id": "suffix-automaton",
+      "title": "后缀自动机：endpos 与 clone",
+      "category": "strings",
+      "path": "strings/suffix-automaton.md",
+      "aliases": [
+        "suffix automaton",
+        "sam",
+        "后缀自动机"
+      ]
+    }
+  ]
+}

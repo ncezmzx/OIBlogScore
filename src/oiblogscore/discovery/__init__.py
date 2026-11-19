@@ -2,15 +2,13 @@
 import fnmatch
 import json
 import os
-import posixpath
 import re
-from pathlib import Path, PurePosixPath
-from urllib.parse import unquote, urlsplit
+from pathlib import PurePosixPath
 
 from ..repository import digest, git, stamp
+from .dependencies import ARTICLES, CODE, DependencyGraph
+from .manifest import rule_fingerprint
 
-ARTICLES = {'.md', '.markdown', '.mdx', '.tex', '.latex', '.html', '.htm'}
-CODE = {'.cpp', '.cc', '.cxx', '.c', '.hpp', '.h', '.py', '.java', '.rs', '.go', '.pas', '.js', '.ts'}
 CATEGORIES = {
     'dp': r'动态规划|\bdp\b', 'graph': r'图论|最短路|dijkstra|拓扑|最小生成树',
     'greedy': r'贪心|greedy', 'strings': r'字符串|kmp|后缀数组',
@@ -18,31 +16,6 @@ CATEGORIES = {
     'search': r'二分|回溯|\bdfs\b|\bbfs\b', 'flow': r'网络流|dinic|最大流',
     'geometry': r'计算几何|凸包|叉积', 'counting': r'组合数学|容斥|计数',
 }
-REFERENCES = re.compile(
-    r'''\]\(\s*(?:<([^>]+)>|([^\s)]+))|^\s{0,3}\[[^\]\n]+\]:\s*(\S+)|(?:href|src)\s*=\s*["']([^"']+)|\\(?:input|include|includegraphics|lstinputlisting)(?:\[[^\]]*\])?\{([^}]+)\}|(?:from|import)\s*["'](\.[^"']+)["']|^\s*#\s*include\s*"([^"]+)"''',
-    re.M | re.I)
-
-
-def links(text, name, files):
-    found, missing = set(), set()
-    for match in REFERENCES.finditer(text):
-        raw = next(x for x in match.groups() if x is not None).strip('<>')
-        try:
-            url = urlsplit(raw)
-        except ValueError:
-            continue
-        if url.scheme or url.netloc or not url.path:
-            continue
-        target = posixpath.normpath(posixpath.join(posixpath.dirname(name), unquote(url.path))) if not url.path.startswith('/') else posixpath.normpath(unquote(url.path).lstrip('/'))
-        options = [target, target + '.tex', target + '.js', target + '.mdx', target + '/index.md']
-        existing = next((item for item in options if item in files), None)
-        if existing and existing != name:
-            found.add(existing)
-        elif not existing:
-            missing.add(raw)
-    return found, missing
-
-
 def discover(repo):
     names = {os.fsdecode(p) for p in git(repo.root, 'ls-files', '-z', '--cached', '--others', '--exclude-standard').stdout.split(b'\0') if p}
     files, exclusions, issues = set(), [], []
@@ -54,8 +27,7 @@ def discover(repo):
                 files.add(name)
         except ValueError as exc:
             issues.append({'path': name, 'reason': str(exc)})
-    hashes, references = {}, {}
-    configured = repo.config.get('dependencies', {})
+    hashes = {}
 
     def content(name):
         return repo.path(name).read_bytes()
@@ -65,21 +37,9 @@ def discover(repo):
             hashes[name] = digest(content(name))
         return hashes[name]
 
-    def edges(name):
-        if name not in references:
-            suffix = PurePosixPath(name).suffix.lower()
-            refs, unresolved = links(content(name).decode('utf-8', errors='replace'), name, files) if suffix in ARTICLES | CODE else (set(), set())
-            for dep in configured.get(name, []):
-                (refs if dep in files else unresolved).add(dep)
-            references[name] = refs, unresolved
-        return references[name]
+    graph = DependencyGraph(files, content, repo.config.get('dependencies', {}))
 
-    # Include runtime code and review policy contents, not just a timestamp.
-    rule_items = [digest(p.read_bytes()) for p in sorted(Path(__file__).resolve().parents[1].rglob('*')) if p.suffix in {'.py', '.json'}]
-    for rule in repo.config.get('rule_paths', ['skills', 'resources']):
-        repo.path(rule)
-        rule_items.extend((n, hash_file(n)) for n in sorted(files) if n == rule or n.startswith(rule.rstrip('/') + '/'))
-    rules = digest(json.dumps([rule_items, repo.config], sort_keys=True).encode())
+    rules = rule_fingerprint(repo, files, hash_file)
     articles = {}
     for name in sorted(files):
         path = PurePosixPath(name)
@@ -116,16 +76,7 @@ def discover(repo):
             kind, reason = 'article', 'front matter, algorithm keywords or blog directory'
         if not enc_ok:
             issues.append({'path': name, 'reason': 'not UTF-8; Agent must resolve encoding'})
-        deps, queue, missing = set(), [name], set()
-        seen = {name}
-        while queue:
-            current = queue.pop()
-            refs, broken = edges(current)
-            missing.update((current, ref) for ref in broken)
-            for dep in refs - seen:
-                deps.add(dep)
-                seen.add(dep)
-                queue.append(dep)
+        deps, missing = graph.closure(name)
         # Undeclared shared code can be added explicitly in config.
         inputs = {p: hash_file(p) for p in sorted(deps | {name})}
         fingerprint = digest(json.dumps([inputs, sorted(missing), rules], sort_keys=True).encode())
