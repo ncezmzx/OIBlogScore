@@ -1,6 +1,6 @@
 # 算法审查知识库
 
-三层分开维护：
+**Source → Normalization → Crosswalk → Review Knowledge → Skill Retrieval**。详细字段、ID 和许可策略见[数据契约](../../docs/catalog-schema.md)。三层分开维护：
 
 1. **来源**：[来源许可、原稿与版本](sources/README.md)；不把来源文本当作审稿规则。
 2. **算法身份**：[本地深度专题索引](index.json)与[跨源对照](knowledge/crosswalk.json)；中文、英文及缩写统一到 ID。尚未人工合并的题目/教程不靠文件名强行判等；其中 OI Wiki 和 cp-algorithms 的未归并技术页可作为 `upstream-candidate` 检索。
@@ -23,7 +23,9 @@ python tools/catalog.py find --category geometry --limit 0
 python tools/catalog.py refs min-cost-flow --json
 python tools/catalog.py review min-cost-flow
 python tools/catalog.py related min-cost-flow
-python tools/catalog.py search-sources 'potentials' --kind blog --provider codeforces --tag min-cost-flow
+python tools/catalog.py variants shortest-paths
+python tools/catalog.py candidates
+python tools/catalog.py search-sources 'potentials' --kind blog --author is-this-fft --provider codeforces --tag min-cost-flow
 python tools/catalog.py source cp-algorithms:graph/dijkstra.md --text
 python tools/catalog.py stats
 ```

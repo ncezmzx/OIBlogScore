@@ -5,7 +5,7 @@ from collections import Counter
 import json
 import sys
 
-from catalog_data import ROOT, build, normalize, read, related, source_view
+from catalog_data import RELATIONS, ROOT, build, normalize, read, related, source_view
 
 
 def load(root=ROOT):
@@ -37,10 +37,12 @@ def search(data, query='', category=None, provider=None, tag=None):
     return sorted(exact, key=lambda row: row['id']) if exact else [row for _, _, row in sorted(matches)]
 
 
-def source_search(data, query='', provider=None, tag=None, kind=None):
+def source_search(data, query='', provider=None, tag=None, kind=None, author=None):
     needle = normalize(query)
     for sid, row in sorted(data['sources'].items()):
         if provider and row['provider'] != provider or kind and row['kind'] != kind:
+            continue
+        if author and not any(normalize(author) in normalize(name) for name in row['authors']):
             continue
         view = source_view(data, sid)
         if tag and tag not in view['tags']:
@@ -60,10 +62,15 @@ def dump(value):
     print(json.dumps(value, ensure_ascii=False, indent=2))
 
 
+SEARCH_COMMANDS = ('find', 'search-sources')
+ITEM_COMMANDS = ('show', 'refs', 'review', 'related', 'source', 'variants')
+SUMMARY_COMMANDS = ('stats', 'candidates')
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     subs = parser.add_subparsers(dest='command', required=True)
-    for name in ('find', 'search-sources'):
+    for name in SEARCH_COMMANDS:
         cmd = subs.add_parser(name)
         cmd.add_argument('query', nargs='?', default='')
         cmd.add_argument('--provider')
@@ -71,14 +78,20 @@ def main(argv=None):
         cmd.add_argument('--json', action='store_true')
         cmd.add_argument('--limit', type=int, default=25, help='0 to show all')
         cmd.add_argument('--category' if name == 'find' else '--kind')
-    for name in ('show', 'refs', 'review', 'related', 'source'):
+        if name == 'search-sources':
+            cmd.add_argument('--author')
+    for name in ITEM_COMMANDS:
         cmd = subs.add_parser(name)
         cmd.add_argument('id')
-        if name in ('refs', 'related'):
+        if name in ('refs', 'related', 'variants'):
             cmd.add_argument('--json', action='store_true')
+        if name == 'refs':
+            cmd.add_argument('--relation', choices=sorted(RELATIONS))
         if name == 'source':
             cmd.add_argument('--text', action='store_true')
     subs.add_parser('stats')
+    candidates = subs.add_parser('candidates')
+    candidates.add_argument('--all', action='store_true', help='include already mapped baseline candidates')
     args = parser.parse_args(argv)
     try:
         data = build()
@@ -95,7 +108,7 @@ def main(argv=None):
                     raise ValueError('Unknown category: ' + args.category)
                 rows = search(data, args.query, args.category, args.provider, args.tag)
             else:
-                rows = list(source_search(data, args.query, args.provider, args.tag, args.kind))
+                rows = list(source_search(data, args.query, args.provider, args.tag, args.kind, args.author))
             rows = rows[:args.limit] if args.limit else rows
             if args.json:
                 dump(rows)
@@ -104,11 +117,29 @@ def main(argv=None):
                     detail = row['url'] if command == 'search-sources' else row['category'] + ' / ' + row['review']
                     print(f"{row['id']}\t{row['title']}\t{detail}")
             return int(not rows)
-        if command == 'stats':
+        if command in ('stats', 'candidates'):
+            cohort = read(ROOT / 'knowledge/triage-baseline.json')['source_ids']
+            triage = []
+            for sid in cohort:
+                view = source_view(data, sid)
+                mapped = [a for a in view['associations'] if a['relation'] != 'unclassified']
+                triage.append(dict(source=sid, title=view['title'], mapped=mapped))
+            if command == 'candidates':
+                dump([r for r in triage if args.all or not r['mapped']])
+                return 0
+            mapped_rows = [r for r in triage if r['mapped']]
+            counts = {kind: sum(any(a['relation'] == kind for a in r['mapped']) for r in mapped_rows) for kind in sorted(RELATIONS)}
+            counts['unclassified'] = len(cohort) - len(mapped_rows)
+            independent = {a['algorithm'] for r in mapped_rows for a in r['mapped'] if a['relation'] in ('exact','alias')}
+
             dump({'algorithms': dict(Counter(row['category'] for row in data['algorithms'].values())),
+                  'triage': dict(total=len(cohort), mapped=len(mapped_rows), pending=counts['unclassified'],
+                                 identity_targets=len(independent), by_relation=counts),
                   'by_provider': dict(Counter(row['provider'] for row in data['sources'].values())),
                   'by_mode': dict(Counter(row['mode'] for row in data['sources'].values())),
                   'review': dict(Counter(row['review'] for row in data['algorithms'].values())),
+                  'local_artifacts': dict(markdown=sum('path' in r for r in data['algorithms'].values()),
+                                          structured=len(data['notes'])),
                   'canonical': sum(not row.get('identity') for row in data['algorithms'].values()),
                   'curated': dict(Counter(row['kind'] for row in data['sources'].values() if 'metadata_status' in row))})
             return 0
@@ -128,13 +159,15 @@ def main(argv=None):
         if key not in data['algorithms']:
             raise ValueError('Unknown topic ID: ' + key)
         row = data['algorithms'][key]
-        if command == 'refs':
-            refs = [source_view(data, sid) for sid in row['sources']]
+        if command in ('refs', 'variants'):
+            selected = {'variant','implementation'} if command == 'variants' else ({args.relation} if args.relation else RELATIONS)
+            refs = [dict(source_view(data, a['source']), relation=a['relation'], rationale=a['basis'])
+                    for a in row.get('associations', ()) if a['relation'] in selected]
             if args.json:
                 dump(refs)
             else:
                 for item in refs:
-                    print('{id}\t{title}\t{mode}\t{url}'.format(**item))
+                    print('{id}\t{title}\t{mode}\t{url}\t{relation}\t{trust}\t{license}'.format(**item))
         elif command == 'related':
             groups = related(data, key)
             if args.json:

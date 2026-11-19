@@ -2,9 +2,13 @@
 
 ## 可重现范围
 
-`tools/catalog.py stats` 是当前统计。来源范围按固定提交枚举：OI Wiki 收录 `docs` 下 12 个技术／竞赛分组的 Markdown，标题优先取 mkdocs 导航；cp-algorithms 收录 `src` 下分类技术页，排除顶层站点页。USACO Guide 为挑选的 13 个模块；Library Checker 为带标题的非样例题规格；KACTL 为技术分类的头文件。另有 5 篇博客（Codeforces 4、Universal OJ 1）、1 篇 AtCoder 官方题解、2 篇研究资料记录。许多记录只有来源元数据；不得将题库、头文件或导航页计为已核验数学专题。
+运行 `python tools/catalog.py stats` 获取当前来源、审稿状态和归并统计。数据契约见 [Catalog Schema](catalog-schema.md)。目录保留原有 34 篇 Markdown 和 6 篇定向分析；新笔记扩展前提、不变量、推导、复杂度和见证。`needs-review` 明确标记 Knuth 的最优决策单调性定理及一般图匹配的缩花完备性尚未在本项目全证；其它推导只在其声明范围内使用。
 
-本次保留 34 份原有完整专题，新增 6 份项目定向审稿条目（费用流、LCT、数位 DP、回文自动机、几何凸包、稀疏表）。例如“边分治”、“支配树”、“Beats”、“Knuth”和“广义 SAM”现在能查到有出处的资料，但其完整本地审查说明仍缺。其它来源候选未完全消歧；已建规范 ID 的别名必须唯一，未归并条目以来源路径作可追溯的发现 ID，不将同名算法误采为必然等价。待继续覆盖：复杂树分治的平衡假设、费用流强界及负环变体、完全动态连通性、全套几何鲁棒性证明、自动机与 DP 的组合模型。
+## 归并流程
+
+`python tools/catalog.py candidates` 列出固定基线仍待核对的来源。读来源的实际模型、状态及复杂度后，与现有规范 ID 对照；不要把一个页面作为多个条目的身份声明。已确认或有弱关联的条目用 `candidates --all` 查看，明确区分 `related` 和 `exact`。不要把旧的一般关联迁移为已人工验证的等价。
+
+博客编目优先记录可追溯的作者与原地址，再写一个具体审稿问题。若只核对了公开二级目录，把它记作二级来源，不把项目补充的问题描述成博客已证明的结论。正文核对、数学复核是后续步骤。
 
 ## 同步：只生成候选，不修改工作树
 
@@ -22,3 +26,13 @@ python tools/sync_catalog.py cp-algorithms /path/to/cp-algorithms-checkout --out
 ## 审查和 Golden 语义
 
 `tests/fixtures/catalog/golden.json` 保存可供 Agent 检查的对照：真实资料短句或博客贡献、合成正反主张、来源 ID、预期审查证据；`lazy.cpp` 是自写的有意错误对照。测试实际跑检索、出处和小型独立 oracle，并在可用时编译运行两种 C++ 实现；不调用 LLM，也不声称通过结构门禁就验证了上游定理。要测 Agent 能力，给 Agent 不包含 `expected` 的两侧主张与固定资料，要求分维度提供证据，再由人工对照期望；不要把期望预先暴露给待测 Agent。
+
+## Agent 对照盲测
+
+```sh
+python tools/blind_eval.py pack baseline > /tmp/baseline-cases.json
+python tools/blind_eval.py pack catalog > /tmp/catalog-cases.json
+python tools/blind_eval.py compare --baseline /tmp/baseline-answers.json --catalog /tmp/catalog-answers.json
+```
+
+使用同一模型、指令骨架、预算，两次隔离运行；baseline 不提供仓库、Catalog 或工具，Catalog 条件提供工具和其快照，但两边均不交付答案文件。保存原始响应及模型和变量。比较器输出问题检出率、误报率、遗漏类型、可疑引用、无根据的核验声明；引用是否能支撑某条结论、reason 是否正确仍由盲评者审读。本轮只运行工具和合成响应验证，**未执行真实 Agent 对照评测**。

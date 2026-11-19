@@ -20,3 +20,9 @@ description: 核算 OI 博客的时间、空间和摊还复杂度，与实际代
 ## Catalog 检索
 
 若有 OIBlogScore checkout，在其中运行 `python tools/catalog.py`。用 `find <算法或别名>` 和 `review <id>` 找工作量模型、退化案例；用 `refs <id>` 区分实现版本。独立数层数、每层处理量与内层访问次数，标明 worst-case、amortized、expected，绝不直接继承来源复杂度。 只有来源索引时，不得标记来源结论为 VERIFIED；无法访问共享库时按本包协议独立核验，并记录限制。
+
+- **触发**：开始审查具体算法、实现变体或原文章节有定理引用时；纯文字修复不触发。
+- **检索**：在 checkout 用 `python tools/catalog.py find <术语>`，用 `refs <id>` 追源，用 `review <id>` 读本地分析；需要区分实现时用 `variants <id>`。
+- **证据层**：来源的 `upstream-unreviewed` 与本地 `project-analysis`、`needs-review` 不同；相关资料不等于算法相同。检索命中不构成通过证据。
+- **缺证处理**：无来源、无法访问、变体不匹配或未核验时，独立推导或标 `NOT_CHECKED`，不得以命中判 `PASS`。
+- **引用**：记录算法 ID、来源 ID、固定版本（如有）、原文定位和独立推导或反例；未核验结论不得标 `VERIFIED`。

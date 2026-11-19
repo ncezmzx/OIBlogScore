@@ -6,8 +6,22 @@ import unicodedata
 ROOT = Path(__file__).resolve().parents[1] / 'resources' / 'algorithm-catalog'
 
 
+RELATIONS = frozenset({'exact', 'alias', 'implementation', 'variant', 'related', 'unclassified'})
+
+
 def read(path):
-    return json.loads(path.read_text(encoding='utf-8'))
+    def unique(pairs):
+        obj = {}
+        for key, value in pairs:
+            if key in obj:
+                raise ValueError(f'{path}: duplicate JSON key {key}')
+            obj[key] = value
+        return obj
+
+    def reject_constant(value):
+        raise ValueError(f'{path}: non-JSON constant {value}')
+
+    return json.loads(path.read_text(encoding='utf-8'), object_pairs_hook=unique, parse_constant=reject_constant)
 
 
 def normalize(text):
@@ -17,9 +31,20 @@ def normalize(text):
 def sources(root=ROOT):
     directory = root / 'sources'
     providers = read(directory / 'providers.json')
-    return providers, [row for filename in sorted(directory.glob('*.json'))
-                       if filename.stem in providers or filename.stem == 'curated'
-                       for row in read(filename)]
+    auxiliary = {'providers','import-policy','approved-verbatim'}
+    expected = {key for key, profile in providers.items() if profile.get('repository')} | {'curated'}
+    actual = {path.stem for path in directory.glob('*.json')} - auxiliary
+    if actual != expected:
+        raise ValueError('Missing or unrecognized source files: ' + ', '.join(sorted(actual ^ expected)))
+    records = []
+    for name in sorted(expected):
+        rows = read(directory / (name + '.json'))
+        if not isinstance(rows, list):
+            raise ValueError(name + ': expected a source array')
+        if name != 'curated' and any(not isinstance(r, dict) or r.get('provider') != name for r in rows):
+            raise ValueError(name + ': wrong provider in snapshot')
+        records.extend(rows)
+    return providers, records
 
 
 EXTRA = {'geometry': '计算几何', 'foundations': '基础算法、贪心与构造', 'search': '搜索与剪枝',
@@ -63,19 +88,20 @@ def build(root=ROOT):
             algorithms[key] = dict(id=key, title=row['title'], category=row['category'], aliases=[], review='sources-only')
         card = algorithms[key]
         card['aliases'] = list(dict.fromkeys(card['aliases'] + row['aliases']))
-        card['sources'] = row['sources'][:]
-        claimed.update(row['sources'])
+        card['associations'] = row['sources'][:]
+        card['sources'] = [a['source'] for a in row['sources']]
+        claimed.update(a['source'] for a in row['sources'] if a['relation'] != 'unclassified')
     # Unmapped upstream tutorial records remain separate discovery candidates.
     # Do not guess equivalence from a matching filename or translated title.
     for source in all_sources:
         key = source['id']
         if key not in claimed and source['provider'] in ('oi-wiki', 'cp-algorithms') and not key.endswith('/index.md'):
             algorithms[key] = dict(id=key, title=source['title'], category=category(source), aliases=[],
-                                   sources=[key], review='sources-only', identity='upstream-candidate')
+                                   sources=[key], associations=[dict(source=key, relation='unclassified', basis='No canonical mapping confirmed.')], review='sources-only', identity='upstream-candidate')
     reverse = {key: [] for key in source_by_id}
     for key, card in algorithms.items():
         if key in notes:
-            card['review'] = 'project-analysis'
+            card['review'] = notes[key]['status']
         for source in card['sources']:
             reverse[source].append(key)
     return {'categories': categories, 'sources': source_by_id, 'providers': providers,
@@ -99,5 +125,6 @@ def source_view(data, sid):
         categories.add(category(row))
     attribution = row['authors'] or [profile['title'] + ' contributors (see per-page history)']
     return dict(row, algorithms=algorithms, tags=sorted(set(algorithms) | categories), attribution=attribution,
+                associations=[dict(a, algorithm=key) for key in algorithms for a in data['algorithms'][key].get('associations', []) if a['source'] == sid],
                 policy_url=profile['policy_url'], license_url=profile['license_url'],
-                permissions=profile['permissions'], redistribution_policy=profile['mode'])
+                permissions=profile['permissions'], license_terms=profile['terms'], redistribution_policy=profile['mode'])

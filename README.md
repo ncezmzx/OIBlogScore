@@ -43,7 +43,7 @@ Git 可见的 Markdown、MDX、LaTeX、HTML 会进入候选集。README、文档
 
 ## 算法资料检索
 
-在 OIBlogScore checkout 中用 `python tools/catalog.py find "李超线段树"` 查规范 ID，用 `refs li-chao` 查看来源及版本，用 `review li-chao` 读本地审查说明。收录上游原稿和许可说明均放在[独立的来源层](resources/algorithm-catalog/sources/README.md)，不受项目 MIT 许可重新授权；来源未核验与项目分析是不同状态。详见[目录同步及验收](docs/catalog-maintenance.md)。
+在 OIBlogScore checkout 中用 `python tools/catalog.py find "李超线段树"` 查规范 ID，用 `refs li-chao` 查看来源及版本，用 `review li-chao` 读本地审查说明。收录上游原稿和许可说明均放在[独立的来源层](resources/algorithm-catalog/sources/README.md)，不受项目 MIT 许可重新授权；来源未核验与项目分析是不同状态。数据流为 **Source → Normalization → Crosswalk → Review Knowledge → Skill Retrieval**。可用 `variants shortest-paths` 区分实现和变体，`candidates` 查看尚未归类的来源；见 [Schema](docs/catalog-schema.md) 和[目录同步及验收](docs/catalog-maintenance.md)。
 
 ## 自动修复与回滚
 
