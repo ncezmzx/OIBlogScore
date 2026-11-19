@@ -1,0 +1,6 @@
+{
+  "exclude": ["public/**", "vendor/**"],
+  "dependencies": {"notes/example.md": ["solutions/helper.hpp"]},
+  "rule_paths": ["skills", "resources"],
+  "rule_version": "1"
+}
