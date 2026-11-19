@@ -70,7 +70,9 @@ class CatalogTests(unittest.TestCase):
         self.assertIn('graph', results[0]['tags'])
         p = command('catalog.py', 'related', 'min-cost-flow', '--json')
         self.assertIn('shortest-paths', json.loads(p.stdout)['editorial'])
-        self.assertEqual(command('catalog.py', 'review', 'dominator-tree').returncode, 1)
+        # Dominators now have a local proof for the iterative-set variant.
+        self.assertEqual(command('catalog.py', 'review', 'dominator-tree').returncode, 0)
+        self.assertEqual(command('catalog.py', 'review', 'wavelet').returncode, 1)
         self.assertEqual(command('catalog.py', 'source', 'codeforces:105658', '--text').returncode, 1)
 
     def test_quality_rejects_tampering_and_alias_collisions(self):

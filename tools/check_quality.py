@@ -8,7 +8,7 @@ import sys
 from urllib.parse import unquote, urlsplit
 
 from catalog_quality import check_sources
-from catalog import ROOT as CATALOG, load, normalize
+from catalog import ROOT as CATALOG, ITEM_COMMANDS, SEARCH_COMMANDS, SUMMARY_COMMANDS, load, normalize
 
 
 ROOT = CATALOG.parents[1]
@@ -86,6 +86,14 @@ def check(root):
         text = read(path)
         if not any(ch.isalnum() for line in text.splitlines() if not line.lstrip().startswith('#') for ch in line):
             issues.append(f'{path}: empty knowledge text')
+        # Check executable examples, without invoking documented commands.
+        if 'skills' not in path.relative_to(root).parts:
+            for script, command in re.findall(r'^python (tools/[\w-]+\.py)(?: ([\w-]+))?', text, re.M):
+                if not (root / script).is_file():
+                    issues.append(f'{path}: nonexistent documented tool: {script}')
+                known = SEARCH_COMMANDS + ITEM_COMMANDS + SUMMARY_COMMANDS if script == 'tools/catalog.py' else ('pack','compare') if script == 'tools/blind_eval.py' else None
+                if command and known is not None and command not in known:
+                    issues.append(f'{path}: unknown documented command: {script} {command}')
         edges[path] = set()
         boundary = next((folder for folder in path.parents if folder.parent == skills), root)
         for raw in markdown_links(text):
@@ -138,8 +146,17 @@ def check(root):
         if (not meta or meta[1] != name or len(name) > 64 or not 1 <= len(meta[2].strip()) <= 1024
                 or meta[2].lstrip()[0] in '!&*{}[],#|>@`"\'' or ': ' in meta[2] or ' #' in meta[2]):
             issues.append(f'{path}: invalid Agent Skills metadata or unsupported local YAML style')
-        if name not in {'oi-blog-repair', 'oi-repair-verify'} and ('Catalog 检索' not in sections(text) or 'python tools/catalog.py' not in text or 'refs <id>' not in text):
-            issues.append(f'{path}: missing Catalog workflow and provenance lookup')
+        if name not in {'oi-blog-repair', 'oi-repair-verify'}:
+            catalog_section = sections(text).get('Catalog 检索', '')
+            contract = {
+                '触发': ('审查',), '检索': ('python tools/catalog.py find', 'refs <id>', 'review <id>'),
+                '证据层': ('upstream-unreviewed','project-analysis','needs-review'),
+                '缺证处理': ('NOT_CHECKED','PASS'), '引用': ('来源 ID','版本','推导','VERIFIED'),
+            }
+            for label, required in contract.items():
+                line = re.search(r'^- \*\*' + label + r'\*\*：(.+)$', catalog_section, re.M)
+                if not line or any(token not in line[1] for token in required):
+                    issues.append(f'{path}: missing Catalog contract: {label}')
         if '工作流' not in sections(text):
             issues.append(f'{path}: missing workflow entry point')
         require_sections(directory / 'references' / 'workflow.md', WORKFLOW_SECTIONS, 12)
@@ -151,10 +168,13 @@ def check(root):
         require_sections(skills / relative, names, 35)
 
     index = load(catalog)
-    if index['version'] != 1 or set(index['categories']) != CATEGORIES:
+    if set(index) != {'version','categories','topics'} or type(index['version']) is not int or index['version'] != 1 or set(index['categories']) != CATEGORIES or not isinstance(index['topics'], list):
         issues.append('Wrong catalog version or categories')
     ids, paths, aliases, bodies, per_category = set(), set(), {}, {}, Counter()
     for item in index['topics']:
+        if not isinstance(item, dict) or set(item) != {'id','category','path','title','aliases'} or not isinstance(item.get('aliases'), list):
+            issues.append('Malformed Markdown topic manifest entry')
+            continue
         key, cat, rel = item['id'], item['category'], item['path']
         if not re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*', key) or key in ids or rel in paths:
             issues.append(f'{key}: invalid/duplicate catalog id or path')

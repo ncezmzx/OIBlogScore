@@ -3,26 +3,63 @@
     "id": "segment-tree",
     "aliases": [],
     "sources": [
-      "oi-wiki:ds/seg.md",
-      "cp-algorithms:data_structures/segment_tree.md",
-      "usaco-guide:4_Gold/PURS.mdx"
+      {
+        "source": "oi-wiki:ds/seg.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:data_structures/segment_tree.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "usaco-guide:4_Gold/PURS.mdx",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
     "id": "fenwick-tree",
     "aliases": [],
     "sources": [
-      "oi-wiki:ds/fenwick.md",
-      "cp-algorithms:data_structures/fenwick.md",
-      "library-checker:data_structure/point_add_range_sum/info.toml"
+      {
+        "source": "oi-wiki:ds/fenwick.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:data_structures/fenwick.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "library-checker:data_structure/point_add_range_sum/info.toml",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "codeforces:61364",
+        "relation": "related",
+        "basis": "外部博客发现线索；下列审查问题为项目补充，不代表原文结论已验证：前缀和必须单调；负增量若导致某个元素为负，下界搜索无该保证。"
+      }
     ]
   },
   {
     "id": "persistent-segment-tree",
     "aliases": [],
     "sources": [
-      "oi-wiki:ds/persistent-seg.md",
-      "library-checker:data_structure/persistent_range_affine_range_sum/info.toml"
+      {
+        "source": "oi-wiki:ds/persistent-seg.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "library-checker:data_structure/persistent_range_affine_range_sum/info.toml",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -34,8 +71,16 @@
       "Persistent Data Structures"
     ],
     "sources": [
-      "oi-wiki:ds/persistent.md",
-      "usaco-guide:6_Advanced/Persistent.mdx"
+      {
+        "source": "oi-wiki:ds/persistent.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "usaco-guide:6_Advanced/Persistent.mdx",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -47,9 +92,41 @@
       "稀疏表"
     ],
     "sources": [
-      "oi-wiki:ds/sparse-table.md",
-      "cp-algorithms:data_structures/sparse-table.md",
-      "library-checker:data_structure/staticrmq/info.toml"
+      {
+        "source": "library-checker:data_structure/staticrmq/info.toml",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:ds/sparse-table.md",
+        "relation": "exact",
+        "basis": "静态区间查询预处理长度为 2^k 的区间摘要，RMQ 的重叠查询依赖幂等性。"
+      },
+      {
+        "source": "cp-algorithms:data_structures/sparse-table.md",
+        "relation": "exact",
+        "basis": "静态区间查询预处理长度为 2^k 的区间摘要，RMQ 的重叠查询依赖幂等性。"
+      },
+      {
+        "source": "oi-wiki:topic/rmq.md",
+        "relation": "related",
+        "basis": "RMQ 是问题，不是 Sparse Table 的别名；还可以使用其它预处理结构。"
+      },
+      {
+        "source": "cp-algorithms:sequences/rmq.md",
+        "relation": "related",
+        "basis": "RMQ 是问题，不是 Sparse Table 的别名；还可以使用其它预处理结构。"
+      },
+      {
+        "source": "cp-algorithms:graph/rmq_linear.md",
+        "relation": "related",
+        "basis": "RMQ 是问题，不是 Sparse Table 的别名；还可以使用其它预处理结构。"
+      },
+      {
+        "source": "codeforces:57046",
+        "relation": "related",
+        "basis": "外部博客发现线索；下列审查问题为项目补充，不代表原文结论已验证：按层核对前缀、后缀和整块摘要的顺序，非交换合并不能把左右互换。"
+      }
     ]
   },
   {
@@ -61,8 +138,21 @@
       "吉司机线段树"
     ],
     "sources": [
-      "oi-wiki:ds/seg-beats.md",
-      "library-checker:data_structure/range_chmin_chmax_add_range_sum/info.toml"
+      {
+        "source": "oi-wiki:ds/seg-beats.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "library-checker:data_structure/range_chmin_chmax_add_range_sum/info.toml",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "codeforces:57319",
+        "relation": "related",
+        "basis": "外部博客发现线索；下列审查问题为项目补充，不代表原文结论已验证：chmin(x) 在 x 等于次大值时不能把两组计数当成仍然分离，检查严格不等和下传规则。"
+      }
     ]
   },
   {
@@ -76,7 +166,16 @@
       "Segment Tree Split"
     ],
     "sources": [
-      "oi-wiki:ds/seg-merge-split.md"
+      {
+        "source": "oi-wiki:ds/seg-merge-split.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "codeforces:83170",
+        "relation": "related",
+        "basis": "外部博客发现线索；下列审查问题为项目补充，不代表原文结论已验证：区分破坏式合并和保留旧版本；同一个被吸收节点不能在多份版本上重复收费。"
+      }
     ]
   },
   {
@@ -88,9 +187,21 @@
       "平衡树"
     ],
     "sources": [
-      "oi-wiki:ds/bst.md",
-      "oi-wiki:ds/avl.md",
-      "oi-wiki:ds/rbtree.md"
+      {
+        "source": "oi-wiki:ds/bst.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:ds/avl.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:ds/rbtree.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -104,8 +215,31 @@
       "动态树"
     ],
     "sources": [
-      "oi-wiki:ds/lct.md",
-      "kactl:graph/LinkCutTree.h"
+      {
+        "source": "oi-wiki:ds/lct.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "kactl:graph/LinkCutTree.h",
+        "relation": "implementation",
+        "basis": "该头文件用伸展树实现动态森林路径暴露，不是静态树链剖分。"
+      },
+      {
+        "source": "codeforces:11241",
+        "relation": "related",
+        "basis": "外部博客发现线索；下列审查问题为项目补充，不代表原文结论已验证：access 后区分辅助父与表示森林的父，旋转前验证反转标记已下传。"
+      },
+      {
+        "source": "codeforces:67637",
+        "relation": "related",
+        "basis": "外部博客发现线索；下列审查问题为项目补充，不代表原文结论已验证：access 更换 preferred child 时，旧孩子进入虚贡献、新孩子离开虚贡献，两次记账不能漏。"
+      },
+      {
+        "source": "codeforces:75885",
+        "relation": "related",
+        "basis": "外部博客发现线索；下列审查问题为项目补充，不代表原文结论已验证：只有暴露后两点确实相邻才能切边，检查长度至少为二的链请求删除其端点对。"
+      }
     ]
   },
   {
@@ -119,8 +253,21 @@
       "小波矩阵"
     ],
     "sources": [
-      "usaco-guide:6_Advanced/Wavelet.mdx",
-      "library-checker:data_structure/range_kth_smallest/info.toml"
+      {
+        "source": "usaco-guide:6_Advanced/Wavelet.mdx",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "library-checker:data_structure/range_kth_smallest/info.toml",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "codeforces:52854",
+        "relation": "related",
+        "basis": "外部博客发现线索；下列审查问题为项目补充，不代表原文结论已验证：子区间投影使用两个前缀计数之差；重复值不能当成唯一索引。"
+      }
     ]
   },
   {
@@ -133,12 +280,36 @@
       "Disjoint Set Union"
     ],
     "sources": [
-      "oi-wiki:ds/dsu.md",
-      "oi-wiki:ds/dsu-complexity.md",
-      "oi-wiki:topic/dsu-app.md",
-      "cp-algorithms:data_structures/disjoint_set_union.md",
-      "library-checker:data_structure/unionfind/info.toml",
-      "library-checker:data_structure/unionfind_with_potential/info.toml"
+      {
+        "source": "oi-wiki:ds/dsu.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:ds/dsu-complexity.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:topic/dsu-app.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:data_structures/disjoint_set_union.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "library-checker:data_structure/unionfind/info.toml",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "library-checker:data_structure/unionfind_with_potential/info.toml",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -150,7 +321,11 @@
       "K-D 树"
     ],
     "sources": [
-      "oi-wiki:ds/kdt.md"
+      {
+        "source": "oi-wiki:ds/kdt.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -162,8 +337,16 @@
       "二进制字典树"
     ],
     "sources": [
-      "oi-wiki:string/trie.md",
-      "library-checker:data_structure/set_xor_min/info.toml"
+      {
+        "source": "oi-wiki:string/trie.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "library-checker:data_structure/set_xor_min/info.toml",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -176,9 +359,21 @@
       "可合并堆"
     ],
     "sources": [
-      "oi-wiki:ds/leftist-tree.md",
-      "oi-wiki:ds/pairing-heap.md",
-      "cp-algorithms:data_structures/randomized_heap.md"
+      {
+        "source": "oi-wiki:ds/leftist-tree.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:ds/pairing-heap.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:data_structures/randomized_heap.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -190,9 +385,21 @@
       "线段树优化动态规划"
     ],
     "sources": [
-      "oi-wiki:ds/seg.md",
-      "cp-algorithms:data_structures/segment_tree.md",
-      "cp-algorithms:dynamic_programming/longest_increasing_subsequence.md"
+      {
+        "source": "oi-wiki:ds/seg.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:data_structures/segment_tree.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:dynamic_programming/longest_increasing_subsequence.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -208,30 +415,88 @@
       "树上莫队"
     ],
     "sources": [
-      "oi-wiki:misc/mo-algo.md",
-      "oi-wiki:misc/mo-algo-intro.md",
-      "oi-wiki:misc/modifiable-mo-algo.md",
-      "oi-wiki:misc/rollback-mo-algo.md",
-      "oi-wiki:misc/mo-algo-on-tree.md",
-      "oi-wiki:misc/mo-algo-2dimen.md",
-      "oi-wiki:misc/mo-algo-secondary-offline.md",
-      "oi-wiki:misc/mo-algo-with-bitset.md",
-      "cp-algorithms:data_structures/sqrt_decomposition.md",
-      "codeforces:61203"
+      {
+        "source": "oi-wiki:misc/mo-algo.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:misc/mo-algo-intro.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:misc/modifiable-mo-algo.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:misc/rollback-mo-algo.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:misc/mo-algo-on-tree.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:misc/mo-algo-2dimen.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:misc/mo-algo-secondary-offline.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:misc/mo-algo-with-bitset.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:data_structures/sqrt_decomposition.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "codeforces:61203",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "codeforces:72690",
+        "relation": "related",
+        "basis": "外部博客发现线索；下列审查问题为项目补充，不代表原文结论已验证：回退修改须还原旧值，落在当前窗口内时同时更新维护的统计量。"
+      },
+      {
+        "source": "codeforces:43230",
+        "relation": "related",
+        "basis": "外部博客发现线索；下列审查问题为项目补充，不代表原文结论已验证：双次出现必须按奇偶消去，LCA 是否额外加入取决于具体区间变换。"
+      }
     ]
   },
   {
     "id": "cdq",
     "aliases": [],
     "sources": [
-      "oi-wiki:misc/cdq-divide.md"
+      {
+        "source": "oi-wiki:misc/cdq-divide.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
     "id": "parallel-binary-search",
     "aliases": [],
     "sources": [
-      "oi-wiki:misc/parallel-binsearch.md"
+      {
+        "source": "oi-wiki:misc/parallel-binsearch.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -240,8 +505,21 @@
       "点分治"
     ],
     "sources": [
-      "oi-wiki:graph/tree-divide.md",
-      "cp-algorithms:graph/centroid_decomposition.md"
+      {
+        "source": "oi-wiki:graph/tree-divide.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:graph/centroid_decomposition.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:graph/dynamic-tree-divide.md",
+        "relation": "variant",
+        "basis": "动态点分治保存每一层重心信息以维护更新，和一次性分治统计分开。"
+      }
     ]
   },
   {
@@ -253,17 +531,42 @@
       "边分治"
     ],
     "sources": [
-      "oi-wiki:graph/tree-divide.md"
+      {
+        "source": "oi-wiki:graph/tree-divide.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
     "id": "fft-ntt",
     "aliases": [],
     "sources": [
-      "oi-wiki:math/poly/fft.md",
-      "oi-wiki:math/poly/ntt.md",
-      "cp-algorithms:algebra/fft.md",
-      "library-checker:convolution/convolution_mod/info.toml"
+      {
+        "source": "oi-wiki:math/poly/fft.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:math/poly/ntt.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:algebra/fft.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "library-checker:convolution/convolution_mod/info.toml",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "codeforces:55572",
+        "relation": "related",
+        "basis": "外部博客发现线索；下列审查问题为项目补充，不代表原文结论已验证：检查补零使长度至少为 n+m−1；模域根阶或浮点舍入需要各自证明。"
+      }
     ]
   },
   {
@@ -273,24 +576,48 @@
       "Heavy Light Decomposition"
     ],
     "sources": [
-      "oi-wiki:graph/hld.md",
-      "cp-algorithms:graph/hld.md",
-      "usaco-guide:5_Plat/HLD.mdx"
+      {
+        "source": "oi-wiki:graph/hld.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:graph/hld.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "usaco-guide:5_Plat/HLD.mdx",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
     "id": "virtual-tree",
     "aliases": [],
     "sources": [
-      "oi-wiki:graph/virtual-tree.md"
+      {
+        "source": "oi-wiki:graph/virtual-tree.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
     "id": "splay",
     "aliases": [],
     "sources": [
-      "oi-wiki:ds/splay.md",
-      "cmu:splay"
+      {
+        "source": "oi-wiki:ds/splay.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cmu:splay",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -300,25 +627,58 @@
       "无旋 Treap"
     ],
     "sources": [
-      "oi-wiki:ds/treap.md",
-      "cp-algorithms:data_structures/treap.md"
+      {
+        "source": "oi-wiki:ds/treap.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:data_structures/treap.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:ds/cartesian-tree.md",
+        "relation": "related",
+        "basis": "Cartesian Tree 用键序与优先级的两种次序刻画静态结构；Treap 的更新及随机模型是额外内容。"
+      }
     ]
   },
   {
     "id": "dynamic-segment-tree",
     "aliases": [],
     "sources": [
-      "oi-wiki:ds/seg.md",
-      "usaco-guide:5_Plat/Sparse_Segtree.mdx"
+      {
+        "source": "oi-wiki:ds/seg.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "usaco-guide:5_Plat/Sparse_Segtree.mdx",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
     "id": "li-chao",
     "aliases": [],
     "sources": [
-      "oi-wiki:ds/li-chao-tree.md",
-      "cp-algorithms:geometry/convex_hull_trick.md",
-      "library-checker:data_structure/line_add_get_min/info.toml"
+      {
+        "source": "oi-wiki:ds/li-chao-tree.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:geometry/convex_hull_trick.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "library-checker:data_structure/line_add_get_min/info.toml",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -327,24 +687,72 @@
       "Shortest Path"
     ],
     "sources": [
-      "oi-wiki:graph/shortest-path.md",
-      "cp-algorithms:graph/dijkstra.md",
-      "cp-algorithms:graph/dijkstra_sparse.md",
-      "cp-algorithms:graph/bellman_ford.md",
-      "cp-algorithms:graph/01_bfs.md",
-      "cp-algorithms:graph/all-pair-shortest-path-floyd-warshall.md",
-      "library-checker:graph/shortest_path/info.toml"
+      {
+        "source": "oi-wiki:graph/shortest-path.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:graph/bellman_ford.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:graph/01_bfs.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:graph/all-pair-shortest-path-floyd-warshall.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "library-checker:graph/shortest_path/info.toml",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:graph/dijkstra.md",
+        "relation": "variant",
+        "basis": "稠密扫描与稀疏堆维护是单源非负最短路的不同定点实现；松弛规则不变，选点代价不同。"
+      },
+      {
+        "source": "cp-algorithms:graph/dijkstra_sparse.md",
+        "relation": "variant",
+        "basis": "稠密扫描与稀疏堆维护是单源非负最短路的不同定点实现；松弛规则不变，选点代价不同。"
+      }
     ]
   },
   {
     "id": "mst",
     "aliases": [],
     "sources": [
-      "oi-wiki:graph/mst.md",
-      "cp-algorithms:graph/mst_kruskal.md",
-      "cp-algorithms:graph/mst_kruskal_with_dsu.md",
-      "cp-algorithms:graph/mst_prim.md",
-      "library-checker:graph/minimum_spanning_tree/info.toml"
+      {
+        "source": "oi-wiki:graph/mst.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:graph/mst_kruskal.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:graph/mst_kruskal_with_dsu.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:graph/mst_prim.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "library-checker:graph/minimum_spanning_tree/info.toml",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -353,19 +761,47 @@
       "强连通分量"
     ],
     "sources": [
-      "oi-wiki:graph/scc.md",
-      "cp-algorithms:graph/strongly-connected-components.md",
-      "library-checker:graph/scc/info.toml"
+      {
+        "source": "oi-wiki:graph/scc.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "library-checker:graph/scc/info.toml",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:graph/strongly-connected-components.md",
+        "relation": "alias",
+        "basis": "SCC 是 Strongly Connected Components（强连通分量）的缩写，定义为互相可达关系的等价类。"
+      }
     ]
   },
   {
     "id": "biconnected",
     "aliases": [],
     "sources": [
-      "oi-wiki:graph/bcc.md",
-      "cp-algorithms:graph/bridge-searching.md",
-      "cp-algorithms:graph/cutpoints.md",
-      "library-checker:graph/biconnected_components/info.toml"
+      {
+        "source": "oi-wiki:graph/bcc.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:graph/bridge-searching.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:graph/cutpoints.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "library-checker:graph/biconnected_components/info.toml",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -375,14 +811,56 @@
       "Minimum Cut"
     ],
     "sources": [
-      "oi-wiki:graph/flow.md",
-      "oi-wiki:graph/flow/max-flow.md",
-      "oi-wiki:graph/flow/min-cut.md",
-      "cp-algorithms:graph/dinic.md",
-      "cp-algorithms:graph/edmonds_karp.md",
-      "cp-algorithms:graph/mpm.md",
-      "cp-algorithms:graph/push-relabel.md",
-      "cp-algorithms:graph/push-relabel-faster.md"
+      {
+        "source": "oi-wiki:graph/flow.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:graph/flow/max-flow.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:graph/flow/min-cut.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:graph/dinic.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:graph/edmonds_karp.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:graph/mpm.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:graph/push-relabel.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:graph/push-relabel-faster.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:graph/flow_with_demands.md",
+        "relation": "variant",
+        "basis": "容量上下界改变可行性条件，需要用辅助源汇负载平衡。"
+      },
+      {
+        "source": "oi-wiki:graph/flow/bound.md",
+        "relation": "variant",
+        "basis": "容量上下界改变可行性条件，需要用辅助源汇负载平衡。"
+      }
     ]
   },
   {
@@ -397,21 +875,72 @@
       "原始对偶"
     ],
     "sources": [
-      "oi-wiki:graph/flow/min-cost.md",
-      "cp-algorithms:graph/min_cost_flow.md",
-      "library-checker:graph/min_cost_b_flow/info.toml",
-      "codeforces:105658"
+      {
+        "source": "oi-wiki:graph/flow/min-cost.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:graph/min_cost_flow.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "library-checker:graph/min_cost_b_flow/info.toml",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "codeforces:105658",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:graph/Assignment-problem-min-flow.md",
+        "relation": "related",
+        "basis": "指派问题可规约到费用流；规约不是所有费用流实例的定义。"
+      }
     ]
   },
   {
     "id": "matching",
     "aliases": [],
     "sources": [
-      "oi-wiki:graph/graph-matching/graph-match.md",
-      "oi-wiki:graph/graph-matching/bigraph-match.md",
-      "cp-algorithms:graph/kuhn_maximum_bipartite_matching.md",
-      "doi:hopcroft-karp",
-      "library-checker:graph/bipartitematching/info.toml"
+      {
+        "source": "oi-wiki:graph/graph-matching/graph-match.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:graph/graph-matching/bigraph-match.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:graph/kuhn_maximum_bipartite_matching.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "doi:hopcroft-karp",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "library-checker:graph/bipartitematching/info.toml",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:graph/graph-matching/bigraph-weight-match.md",
+        "relation": "variant",
+        "basis": "二分带权匹配改变目标函数，不能沿用只计边数的结论。"
+      },
+      {
+        "source": "cp-algorithms:graph/hungarian-algorithm.md",
+        "relation": "variant",
+        "basis": "二分带权匹配改变目标函数，不能沿用只计边数的结论。"
+      }
     ]
   },
   {
@@ -424,9 +953,21 @@
       "带花树"
     ],
     "sources": [
-      "oi-wiki:graph/graph-matching/general-match.md",
-      "oi-wiki:graph/graph-matching/general-weight-match.md",
-      "library-checker:graph/general_matching/info.toml"
+      {
+        "source": "oi-wiki:graph/graph-matching/general-match.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:graph/graph-matching/general-weight-match.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "library-checker:graph/general_matching/info.toml",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -439,13 +980,46 @@
       "倍增 LCA"
     ],
     "sources": [
-      "oi-wiki:graph/lca.md",
-      "cp-algorithms:graph/lca.md",
-      "cp-algorithms:graph/lca_binary_lifting.md",
-      "cp-algorithms:graph/lca_farachcoltonbender.md",
-      "cp-algorithms:graph/lca_tarjan.md",
-      "library-checker:tree/lca/info.toml",
-      "usaco-guide:5_Plat/Binary_Jump.mdx"
+      {
+        "source": "oi-wiki:graph/lca.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:graph/lca.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "library-checker:tree/lca/info.toml",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "usaco-guide:5_Plat/Binary_Jump.mdx",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:basic/binary-lifting.md",
+        "relation": "related",
+        "basis": "倍增复用 2^k 步祖先跳跃，但倍增也用于非 LCA 查询。"
+      },
+      {
+        "source": "cp-algorithms:graph/lca_tarjan.md",
+        "relation": "variant",
+        "basis": "离线 Tarjan、Euler RMQ 和倍增具有不同的复杂度及查询前提。"
+      },
+      {
+        "source": "cp-algorithms:graph/lca_farachcoltonbender.md",
+        "relation": "variant",
+        "basis": "离线 Tarjan、Euler RMQ 和倍增具有不同的复杂度及查询前提。"
+      },
+      {
+        "source": "cp-algorithms:graph/lca_binary_lifting.md",
+        "relation": "variant",
+        "basis": "离线 Tarjan、Euler RMQ 和倍增具有不同的复杂度及查询前提。"
+      }
     ]
   },
   {
@@ -457,17 +1031,37 @@
       "Lengauer-Tarjan"
     ],
     "sources": [
-      "oi-wiki:graph/dominator-tree.md",
-      "library-checker:graph/dominatortree/info.toml"
+      {
+        "source": "oi-wiki:graph/dominator-tree.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "library-checker:graph/dominatortree/info.toml",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
     "id": "two-sat",
     "aliases": [],
     "sources": [
-      "oi-wiki:graph/2-sat.md",
-      "cp-algorithms:graph/2SAT.md",
-      "library-checker:other/two_sat/info.toml"
+      {
+        "source": "oi-wiki:graph/2-sat.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:graph/2SAT.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "library-checker:other/two_sat/info.toml",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -481,8 +1075,16 @@
       "Hierholzer"
     ],
     "sources": [
-      "oi-wiki:graph/euler.md",
-      "cp-algorithms:graph/euler_path.md"
+      {
+        "source": "oi-wiki:graph/euler.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:graph/euler_path.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -494,8 +1096,16 @@
       "Kahn"
     ],
     "sources": [
-      "oi-wiki:graph/topo.md",
-      "cp-algorithms:graph/topological-sort.md"
+      {
+        "source": "oi-wiki:graph/topo.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:graph/topological-sort.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -507,8 +1117,16 @@
       "Shortest Cycle"
     ],
     "sources": [
-      "oi-wiki:graph/min-cycle.md",
-      "cp-algorithms:graph/finding-negative-cycle-in-graph.md"
+      {
+        "source": "oi-wiki:graph/min-cycle.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:graph/finding-negative-cycle-in-graph.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -519,7 +1137,11 @@
       "Difference Constraints"
     ],
     "sources": [
-      "oi-wiki:graph/diff-constraints.md"
+      {
+        "source": "oi-wiki:graph/diff-constraints.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -531,9 +1153,21 @@
       "Connected Components"
     ],
     "sources": [
-      "oi-wiki:graph/connectivity.md",
-      "cp-algorithms:graph/edge_vertex_connectivity.md",
-      "cp-algorithms:graph/search-for-connected-components.md"
+      {
+        "source": "oi-wiki:graph/connectivity.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:graph/edge_vertex_connectivity.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:graph/search-for-connected-components.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -546,8 +1180,16 @@
       "可撤销并查集"
     ],
     "sources": [
-      "cp-algorithms:data_structures/deleting_in_log_n.md",
-      "cp-algorithms:graph/bridge-searching-online.md"
+      {
+        "source": "cp-algorithms:data_structures/deleting_in_log_n.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:graph/bridge-searching-online.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -561,7 +1203,11 @@
       "基环树"
     ],
     "sources": [
-      "oi-wiki:graph/concept.md"
+      {
+        "source": "oi-wiki:graph/concept.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -574,17 +1220,37 @@
       "圆方树"
     ],
     "sources": [
-      "oi-wiki:graph/block-forest.md",
-      "uoj-blog:1955"
+      {
+        "source": "oi-wiki:graph/block-forest.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "uoj-blog:1955",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
     "id": "state-and-transition",
     "aliases": [],
     "sources": [
-      "oi-wiki:dp/basic.md",
-      "cp-algorithms:dynamic_programming/intro-to-dp.md",
-      "oi-wiki:dp/knapsack/basic.md"
+      {
+        "source": "oi-wiki:dp/basic.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:dynamic_programming/intro-to-dp.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:dp/knapsack/basic.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -597,10 +1263,31 @@
       "完全背包"
     ],
     "sources": [
-      "oi-wiki:dp/knapsack/basic.md",
-      "oi-wiki:dp/knapsack/advanced.md",
-      "cp-algorithms:dynamic_programming/knapsack.md",
-      "usaco-guide:4_Gold/Knapsack_DP.mdx"
+      {
+        "source": "oi-wiki:dp/knapsack/basic.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:dp/knapsack/advanced.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:dynamic_programming/knapsack.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "usaco-guide:4_Gold/Knapsack_DP.mdx",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "codeforces:59606",
+        "relation": "related",
+        "basis": "外部博客发现线索；下列审查问题为项目补充，不代表原文结论已验证：阅读前先区分 0/1、完全和有限次数模型；原地更新次序必须匹配可重复选数。"
+      }
     ]
   },
   {
@@ -612,9 +1299,21 @@
       "Range DP"
     ],
     "sources": [
-      "oi-wiki:dp/interval.md",
-      "usaco-guide:4_Gold/DP_Ranges.mdx",
-      "atcoder:abc217-2584"
+      {
+        "source": "oi-wiki:dp/interval.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "usaco-guide:4_Gold/DP_Ranges.mdx",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "atcoder:abc217-2584",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -628,17 +1327,52 @@
       "换根 DP"
     ],
     "sources": [
-      "oi-wiki:dp/tree.md",
-      "usaco-guide:4_Gold/DP_Trees.mdx"
+      {
+        "source": "oi-wiki:dp/tree.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "usaco-guide:4_Gold/DP_Trees.mdx",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:graph/dsu-on-tree.md",
+        "relation": "related",
+        "basis": "DSU on Tree 复用重子树数据，解决离线子树统计，不等同于按子树状态转移的一般 DP。"
+      },
+      {
+        "source": "codeforces:44351",
+        "relation": "related",
+        "basis": "外部博客发现线索；下列审查问题为项目补充，不代表原文结论已验证：核对每点只因经过轻边而反复加入，不能把逐个子树全量重建也计成同一上界。"
+      },
+      {
+        "source": "codeforces:63257",
+        "relation": "related",
+        "basis": "外部博客发现线索；下列审查问题为项目补充，不代表原文结论已验证：若父状态依赖孩子选择，检查合并时是否排除父亲及兄弟的重复贡献。"
+      }
     ]
   },
   {
     "id": "bitmask-dp",
     "aliases": [],
     "sources": [
-      "oi-wiki:dp/state.md",
-      "cp-algorithms:algebra/all-submasks.md",
-      "usaco-guide:4_Gold/DP_Bitmasks.mdx"
+      {
+        "source": "oi-wiki:dp/state.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:algebra/all-submasks.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "usaco-guide:4_Gold/DP_Bitmasks.mdx",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -650,8 +1384,21 @@
       "数字 DP"
     ],
     "sources": [
-      "oi-wiki:dp/number.md",
-      "usaco-guide:4_Gold/Digit_DP.mdx"
+      {
+        "source": "oi-wiki:dp/number.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "usaco-guide:4_Gold/Digit_DP.mdx",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "codeforces:53960",
+        "relation": "related",
+        "basis": "外部博客发现线索；下列审查问题为项目补充，不代表原文结论已验证：用 0、9、10 检查 leading zero 是否推进题目性质及 0 的表示。"
+      }
     ]
   },
   {
@@ -665,8 +1412,16 @@
       "期望 DP"
     ],
     "sources": [
-      "oi-wiki:dp/probability.md",
-      "oi-wiki:graph/graph-random-walk.md"
+      {
+        "source": "oi-wiki:dp/probability.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:graph/graph-random-walk.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -679,8 +1434,16 @@
       "轮廓线 DP"
     ],
     "sources": [
-      "oi-wiki:dp/plug.md",
-      "cp-algorithms:dynamic_programming/profile-dynamics.md"
+      {
+        "source": "oi-wiki:dp/plug.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:dynamic_programming/profile-dynamics.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -691,8 +1454,16 @@
       "Counting DP"
     ],
     "sources": [
-      "oi-wiki:dp/count.md",
-      "atcoder:abc217-2584"
+      {
+        "source": "oi-wiki:dp/count.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "atcoder:abc217-2584",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -705,9 +1476,21 @@
       "DP 自动机"
     ],
     "sources": [
-      "oi-wiki:dp/dp-of-dp.md",
-      "oi-wiki:string/ac-automaton.md",
-      "oi-wiki:dp/number.md"
+      {
+        "source": "oi-wiki:dp/dp-of-dp.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:string/ac-automaton.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:dp/number.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -716,16 +1499,32 @@
       "Convex Hull Optimization"
     ],
     "sources": [
-      "oi-wiki:dp/opt/slope.md",
-      "cp-algorithms:geometry/convex_hull_trick.md"
+      {
+        "source": "oi-wiki:dp/opt/slope.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:geometry/convex_hull_trick.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
     "id": "divide-conquer-dp",
     "aliases": [],
     "sources": [
-      "oi-wiki:dp/opt/quadrangle.md",
-      "cp-algorithms:dynamic_programming/divide-and-conquer-dp.md"
+      {
+        "source": "oi-wiki:dp/opt/quadrangle.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:dynamic_programming/divide-and-conquer-dp.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -737,8 +1536,21 @@
       "Knuth-Yao Optimization"
     ],
     "sources": [
-      "cp-algorithms:dynamic_programming/knuth-optimization.md",
-      "oi-wiki:dp/opt/quadrangle.md"
+      {
+        "source": "cp-algorithms:dynamic_programming/knuth-optimization.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:dp/opt/quadrangle.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "codeforces:8219",
+        "relation": "related",
+        "basis": "外部博客发现线索；下列审查问题为项目补充，不代表原文结论已验证：分治的一行最优决策单调性不等于区间 DP 双侧界；并列最优的选取必须统一。"
+      }
     ]
   },
   {
@@ -749,24 +1561,58 @@
       "斜率技巧"
     ],
     "sources": [
-      "oi-wiki:dp/opt/slope-trick.md",
-      "usaco-guide:6_Advanced/Slope_Trick.mdx"
+      {
+        "source": "oi-wiki:dp/opt/slope-trick.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "usaco-guide:6_Advanced/Slope_Trick.mdx",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "codeforces:77298",
+        "relation": "related",
+        "basis": "外部博客发现线索；下列审查问题为项目补充，不代表原文结论已验证：前缀最小化只抹平最小点右侧，在最低点前仍保持原函数。"
+      },
+      {
+        "source": "codeforces:47821",
+        "relation": "related",
+        "basis": "外部博客发现线索；下列审查问题为项目补充，不代表原文结论已验证：合并势函数时核对断点多重性和小并大的每点移动次数。"
+      }
     ]
   },
   {
     "id": "monotone-queue",
     "aliases": [],
     "sources": [
-      "oi-wiki:dp/opt/monotonic-queue-stack.md",
-      "oi-wiki:ds/monotonic-queue.md"
+      {
+        "source": "oi-wiki:dp/opt/monotonic-queue-stack.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:ds/monotonic-queue.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
     "id": "kmp",
     "aliases": [],
     "sources": [
-      "oi-wiki:string/kmp.md",
-      "cp-algorithms:string/prefix-function.md"
+      {
+        "source": "oi-wiki:string/kmp.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:string/prefix-function.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -780,9 +1626,21 @@
       "exKMP"
     ],
     "sources": [
-      "oi-wiki:string/z-func.md",
-      "cp-algorithms:string/z-function.md",
-      "library-checker:string/zalgorithm/info.toml"
+      {
+        "source": "oi-wiki:string/z-func.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:string/z-function.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "library-checker:string/zalgorithm/info.toml",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -794,32 +1652,64 @@
       "前缀树"
     ],
     "sources": [
-      "oi-wiki:string/trie.md"
+      {
+        "source": "oi-wiki:string/trie.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
     "id": "ac-automaton",
     "aliases": [],
     "sources": [
-      "oi-wiki:string/ac-automaton.md",
-      "cp-algorithms:string/aho_corasick.md"
+      {
+        "source": "oi-wiki:string/ac-automaton.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:string/aho_corasick.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
     "id": "suffix-array",
     "aliases": [],
     "sources": [
-      "oi-wiki:string/sa.md",
-      "cp-algorithms:string/suffix-array.md",
-      "library-checker:string/suffixarray/info.toml"
+      {
+        "source": "oi-wiki:string/sa.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:string/suffix-array.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "library-checker:string/suffixarray/info.toml",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
     "id": "suffix-automaton",
     "aliases": [],
     "sources": [
-      "oi-wiki:string/sam.md",
-      "cp-algorithms:string/suffix-automaton.md"
+      {
+        "source": "oi-wiki:string/sam.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:string/suffix-automaton.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -832,7 +1722,11 @@
       "广义 SAM"
     ],
     "sources": [
-      "oi-wiki:string/general-sam.md"
+      {
+        "source": "oi-wiki:string/general-sam.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -845,9 +1739,26 @@
       "PAM"
     ],
     "sources": [
-      "oi-wiki:string/pam.md",
-      "codeforces:19193",
-      "codeforces:13959"
+      {
+        "source": "oi-wiki:string/pam.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "codeforces:19193",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "codeforces:13959",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "codeforces:63149",
+        "relation": "related",
+        "basis": "外部博客发现线索；下列审查问题为项目补充，不代表原文结论已验证：出现起点和终点都要落在区间内；全串节点出现次数不能直接代替区间计数。"
+      }
     ]
   },
   {
@@ -859,9 +1770,21 @@
       "Manacher Algorithm"
     ],
     "sources": [
-      "oi-wiki:string/manacher.md",
-      "cp-algorithms:string/manacher.md",
-      "library-checker:string/enumerate_palindromes/info.toml"
+      {
+        "source": "oi-wiki:string/manacher.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:string/manacher.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "library-checker:string/enumerate_palindromes/info.toml",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -873,18 +1796,47 @@
       "Duval"
     ],
     "sources": [
-      "oi-wiki:string/lyndon.md",
-      "cp-algorithms:string/lyndon_factorization.md",
-      "library-checker:string/lyndon_factorization/info.toml"
+      {
+        "source": "oi-wiki:string/lyndon.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:string/lyndon_factorization.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "library-checker:string/lyndon_factorization/info.toml",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
     "id": "hashing",
     "aliases": [],
     "sources": [
-      "oi-wiki:string/hash.md",
-      "cp-algorithms:string/string-hashing.md",
-      "cp-algorithms:string/rabin-karp.md"
+      {
+        "source": "oi-wiki:string/hash.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:string/string-hashing.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:string/rabin-karp.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "codeforces:60445",
+        "relation": "related",
+        "basis": "外部博客发现线索；下列审查问题为项目补充，不代表原文结论已验证：哈希相等不是数学等价；双模加随机底数要明确概率模型。"
+      }
     ]
   },
   {
@@ -897,17 +1849,37 @@
       "字符串匹配"
     ],
     "sources": [
-      "oi-wiki:string/match.md",
-      "library-checker:string/wildcard_pattern_matching/info.toml"
+      {
+        "source": "oi-wiki:string/match.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "library-checker:string/wildcard_pattern_matching/info.toml",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
     "id": "number-theory",
     "aliases": [],
     "sources": [
-      "oi-wiki:math/number-theory/mod-arithmetic.md",
-      "cp-algorithms:algebra/module-inverse.md",
-      "cp-algorithms:algebra/chinese-remainder-theorem.md"
+      {
+        "source": "oi-wiki:math/number-theory/mod-arithmetic.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:algebra/module-inverse.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:algebra/chinese-remainder-theorem.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -919,8 +1891,16 @@
       "Fast Power"
     ],
     "sources": [
-      "oi-wiki:math/binary-exponentiation.md",
-      "cp-algorithms:algebra/binary-exp.md"
+      {
+        "source": "oi-wiki:math/binary-exponentiation.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:algebra/binary-exp.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -932,8 +1912,21 @@
       "逆元"
     ],
     "sources": [
-      "cp-algorithms:algebra/module-inverse.md",
-      "oi-wiki:math/number-theory/mod-arithmetic.md"
+      {
+        "source": "cp-algorithms:algebra/module-inverse.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:math/number-theory/mod-arithmetic.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:math/number-theory/inverse.md",
+        "relation": "exact",
+        "basis": "模逆对象满足 ax≡1 (mod m)，存在性依赖 gcd(a,m)=1。"
+      }
     ]
   },
   {
@@ -946,8 +1939,16 @@
       "扩展 CRT"
     ],
     "sources": [
-      "oi-wiki:math/number-theory/crt.md",
-      "cp-algorithms:algebra/chinese-remainder-theorem.md"
+      {
+        "source": "oi-wiki:math/number-theory/crt.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:algebra/chinese-remainder-theorem.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -960,8 +1961,31 @@
       "Extended GCD"
     ],
     "sources": [
-      "oi-wiki:math/number-theory/gcd.md",
-      "cp-algorithms:algebra/extended-euclid-algorithm.md"
+      {
+        "source": "oi-wiki:math/number-theory/gcd.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:algebra/extended-euclid-algorithm.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:math/number-theory/bezouts.md",
+        "relation": "related",
+        "basis": "裴蜀定理给扩欧目标的线性组合；定理本身不是递归实现。"
+      },
+      {
+        "source": "oi-wiki:math/number-theory/euclidean.md",
+        "relation": "related",
+        "basis": "裴蜀定理给扩欧目标的线性组合；定理本身不是递归实现。"
+      },
+      {
+        "source": "cp-algorithms:algebra/euclid-algorithm.md",
+        "relation": "related",
+        "basis": "裴蜀定理给扩欧目标的线性组合；定理本身不是递归实现。"
+      }
     ]
   },
   {
@@ -973,8 +1997,16 @@
       "Euler Phi"
     ],
     "sources": [
-      "oi-wiki:math/number-theory/euler-totient.md",
-      "cp-algorithms:algebra/phi-function.md"
+      {
+        "source": "oi-wiki:math/number-theory/euler-totient.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:algebra/phi-function.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -986,7 +2018,16 @@
       "Mobius Inversion"
     ],
     "sources": [
-      "oi-wiki:math/number-theory/mobius.md"
+      {
+        "source": "oi-wiki:math/number-theory/mobius.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "codeforces:53925",
+        "relation": "related",
+        "basis": "外部博客发现线索；下列审查问题为项目补充，不代表原文结论已验证：核对是约数和还是倍数和；两版的求和边界不能直接互换。"
+      }
     ]
   },
   {
@@ -997,7 +2038,16 @@
       "Dirichlet Convolution"
     ],
     "sources": [
-      "oi-wiki:math/number-theory/dirichlet.md"
+      {
+        "source": "oi-wiki:math/number-theory/dirichlet.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "codeforces:54150",
+        "relation": "related",
+        "basis": "外部博客发现线索；下列审查问题为项目补充，不代表原文结论已验证：验证单位元只在 n=1 非零，不是处处为 1。"
+      }
     ]
   },
   {
@@ -1010,28 +2060,78 @@
       "线性筛"
     ],
     "sources": [
-      "oi-wiki:math/number-theory/sieve.md",
-      "cp-algorithms:algebra/prime-sieve-linear.md",
-      "cp-algorithms:algebra/sieve-of-eratosthenes.md"
+      {
+        "source": "oi-wiki:math/number-theory/sieve.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:algebra/prime-sieve-linear.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:algebra/sieve-of-eratosthenes.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
     "id": "polynomial",
     "aliases": [],
     "sources": [
-      "oi-wiki:math/poly/intro.md",
-      "cp-algorithms:algebra/polynomial.md",
-      "library-checker:polynomial/inv_of_formal_power_series/info.toml"
+      {
+        "source": "oi-wiki:math/poly/intro.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:algebra/polynomial.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "library-checker:polynomial/inv_of_formal_power_series/info.toml",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "codeforces:77468",
+        "relation": "related",
+        "basis": "外部博客发现线索；下列审查问题为项目补充，不代表原文结论已验证：区分普通生成函数与指数生成函数；卷积是否需要组合系数取决于编码。"
+      },
+      {
+        "source": "codeforces:77551",
+        "relation": "related",
+        "basis": "外部博客发现线索；下列审查问题为项目补充，不代表原文结论已验证：截断形式幂级数时逆元要求常数项可逆，不能把数值收敛条件代入形式运算。"
+      }
     ]
   },
   {
     "id": "counting",
     "aliases": [],
     "sources": [
-      "oi-wiki:math/probability/exp-var.md",
-      "oi-wiki:math/combinatorics/inclusion-exclusion-principle.md",
-      "cp-algorithms:combinatorics/inclusion-exclusion.md",
-      "usaco-guide:4_Gold/Combinatorics.mdx"
+      {
+        "source": "oi-wiki:math/probability/exp-var.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:math/combinatorics/inclusion-exclusion-principle.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:combinatorics/inclusion-exclusion.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "usaco-guide:4_Gold/Combinatorics.mdx",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -1046,18 +2146,47 @@
       "Polya 定理"
     ],
     "sources": [
-      "oi-wiki:math/combinatorics/polya.md",
-      "cp-algorithms:combinatorics/burnside.md"
+      {
+        "source": "oi-wiki:math/combinatorics/polya.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:combinatorics/burnside.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "codeforces:51272",
+        "relation": "related",
+        "basis": "外部博客发现线索；下列审查问题为项目补充，不代表原文结论已验证：取平均前先确认所有变换构成一个有限群并作用于合法配置集合。"
+      }
     ]
   },
   {
     "id": "linear-algebra",
     "aliases": [],
     "sources": [
-      "cp-algorithms:linear_algebra/linear-system-gauss.md",
-      "cp-algorithms:linear_algebra/determinant-gauss.md",
-      "cp-algorithms:linear_algebra/rank-matrix.md",
-      "cp-algorithms:algebra/binary-exp.md"
+      {
+        "source": "cp-algorithms:linear_algebra/linear-system-gauss.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:linear_algebra/determinant-gauss.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:linear_algebra/rank-matrix.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:algebra/binary-exp.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -1070,7 +2199,11 @@
       "矩阵快速幂"
     ],
     "sources": [
-      "cp-algorithms:algebra/binary-exp.md"
+      {
+        "source": "cp-algorithms:algebra/binary-exp.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -1083,8 +2216,16 @@
       "异或线性基"
     ],
     "sources": [
-      "oi-wiki:math/linear-algebra/basis.md",
-      "library-checker:linear_algebra/intersection_of_f2_vector_spaces/info.toml"
+      {
+        "source": "oi-wiki:math/linear-algebra/basis.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "library-checker:linear_algebra/intersection_of_f2_vector_spaces/info.toml",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -1097,8 +2238,16 @@
       "SG 函数"
     ],
     "sources": [
-      "oi-wiki:math/game-theory/intro.md",
-      "cp-algorithms:game_theory/sprague-grundy-nim.md"
+      {
+        "source": "oi-wiki:math/game-theory/intro.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:game_theory/sprague-grundy-nim.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -1111,8 +2260,16 @@
       "Graham Scan"
     ],
     "sources": [
-      "oi-wiki:geometry/convex-hull.md",
-      "cp-algorithms:geometry/convex-hull.md"
+      {
+        "source": "oi-wiki:geometry/convex-hull.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:geometry/convex-hull.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -1124,8 +2281,16 @@
       "Half Plane Intersection"
     ],
     "sources": [
-      "oi-wiki:geometry/half-plane.md",
-      "cp-algorithms:geometry/halfplane-intersection.md"
+      {
+        "source": "oi-wiki:geometry/half-plane.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:geometry/halfplane-intersection.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -1136,7 +2301,11 @@
       "Rotating Calipers"
     ],
     "sources": [
-      "oi-wiki:geometry/rotating-calipers.md"
+      {
+        "source": "oi-wiki:geometry/rotating-calipers.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -1148,8 +2317,16 @@
       "Nearest Points"
     ],
     "sources": [
-      "oi-wiki:geometry/nearest-points.md",
-      "cp-algorithms:geometry/nearest_points.md"
+      {
+        "source": "oi-wiki:geometry/nearest-points.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:geometry/nearest_points.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -1161,8 +2338,16 @@
       "圆线交"
     ],
     "sources": [
-      "cp-algorithms:geometry/circle-line-intersection.md",
-      "cp-algorithms:geometry/circle-circle-intersection.md"
+      {
+        "source": "cp-algorithms:geometry/circle-line-intersection.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:geometry/circle-circle-intersection.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -1176,9 +2361,21 @@
       "多边形"
     ],
     "sources": [
-      "oi-wiki:geometry/2d.md",
-      "cp-algorithms:geometry/area-of-simple-polygon.md",
-      "cp-algorithms:geometry/point-in-convex-polygon.md"
+      {
+        "source": "oi-wiki:geometry/2d.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:geometry/area-of-simple-polygon.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:geometry/point-in-convex-polygon.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -1190,8 +2387,16 @@
       "扫描线"
     ],
     "sources": [
-      "oi-wiki:geometry/scanning.md",
-      "cp-algorithms:geometry/intersecting_segments.md"
+      {
+        "source": "oi-wiki:geometry/scanning.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:geometry/intersecting_segments.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -1205,9 +2410,21 @@
       "点积"
     ],
     "sources": [
-      "oi-wiki:geometry/2d.md",
-      "cp-algorithms:geometry/basic-geometry.md",
-      "cp-algorithms:geometry/oriented-triangle-area.md"
+      {
+        "source": "oi-wiki:geometry/2d.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:geometry/basic-geometry.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:geometry/oriented-triangle-area.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -1219,8 +2436,16 @@
       "Delaunay"
     ],
     "sources": [
-      "oi-wiki:geometry/triangulation.md",
-      "cp-algorithms:geometry/delaunay.md"
+      {
+        "source": "oi-wiki:geometry/triangulation.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:geometry/delaunay.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -1232,7 +2457,11 @@
       "交换论证"
     ],
     "sources": [
-      "oi-wiki:basic/greedy.md"
+      {
+        "source": "oi-wiki:basic/greedy.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -1244,7 +2473,11 @@
       "构造"
     ],
     "sources": [
-      "oi-wiki:basic/construction.md"
+      {
+        "source": "oi-wiki:basic/construction.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -1257,9 +2490,76 @@
       "选择算法"
     ],
     "sources": [
-      "oi-wiki:basic/sort-intro.md",
-      "oi-wiki:basic/selection-sort.md",
-      "cp-algorithms:sequences/k-th.md"
+      {
+        "source": "oi-wiki:basic/sort-intro.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:basic/selection-sort.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:sequences/k-th.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:basic/bubble-sort.md",
+        "relation": "variant",
+        "basis": "具体排序方法依据相邻逆序对交换；不等同于其它排序实现。"
+      },
+      {
+        "source": "oi-wiki:basic/bucket-sort.md",
+        "relation": "variant",
+        "basis": "具体排序方法依据按值域分桶后各桶排序；不等同于其它排序实现。"
+      },
+      {
+        "source": "oi-wiki:basic/counting-sort.md",
+        "relation": "variant",
+        "basis": "具体排序方法依据直接计数每种键值；不等同于其它排序实现。"
+      },
+      {
+        "source": "oi-wiki:basic/heap-sort.md",
+        "relation": "variant",
+        "basis": "具体排序方法依据反复删除堆顶；不等同于其它排序实现。"
+      },
+      {
+        "source": "oi-wiki:basic/insertion-sort.md",
+        "relation": "variant",
+        "basis": "具体排序方法依据逐项插入已排序前缀；不等同于其它排序实现。"
+      },
+      {
+        "source": "oi-wiki:basic/merge-sort.md",
+        "relation": "variant",
+        "basis": "具体排序方法依据有序子序列归并；不等同于其它排序实现。"
+      },
+      {
+        "source": "oi-wiki:basic/quick-sort.md",
+        "relation": "variant",
+        "basis": "具体排序方法依据划分基准两侧；不等同于其它排序实现。"
+      },
+      {
+        "source": "oi-wiki:basic/radix-sort.md",
+        "relation": "variant",
+        "basis": "具体排序方法依据逐位处理键；不等同于其它排序实现。"
+      },
+      {
+        "source": "oi-wiki:basic/shell-sort.md",
+        "relation": "variant",
+        "basis": "具体排序方法依据按间隔执行分组插入；不等同于其它排序实现。"
+      },
+      {
+        "source": "oi-wiki:basic/tim-sort.md",
+        "relation": "variant",
+        "basis": "具体排序方法依据天然有序段归并；不等同于其它排序实现。"
+      },
+      {
+        "source": "oi-wiki:basic/tournament-sort.md",
+        "relation": "variant",
+        "basis": "具体排序方法依据锦标树选出下一项；不等同于其它排序实现。"
+      }
     ]
   },
   {
@@ -1271,9 +2571,21 @@
       "Breadth First Search"
     ],
     "sources": [
-      "oi-wiki:search/bfs.md",
-      "oi-wiki:graph/bfs.md",
-      "cp-algorithms:graph/breadth-first-search.md"
+      {
+        "source": "oi-wiki:search/bfs.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:graph/bfs.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:graph/breadth-first-search.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -1285,9 +2597,21 @@
       "Depth First Search"
     ],
     "sources": [
-      "oi-wiki:search/dfs.md",
-      "oi-wiki:graph/dfs.md",
-      "cp-algorithms:graph/depth-first-search.md"
+      {
+        "source": "oi-wiki:search/dfs.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:graph/dfs.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:graph/depth-first-search.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -1300,8 +2624,16 @@
       "搜索剪枝"
     ],
     "sources": [
-      "oi-wiki:search/opt.md",
-      "oi-wiki:search/alpha-beta.md"
+      {
+        "source": "oi-wiki:search/opt.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:search/alpha-beta.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -1313,9 +2645,21 @@
       "随机算法"
     ],
     "sources": [
-      "oi-wiki:misc/random.md",
-      "oi-wiki:geometry/random-incremental.md",
-      "cp-algorithms:num_methods/simulated_annealing.md"
+      {
+        "source": "oi-wiki:misc/random.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "oi-wiki:geometry/random-incremental.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "cp-algorithms:num_methods/simulated_annealing.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -1327,7 +2671,11 @@
       "交互协议"
     ],
     "sources": [
-      "oi-wiki:contest/interaction.md"
+      {
+        "source": "oi-wiki:contest/interaction.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -1339,7 +2687,11 @@
       "Potential Method"
     ],
     "sources": [
-      "oi-wiki:basic/amortized-analysis.md"
+      {
+        "source": "oi-wiki:basic/amortized-analysis.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
     ]
   },
   {
@@ -1351,7 +2703,114 @@
       "Bit Operations"
     ],
     "sources": [
-      "cp-algorithms:algebra/bit-manipulation.md"
+      {
+        "source": "cp-algorithms:algebra/bit-manipulation.md",
+        "relation": "related",
+        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      }
+    ]
+  },
+  {
+    "id": "suffix-tree",
+    "category": "strings",
+    "title": "后缀树",
+    "aliases": [
+      "Suffix Tree"
+    ],
+    "sources": [
+      {
+        "source": "oi-wiki:string/suffix-tree.md",
+        "relation": "exact",
+        "basis": "压缩的后缀 Trie；边可代表一段字符，与按 endpos 合并的后缀自动机不同。"
+      },
+      {
+        "source": "cp-algorithms:string/suffix-tree-ukkonen.md",
+        "relation": "implementation",
+        "basis": "Ukkonen 为在线构造，维护活动点与后缀链接。"
+      }
+    ]
+  },
+  {
+    "id": "binary-search",
+    "category": "foundations",
+    "title": "二分查找",
+    "aliases": [
+      "Binary Search",
+      "二分"
+    ],
+    "sources": [
+      {
+        "source": "oi-wiki:basic/binary.md",
+        "relation": "exact",
+        "basis": "利用单调区间谓词不断排除一半候选。"
+      },
+      {
+        "source": "cp-algorithms:num_methods/binary_search.md",
+        "relation": "exact",
+        "basis": "逐步缩小合法边界，按单调谓词确定左右更新。"
+      }
+    ]
+  },
+  {
+    "id": "prufer",
+    "category": "graph",
+    "title": "Prüfer 序列",
+    "aliases": [
+      "Prufer Code",
+      "Prüfer Code"
+    ],
+    "sources": [
+      {
+        "source": "oi-wiki:graph/prufer.md",
+        "relation": "exact",
+        "basis": "标号树与长度 n−2 的序列之间的编码。"
+      },
+      {
+        "source": "cp-algorithms:graph/pruefer_code.md",
+        "relation": "exact",
+        "basis": "同一最小叶删除编码及逆过程。"
+      }
+    ]
+  },
+  {
+    "id": "matrix-tree",
+    "category": "graph",
+    "title": "矩阵树定理",
+    "aliases": [
+      "Matrix-Tree Theorem",
+      "Kirchhoff Theorem"
+    ],
+    "sources": [
+      {
+        "source": "oi-wiki:graph/matrix-tree.md",
+        "relation": "exact",
+        "basis": "用图 Laplacian 的余子式给出生成树计数。"
+      },
+      {
+        "source": "cp-algorithms:graph/kirchhoff-theorem.md",
+        "relation": "exact",
+        "basis": "Kirchhoff 生成树计数的 Laplacian 行列式形式。"
+      }
+    ]
+  },
+  {
+    "id": "catalan",
+    "category": "mathematics",
+    "title": "卡特兰数",
+    "aliases": [
+      "Catalan Numbers"
+    ],
+    "sources": [
+      {
+        "source": "cp-algorithms:combinatorics/catalan-numbers.md",
+        "relation": "exact",
+        "basis": "同一个序列的括号匹配、路径与递推模型。"
+      },
+      {
+        "source": "cp-algorithms:combinatorics/bracket_sequences.md",
+        "relation": "related",
+        "basis": "括号序列是卡特兰数的应用，也有额外的排序和构造问题。"
+      }
     ]
   }
 ]

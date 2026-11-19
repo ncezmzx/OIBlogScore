@@ -1,0 +1,12 @@
+{
+ "A01":{"verdict":"PASS","issue":"none","algorithm":"shortest-paths","basis":"非负后缀保证交换界，另按规格处理不可达点。"},
+ "A02":{"verdict":"FAIL","issue":"negative-edge","algorithm":"shortest-paths","basis":"s→u=1,s→v=2,v→u=−2；u 过早定点。"},
+ "A03":{"verdict":"FAIL","issue":"equivalence-direction","algorithm":null,"basis":"反向不成立，x=−1。"},
+ "A04":{"verdict":"FAIL","issue":"complexity","algorithm":null,"basis":"逐层求和 n(log n−d)，总 Θ(n log² n)。"},
+ "A05":{"verdict":"PASS","issue":"none","algorithm":"shortest-paths","basis":"不用 0-1 BFS 仍正确，不能将非最优误报为错误。"},
+ "A06":{"verdict":"FAIL","issue":"leading-zero","algorithm":"digit-dp","basis":"N=10 时真实只包括 10；01–09 的补零不是普通表示。"},
+ "A07":{"verdict":"FAIL","issue":"duplicates","algorithm":null,"basis":"[2,2] 得长度 2；严格版要 lower_bound。"},
+ "A08":{"verdict":"FAIL","issue":"overflow","algorithm":"convex-hull-geometry","basis":"a.x=−2×10⁹,b.x=2×10⁹ 时减法先在 int 中溢出，乘前转换太晚。"},
+ "A09":{"verdict":"FAIL","issue":"monotonicity","algorithm":"fenwick-tree","basis":"前缀 3,−2,2，真、假、真。"},
+ "A10":{"verdict":"NOT_CHECKED","issue":"missing-spec","algorithm":null,"basis":"没有可核验规格，不编造引用。"}
+}

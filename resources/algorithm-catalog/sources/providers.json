@@ -16,7 +16,12 @@
       "modify": "license-conditional",
       "redistribute": "license-conditional"
     },
-    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/"
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "terms": {
+      "commercial_use": "conditional",
+      "attribution": "required",
+      "share_alike": "required"
+    }
   },
   "cp-algorithms": {
     "title": "cp-algorithms",
@@ -35,7 +40,12 @@
       "modify": "license-conditional",
       "redistribute": "license-conditional"
     },
-    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/"
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "terms": {
+      "commercial_use": "conditional",
+      "attribution": "required",
+      "share_alike": "required"
+    }
   },
   "usaco-guide": {
     "title": "USACO Guide",
@@ -54,7 +64,12 @@
       "modify": "license-conditional",
       "redistribute": "license-conditional"
     },
-    "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+    "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "terms": {
+      "commercial_use": "prohibited",
+      "attribution": "required",
+      "share_alike": "required"
+    }
   },
   "library-checker": {
     "title": "Library Checker",
@@ -73,7 +88,12 @@
       "modify": "license-conditional",
       "redistribute": "license-conditional"
     },
-    "license_url": "https://www.apache.org/licenses/LICENSE-2.0"
+    "license_url": "https://www.apache.org/licenses/LICENSE-2.0",
+    "terms": {
+      "commercial_use": "conditional",
+      "attribution": "required",
+      "share_alike": "not-required"
+    }
   },
   "kactl": {
     "title": "KACTL",
@@ -92,7 +112,12 @@
       "modify": "not-established",
       "redistribute": "not-established"
     },
-    "license_url": null
+    "license_url": null,
+    "terms": {
+      "commercial_use": "unknown",
+      "attribution": "unknown",
+      "share_alike": "unknown"
+    }
   },
   "codeforces": {
     "title": "Codeforces",
@@ -106,7 +131,12 @@
       "modify": "not-established",
       "redistribute": "not-established"
     },
-    "license_url": null
+    "license_url": null,
+    "terms": {
+      "commercial_use": "unknown",
+      "attribution": "unknown",
+      "share_alike": "unknown"
+    }
   },
   "atcoder": {
     "title": "AtCoder",
@@ -120,7 +150,12 @@
       "modify": "not-established",
       "redistribute": "not-established"
     },
-    "license_url": null
+    "license_url": null,
+    "terms": {
+      "commercial_use": "unknown",
+      "attribution": "unknown",
+      "share_alike": "unknown"
+    }
   },
   "doi": {
     "title": "Published research (DOI)",
@@ -134,7 +169,12 @@
       "modify": "not-established",
       "redistribute": "not-established"
     },
-    "license_url": null
+    "license_url": null,
+    "terms": {
+      "commercial_use": "unknown",
+      "attribution": "unknown",
+      "share_alike": "unknown"
+    }
   },
   "cmu": {
     "title": "Carnegie Mellon University",
@@ -148,7 +188,12 @@
       "modify": "not-established",
       "redistribute": "not-established"
     },
-    "license_url": null
+    "license_url": null,
+    "terms": {
+      "commercial_use": "unknown",
+      "attribution": "unknown",
+      "share_alike": "unknown"
+    }
   },
   "uoj-blog": {
     "title": "Universal OJ — immortalCO",
@@ -162,6 +207,11 @@
       "copy": "not-established",
       "modify": "not-established",
       "redistribute": "not-established"
+    },
+    "terms": {
+      "commercial_use": "unknown",
+      "attribution": "unknown",
+      "share_alike": "unknown"
     }
   }
 }

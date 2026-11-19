@@ -5,7 +5,8 @@ import hashlib
 import re
 from urllib.parse import quote, urlsplit
 
-from catalog_data import build, normalize, read, sources
+from catalog_schema import LICENSES, check_record, matches_url, safe_path, terms
+from catalog_data import RELATIONS, build, normalize, read, sources
 
 
 HEX = re.compile(r'[0-9a-f]{64}')
@@ -36,18 +37,45 @@ def check_sources(root):
     issues = []
     expected_assets = {'upstream/cp-algorithms/LICENSE.txt'}
     for pid, profile in providers.items():
-        if not ID.fullmatch(pid) or not https(profile['url']) or not profile.get('license'):
+        if not ID.fullmatch(pid) or not https(profile['url']) or profile.get('license') not in LICENSES:
             issues.append(pid + ': invalid provider identity/license')
         if set(profile['permissions']) != {'copy', 'modify', 'redistribute'} or set(profile['permissions'].values()) - {'license-conditional', 'not-established'}:
             issues.append(pid + ': invalid redistribution permissions')
         if profile.get('repository') and (not re.fullmatch('[0-9a-f]{40}', profile['revision']) or not HEX.fullmatch(profile['policy_sha256']) or not https(profile['policy_url'])):
             issues.append(pid + ': invalid pinned license metadata')
+        expected_permission = 'not-established' if profile.get('license') in ('not-established','file-specific') else 'license-conditional'
+        if any(value != expected_permission for value in profile['permissions'].values()):
+            issues.append(pid + ': permissions conflict with stated license policy')
+        if profile.get('license') in LICENSES and profile.get('terms') != terms(profile['license']):
+            issues.append(pid + ': incorrect commercial-use, attribution or ShareAlike terms')
+        if profile.get('mode') != ('selected-verbatim' if pid == 'cp-algorithms' else 'metadata-only'):
+            issues.append(pid + ': invalid redistribution policy')
+        if pid == 'cp-algorithms' and (profile.get('license') != 'CC-BY-SA-4.0' or profile.get('license_url') != 'https://creativecommons.org/licenses/by-sa/4.0/' or not all(v == 'license-conditional' for v in profile['permissions'].values())):
+            issues.append(pid + ': missing effective permission for approved copies')
+        if profile.get('repository') and (not safe_path(profile['policy_path']) or profile['policy_url'] != 'https://github.com/{repository}/blob/{revision}/'.format(**profile) + quote(profile['policy_path'])):
+            issues.append(pid + ': license policy URL does not match pinned path')
     ids, urls, digests = set(), set(), {}
+    cohort = read(root / 'knowledge/triage-baseline.json')
     allowlisted_copies = set(policy['cp-algorithms'])
     observed_copies = set()
     for row in records:
-        key, pid = row['id'], row['provider']
+        if not isinstance(row, dict) or not isinstance(row.get('provider'), str) or row['provider'] not in providers:
+            issues.append('Unknown source provider or malformed source record')
+            continue
+        pid = row['provider']
         profile = providers[pid]
+        errors = check_record(row, profile)
+        if errors:
+            issues.extend(f'{row.get("id", pid)}: {error}' for error in errors)
+            continue
+        key = row['id']
+        if row.get('metadata_evidence') and not https(row['metadata_evidence']):
+            issues.append(key + ': malformed metadata evidence URL')
+        if pid == 'codeforces' and (not re.fullmatch(r'codeforces:[0-9]+', key) or urlsplit(row['url']).path != '/blog/entry/' + key.split(':',1)[1]
+                                    or any(not isinstance(a,str) or not re.fullmatch(r'[A-Za-z0-9_.-]+', a) for a in row['authors'])):
+            issues.append(key + ': invalid Codeforces article ID or author handle')
+        if row.get('published') is not None:
+            date.fromisoformat(row['published'])
         url = row['url']
         if key in ids or url in urls or not key.startswith(pid + ':') or not https(url) or urlsplit(url).hostname != urlsplit(profile['url']).hostname:
             issues.append(key + ': duplicate ID/URL or invalid URL/provider')
@@ -61,6 +89,8 @@ def check_sources(root):
         if 'repository' in profile:
             repo = 'https://github.com/' + profile['repository']
             path = row['path']
+            if not matches_url(pid, profile, row):
+                issues.append(key + ': source ID, website URL and pinned path do not correspond')
             rev = profile['revision']
             for label, url_part in (('permalink','blob'), ('history','commits')):
                 if row[label] != f'{repo}/{url_part}/{rev}/{quote(path)}':
@@ -86,6 +116,8 @@ def check_sources(root):
                 issues.append(key + ': missing or modified upstream text')
         elif row['mode'] != 'external-index' or 'text_path' in row:
             issues.append(key + ': disallowed redistribution mode')
+    if not re.fullmatch('[0-9a-f]{40}', cohort['revision']) or len(cohort['source_ids']) != len(set(cohort['source_ids'])) or set(cohort['source_ids']) - ids:
+        issues.append('Invalid baseline cohort')
     assets = {p.relative_to(directory).as_posix() for p in (directory/'upstream').rglob('*') if p.is_file()}
     if assets != expected_assets or observed_copies != allowlisted_copies or observed_copies != approvals.keys():
         issues.append('Untracked or missing upstream assets/allowlist entries')
@@ -96,9 +128,19 @@ def check_sources(root):
     if any(count != 1 for count in collisions.values()):
         issues.append('Duplicate canonical algorithm ID')
     for row in crosswalk:
-        key, refs = row['id'], row['sources']
+        key = row['id']
+        refs = [a['source'] for a in row['sources']]
         if not ID.fullmatch(key) or not refs or len(refs) != len(set(refs)) or set(refs) - ids:
             issues.append(key + ': missing, repeated or unresolved evidence links')
+    owners = {}
+    for row in crosswalk:
+        for a in row['sources']:
+            if set(a) != {'source', 'relation', 'basis'} or a['relation'] not in RELATIONS or not a['basis'].strip():
+                issues.append(row['id'] + ': invalid association or missing rationale')
+            if a['relation'] in {'exact', 'alias'}:
+                previous = owners.setdefault(a['source'], row['id'])
+                if previous != row['id']:
+                    issues.append(a['source'] + ': conflicting identity claims: ' + previous + ', ' + row['id'])
     if issues:
         return issues
     data = build(root)
@@ -121,9 +163,27 @@ def check_sources(root):
             known = {data['sources'][sid]['url'] for sid in card['sources']}
             if urls - known:
                 issues.append(key + ': local citation missing provenance: ' + ', '.join(sorted(urls - known)))
+    used = set()
+    fields = {'status','evidence','sources','model','preconditions','invariant','proof','complexity','witness','checks','related'}
+    prose = ('model','preconditions','invariant','proof','complexity','witness')
     for key, note in notes.items():
-        if (key not in data['algorithms'] or note['status'] != 'project-analysis' or len(set(note['checks'])) < 2
-                or not note['model'].strip() or not note['witness'].strip()
+        card = data['algorithms'].get(key, {})
+        if (not isinstance(note, dict) or set(note) != fields or not card or card.get('identity')
+                or note['status'] not in {'project-analysis','needs-review'} or note['evidence'] != 'original-derivation'
+                or not note['sources'] or set(note['sources']) - set(card['sources'])
+                or not isinstance(note['checks'], list) or any(not isinstance(v, str) or not v.strip() for v in note['checks'])
+                or len(set(note['checks'])) < 2
                 or set(note['related']) - data['algorithms'].keys() or key in note['related']):
             issues.append(key + ': incomplete or untraceable project reasoning')
+            continue
+        for field in prose:
+            value = note[field]
+            if not isinstance(value, str) or not value.strip() or normalize(value) in {'todo','tbd','待补','略','未完成','n/a'}:
+                issues.append(f'{key}: empty/template {field}')
+            elif normalize(value) in used:
+                issues.append(f'{key}: duplicate review prose ({field})')
+            else:
+                used.add(normalize(value))
+        if not re.search(r'O\(|Θ\(|Ω\(|ceil|floor|Σ', note['complexity']):
+            issues.append(key + ': complexity requires an explicit bound or work expression')
     return issues
