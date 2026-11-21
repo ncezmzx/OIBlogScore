@@ -1,0 +1,1 @@
+Do not access the Catalog, references, or external tools. Use reasoning from the excerpt. Return one row per case with id, verdict (PASS, FAIL or NOT_CHECKED), reason, source_ids, and upstream_verified (true only if claiming upstream content itself is verified).

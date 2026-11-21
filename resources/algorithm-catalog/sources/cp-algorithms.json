@@ -1069,14 +1069,13 @@
     "license": "CC-BY-SA-4.0",
     "original_language": "en",
     "content_language": "en",
-    "mode": "verbatim",
+    "mode": "external-index",
     "modified": false,
     "trust": "upstream-unreviewed",
     "retrieved": "2026-11-19",
     "kind": "tutorial",
     "permalink": "https://github.com/cp-algorithms/cp-algorithms/blob/9392ad98aabadd2bc2feab65b91881918dfe560e/src/dynamic_programming/knuth-optimization.md",
-    "history": "https://github.com/cp-algorithms/cp-algorithms/commits/9392ad98aabadd2bc2feab65b91881918dfe560e/src/dynamic_programming/knuth-optimization.md",
-    "text_path": "upstream/cp-algorithms/dynamic_programming/knuth-optimization.md.txt"
+    "history": "https://github.com/cp-algorithms/cp-algorithms/commits/9392ad98aabadd2bc2feab65b91881918dfe560e/src/dynamic_programming/knuth-optimization.md"
   },
   {
     "id": "cp-algorithms:dynamic_programming/longest_increasing_subsequence.md",

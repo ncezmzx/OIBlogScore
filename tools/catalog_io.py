@@ -1,9 +1,15 @@
 """Strict JSON, duplicate-aware indexing and portable catalog paths."""
 import json
+import ntpath
 from pathlib import PureWindowsPath
 
 
 TEXT_LIMIT = 8 * 1024 * 1024
+
+
+def reserved_name(part):
+    checker = getattr(ntpath, 'isreserved', None)
+    return checker(part) if checker is not None else PureWindowsPath(part).is_reserved()
 
 
 def read_text(path):
@@ -50,7 +56,7 @@ def local_path(root, relative):
             or any(ord(ch) < 32 for ch in relative) or PureWindowsPath(relative).drive):
         raise ValueError(f'Unsafe catalog path: {relative!r}')
     parts = relative.split('/')
-    if any(p in ('', '.', '..') or p.endswith(('.', ' ')) or PureWindowsPath(p).is_reserved() for p in parts):
+    if any(p in ('', '.', '..') or p.endswith(('.', ' ')) or reserved_name(p) for p in parts):
         raise ValueError(f'Unsafe catalog path: {relative!r}')
     root = root.resolve(strict=True)
     target = root

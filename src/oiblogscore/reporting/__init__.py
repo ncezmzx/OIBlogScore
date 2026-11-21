@@ -50,10 +50,12 @@ def build(repo, manifest):
     # 'Discovered' means the configured Git-visible scope was enumerated.
     discovery_ok = not manifest['discovery_issues'] and not any(
         a['unresolved_dependencies'] for a in manifest['articles'].values())
+    if count == 0:
+        unresolved.append(dict(path='.', reason='No candidate articles discovered in the configured scope'))
     return dict(manifest, authority_sha256=authority, discovered=count, reviewed=reviewed, unreviewed=count-reviewed,
                 repaired=len({e['path'] for e in journal if e['status'] == 'applied'}),
-                completion=dict(discovery=discovery_ok, audit=reviewed == count, verification=all_verified),
-                status='COMPLETE' if discovery_ok and reviewed == count and all_verified else 'INCOMPLETE',
+                completion=dict(discovery=discovery_ok, audit=count > 0 and reviewed == count, verification=all_verified),
+                status='COMPLETE' if discovery_ok and count > 0 and reviewed == count and all_verified else 'INCOMPLETE',
                 verdicts={key: verdicts[key] for key in VERDICTS}, severity={key: severity[key] for key in SEVERITIES},
                 repairs=[{key: value for key, value in entry.items() if key not in ('before', 'pending')} for entry in journal],
                 verification=verified, repair_run=repo.read('repair-run.json', []), unresolved=unresolved)

@@ -1,0 +1,164 @@
+{
+  "baseline": {
+    "cases": {
+      "A25": {
+        "knuth-window": {
+          "expected": "PASS",
+          "judgment": {
+            "excerpt": "(1)成立，已证双侧单调即可限定搜索区间。",
+            "disposition": "PASS",
+            "evidence_accurate": true,
+            "citation_accurate": null,
+            "unsupported_claim": false
+          },
+          "correct": true
+        },
+        "resort": {
+          "expected": "FAIL",
+          "judgment": {
+            "excerpt": "(2)错误，逐层重排代价和为首层 n log n 到末层 0，总计 Θ(n log² n)。",
+            "disposition": "FAIL",
+            "evidence_accurate": true,
+            "citation_accurate": null,
+            "unsupported_claim": false
+          },
+          "correct": true
+        },
+        "product-type": {
+          "expected": "CONDITIONAL",
+          "judgment": {
+            "excerpt": "(3)错误，赋给 int64_t 不改变 int 乘法运算，仍可能溢出，须先提升操作数。",
+            "disposition": "FAIL",
+            "evidence_accurate": true,
+            "citation_accurate": null,
+            "unsupported_claim": false
+          },
+          "correct": false
+        },
+        "unknown-preprocess": {
+          "expected": "NOT_CHECKED",
+          "judgment": {
+            "excerpt": "(4)未给定义与规模，不能判定其线性声明。",
+            "disposition": "NOT_CHECKED",
+            "evidence_accurate": true,
+            "citation_accurate": null,
+            "unsupported_claim": false
+          },
+          "correct": true
+        }
+      }
+    },
+    "totals": {
+      "targets": 4,
+      "correct": 3,
+      "assessed": 4,
+      "assessed_correct": 3,
+      "negative_targets": 1,
+      "false_alarms": 0,
+      "evidence_accurate_n": 4,
+      "evidence_accurate": 4,
+      "unsupported_claim_n": 4,
+      "unsupported_claim": 0,
+      "defects": 2,
+      "detected": 1,
+      "defect_assertions": 2,
+      "abstention_opportunities": 1,
+      "correct_abstentions": 1
+    },
+    "rates": {
+      "target_accuracy": 0.75,
+      "assessed_accuracy": 0.75,
+      "scoped_precision": 0.5,
+      "scoped_recall": 0.5,
+      "scoped_f1": 0.5,
+      "scoped_false_negative_rate": 0.5,
+      "scoped_false_positive_rate": 0.0,
+      "correct_abstention": 1.0,
+      "evidence_accurate": 1.0,
+      "citation_accurate": null,
+      "unsupported_claim": 0.0
+    }
+  },
+  "catalog": {
+    "cases": {
+      "A25": {
+        "knuth-window": {
+          "expected": "PASS",
+          "judgment": {
+            "excerpt": "（1）正确：已证双侧单调即可将搜索限制在[opt(l,r−1),opt(l+1,r)]∩合法域，逐层可望远镜求和。",
+            "disposition": "PASS",
+            "evidence_accurate": true,
+            "citation_accurate": true,
+            "unsupported_claim": false
+          },
+          "correct": true
+        },
+        "resort": {
+          "expected": "FAIL",
+          "judgment": {
+            "excerpt": "（2）错误：T(n)=2T(n/2)+Θ(nlogn)由主定理为Θ(nlog²n)。",
+            "disposition": "FAIL",
+            "evidence_accurate": true,
+            "citation_accurate": false,
+            "unsupported_claim": false
+          },
+          "correct": true
+        },
+        "product-type": {
+          "expected": "CONDITIONAL",
+          "judgment": {
+            "excerpt": "（3）错误：乘法先按int计算，赋给int64_t不能防溢出，须先提升操作数。",
+            "disposition": "FAIL",
+            "evidence_accurate": true,
+            "citation_accurate": false,
+            "unsupported_claim": false
+          },
+          "correct": false
+        },
+        "unknown-preprocess": {
+          "expected": "NOT_CHECKED",
+          "judgment": {
+            "excerpt": "（4）未查：仅有函数名、无算法与规模，线性声称无依据。",
+            "disposition": "NOT_CHECKED",
+            "evidence_accurate": true,
+            "citation_accurate": false,
+            "unsupported_claim": false
+          },
+          "correct": true
+        }
+      }
+    },
+    "totals": {
+      "targets": 4,
+      "correct": 3,
+      "assessed": 4,
+      "assessed_correct": 3,
+      "negative_targets": 1,
+      "false_alarms": 0,
+      "evidence_accurate_n": 4,
+      "evidence_accurate": 4,
+      "citation_accurate_n": 4,
+      "citation_accurate": 1,
+      "unsupported_claim_n": 4,
+      "unsupported_claim": 0,
+      "defects": 2,
+      "detected": 1,
+      "defect_assertions": 2,
+      "abstention_opportunities": 1,
+      "correct_abstentions": 1
+    },
+    "rates": {
+      "target_accuracy": 0.75,
+      "assessed_accuracy": 0.75,
+      "scoped_precision": 0.5,
+      "scoped_recall": 0.5,
+      "scoped_f1": 0.5,
+      "scoped_false_negative_rate": 0.5,
+      "scoped_false_positive_rate": 0.0,
+      "correct_abstention": 1.0,
+      "evidence_accurate": 1.0,
+      "citation_accurate": 0.25,
+      "unsupported_claim": 0.0
+    }
+  }
+}

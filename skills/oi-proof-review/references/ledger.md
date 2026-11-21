@@ -13,4 +13,4 @@
 }
 ```
 
-允许方向 `statement`、`forward`、`reverse`、`equivalence`；状态 `PASS`、`SUSPECTED`、`NOT_CHECKED`、`FAIL`。等价节点必须直接登记且仅登记一个正向和一个反向依赖，允许另有 `statement` 依赖。把合法性和条件写入依据，未读的预备引理应显式登记为 `NOT_CHECKED`，不得删除依赖以获得成功退出。
+允许方向 `statement`、`forward`、`reverse`、`equivalence`；状态 `PASS`、`SUSPECTED`、`NOT_CHECKED`、`FAIL`、`NEEDS_CONTEXT`、`NOT_APPLICABLE`。等价节点必须直接登记且仅登记一个正向和一个反向依赖，允许另有 `statement` 依赖。把合法性和条件写入依据，未读的预备引理应显式登记为 `NOT_CHECKED`，缺题面/依赖用 `NEEDS_CONTEXT`，确实不适用用 `NOT_APPLICABLE`；不得删除依赖以获得成功退出。

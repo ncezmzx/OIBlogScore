@@ -22,7 +22,7 @@ def name_key(text):
 def sources(root=ROOT):
     directory = root / 'sources'
     providers = read(local_path(root, 'sources/providers.json'))
-    auxiliary = {'providers','import-policy','approved-verbatim'}
+    auxiliary = {'providers','import-policy','approved-verbatim','verbatim-pin'}
     expected = {key for key, profile in providers.items() if profile.get('repository')} | {'curated'}
     actual = {path.stem for path in directory.glob('*.json')} - auxiliary
     if actual != expected:
@@ -138,4 +138,5 @@ def source_view(data, sid):
     return dict(row, algorithms=algorithms, tags=sorted(set(algorithms) | categories), attribution=attribution,
                 associations=[dict(a, algorithm=key) for key in algorithms for a in data['algorithms'][key].get('associations', []) if a['source'] == sid],
                 policy_url=profile['policy_url'], license_url=profile['license_url'],
-                permissions=profile['permissions'], license_terms=profile['terms'], redistribution_policy=profile['mode'])
+                permissions=profile['permissions'], license_terms=profile['terms'],
+                redistribution_policy=row['mode'], provider_policy=profile['mode'])

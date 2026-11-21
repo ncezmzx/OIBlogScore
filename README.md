@@ -6,19 +6,20 @@ OIBlogScore 由九个 Agent Skills 和一个 Python CLI 组成。**Agent** 阅�
 
 ## 安装
 
-需要 Python **3.8+** 与 Git，运行时无第三方 Python 依赖。
+需要 Python **3.8+** 与 Git，运行时无第三方 Python 依赖。Python 3.8 的旧 pip/setuptools 需先升级；Windows 建议设置 `PYTHONUTF8=1`。
 
 ```sh
 git clone https://github.com/ncezmzx/OIBlogScore.git
 cd OIBlogScore
 python3 -m venv .venv
 . .venv/bin/activate
+python -m pip install --upgrade pip setuptools wheel
 python -m pip install .
 mkdir -p "$HOME/.agents/skills"
 cp -R skills/oi-* "$HOME/.agents/skills/"
 ```
 
-安装路径因 Agent 宿主而异，见 [install.md](install.md)。
+安装路径因 Agent 宿主而异，见 [install.md](install.md)。常见问题：Windows `core.autocrlf=true` 会让 `repair` 按字节判 dirty 并在 `repair-run.json` 说明原因（这是保守拒绝，不是修复成功）；WSL/DrvFs 的 `core.fileMode=false` 会忽略可执行位；Git Bash 的 `/tmp` 需先转成原生路径；CLI 不在 PATH 时用 `PYTHONPATH=src python -m oiblogscore.cli`。
 
 ## 全仓库审查
 

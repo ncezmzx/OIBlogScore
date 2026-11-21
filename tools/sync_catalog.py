@@ -14,6 +14,8 @@ from urllib.parse import quote
 
 from catalog_schema import LAYOUTS
 from catalog_io import local_path, read as load, unique_rows
+from catalog_quality import THIRD_PARTY
+from console import utf8_stdio
 
 
 ROOT = Path(__file__).resolve().parents[1] / 'resources' / 'algorithm-catalog' / 'sources'
@@ -78,6 +80,8 @@ def records(provider, config, checkout, policy):
             raise ValueError('Nonportable upstream path collision: ' + portable[folded] + ' / ' + path)
         raw = read(path)
         text = raw.decode('utf-8', errors='replace')
+        if provider == 'cp-algorithms' and rel in allowlist and THIRD_PARTY.search(text):
+            raise ValueError('Verbatim page contains third-party provenance markers; review before approval: ' + path)
         stem = Path(name).stem
         authors = []
         if provider == 'oi-wiki':
@@ -181,6 +185,7 @@ def encoded(value):
 
 
 def main(argv=None):
+    utf8_stdio()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('provider', choices=LAYOUTS)
     parser.add_argument('checkout', type=Path)
@@ -193,8 +198,9 @@ def main(argv=None):
             raise ValueError('Output already exists; use a fresh staging directory')
         if args.output:
             output = args.output.resolve()
-            if ROOT.parent in (output, *output.parents) or '.git' in {p.lower() for p in output.parts}:
-                raise ValueError('Output must be outside the catalog and Git metadata')
+            checkout = ROOT.parents[2]
+            if checkout in (output, *output.parents) or '.git' in {p.lower() for p in output.parts}:
+                raise ValueError('Output must be outside the OIBlogScore checkout and Git metadata')
         require_valid(ROOT.parent)
         config = load(args.providers)[args.provider]
         if not isinstance(config, dict):
@@ -227,6 +233,15 @@ def main(argv=None):
             if imported != approved:
                 raise ValueError('Verbatim payloads changed; inspect diff, attribution and license before approving new digests')
             files['approved-verbatim.json'] = encoded(approved)
+            pins = load(ROOT / 'verbatim-pin.json')
+            current_pin = {'revision': current_config['revision'], 'policy_sha256': current_config['policy_sha256']}
+            if not isinstance(pins, dict) or pins.get(args.provider) != current_pin:
+                raise ValueError('Stored verbatim pin does not match providers.json; run the gate')
+            next_pin = {'revision': config['revision'], 'policy_sha256': config['policy_sha256']}
+            if pins[args.provider] != next_pin:
+                pins = dict(pins)
+                pins[args.provider] = next_pin
+                files['verbatim-pin.json'] = encoded(pins)
         if candidate_profiles != load(ROOT / 'providers.json'):
             files['providers.json'] = encoded(candidate_profiles)
         with TemporaryDirectory(prefix='oi-catalog-') as temp:

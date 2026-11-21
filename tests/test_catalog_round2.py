@@ -11,7 +11,7 @@ DATA = ROOT / 'resources/algorithm-catalog'
 sys.path.insert(0, str(ROOT/'tools'))
 from catalog_quality import check_sources
 from catalog_data import build, read
-from blind_eval import FIXTURE, pack, score
+from blind_eval import FIXTURE, pack, prepare, score
 
 
 def cli(script, *args):
@@ -96,6 +96,10 @@ class CatalogRound2(unittest.TestCase):
         self.assertEqual(pack('catalog')['cases'], pack('baseline')['cases'])
         self.assertEqual(len(pack('catalog')['cases']), 25)
         self.assertTrue(all(set(r)=={'id','text'} for r in pack('catalog')['cases']))
+        manifest = pack('baseline', 7)['manifest']
+        self.assertEqual(manifest['seed'], 7)
+        self.assertRegex(manifest['cases_sha256'], '^[0-9a-f]{64}$')
+        self.assertRegex(manifest['catalog_sha256'], '^[0-9a-f]{64}$')
         rows = [dict(id=k,verdict=v['verdict'],reason='synthetic scoring fixture',source_ids=[],upstream_verified=False) for k,v in key.items()]
         wrong = [dict(r) for r in rows]
         wrong[0].update(verdict='FAIL',source_ids=['does-not-exist'],upstream_verified=True)
@@ -112,6 +116,58 @@ class CatalogRound2(unittest.TestCase):
             self.assertEqual(scores['baseline']['false_positives'],1)
             self.assertEqual(scores['baseline']['missed_issues'],{'negative-edge':1})
             self.assertEqual(scores['baseline']['unsupported_upstream_verification_claims'],1)
+
+    def test_prepare_writes_sanitized_bundles(self):
+        with tempfile.TemporaryDirectory() as temp:
+            base, catalog = Path(temp)/'baseline', Path(temp)/'catalog'
+            result = prepare('baseline', base, seed=7, repo=ROOT)
+            self.assertEqual(result['manifest']['seed'], 7)
+            self.assertTrue((base/'cases.json').is_file())
+            self.assertTrue((base/'instruction.txt').is_file())
+            self.assertFalse((base/'repo').exists())
+            prepare('catalog', catalog, seed=7, repo=ROOT)
+            self.assertTrue((catalog/'repo'/'tools'/'catalog.py').is_file())
+            self.assertTrue((catalog/'repo'/'resources'/'algorithm-catalog'/'index.json').is_file())
+            self.assertFalse((catalog/'repo'/'tests').exists())
+            for destination in (base, catalog):
+                self.assertFalse(any(destination.rglob('key.json')))
+                self.assertFalse(any(destination.rglob('targets.json')))
+            self.assertEqual(result['manifest']['cases_sha256'],
+                             json.loads((catalog/'manifest.json').read_text(encoding='utf-8'))['cases_sha256'])
+        with tempfile.TemporaryDirectory() as temp:
+            existing = Path(temp)/'exists'; existing.mkdir()
+            with self.assertRaisesRegex(ValueError, 'already exists'):
+                prepare('baseline', existing, repo=ROOT)
+        with self.assertRaisesRegex(ValueError, 'outside'):
+            prepare('baseline', ROOT/'tmp-eval-bundle-for-test', repo=ROOT)
+
+    def test_citation_metrics_separate_unverifiable_and_baseline(self):
+        key = {'A01': {'verdict': 'PASS', 'issue': 'none', 'algorithm': 'shortest-paths', 'dimension': 'proof'},
+               'A10': {'verdict': 'NOT_CHECKED', 'issue': 'missing-spec', 'algorithm': None, 'dimension': 'complexity'}}
+        data = {'algorithms': {'shortest-paths': {'sources': []}}}
+        rows = [dict(id='A01', verdict='PASS', reason='ok', source_ids=['nope'], upstream_verified=False),
+                dict(id='A10', verdict='NOT_CHECKED', reason='missing', source_ids=['also-nope'], upstream_verified=False)]
+        result = score(rows, key, data, 'catalog')
+        self.assertEqual(result['citation_checked'], 1)
+        self.assertEqual(result['citation_id_match_rate'], 0)
+        self.assertEqual(len(result['citation_unchecked']), 1)
+        baseline = score(rows, key, data, 'baseline')
+        self.assertIsNone(baseline['citation_id_match_rate'])
+        self.assertEqual(baseline['baseline_citations'], 1)
+        self.assertEqual(len(baseline['citations_for_manual_review']), 1)
+
+    def test_grade_rejects_duplicate_condition_and_unknown_condition(self):
+        from blind_eval import grade
+        key = read(FIXTURE/'key.json')
+        items = [dict(id='A01', verdict='PASS', reason='x', source_ids=[], upstream_verified=False, token='a'),
+                 dict(id='A01', verdict='PASS', reason='y', source_ids=[], upstream_verified=False, token='b')]
+        mapping = {'a': 'baseline', 'b': 'baseline'}
+        labels = {token: dict(evidence_accurate=True, citation_accurate=None, unsupported_claim=False) for token in mapping}
+        with self.assertRaisesRegex(ValueError, 'Duplicate case'):
+            grade(items, mapping, labels, key)
+        mapping['b'] = 'zoo'
+        with self.assertRaisesRegex(ValueError, 'condition'):
+            grade(items, mapping, labels, key)
 
     def test_blind_anonymize_and_human_metrics(self):
         from blind_eval import anonymize, grade
@@ -155,6 +211,7 @@ class CatalogRound2(unittest.TestCase):
                                      'knuth-window': label('knuth','PASS',False)})
         result = aggregate(items, mapping, {'x': imperfect, 'y': correct}, rubric)
         self.assertEqual(result['catalog']['rates']['scoped_recall'], 1)
+        self.assertEqual(result['catalog']['rates']['assessed_accuracy'], 1)
         self.assertIsNone(result['catalog']['rates']['citation_accurate'])
         rows = result['baseline']['cases']['A25']
         self.assertIsNone(rows['resort']['correct'])
@@ -163,5 +220,6 @@ class CatalogRound2(unittest.TestCase):
         self.assertFalse(rows['knuth-window']['judgment']['evidence_accurate'])
         self.assertEqual(result['baseline']['rates']['correct_abstention'], 1)
         self.assertEqual(result['baseline']['rates']['scoped_precision'], 0)
+        self.assertAlmostEqual(result['baseline']['rates']['assessed_accuracy'], 2/3)
         with self.assertRaisesRegex(ValueError, 'distinct'):
             aggregate(items, mapping, {'x': dict(correct, resort=label('knuth','FAIL')), 'y': correct}, rubric)

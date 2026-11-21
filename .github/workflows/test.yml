@@ -19,12 +19,15 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
+      - run: python -m pip install --upgrade pip setuptools wheel
       - run: python -m pip wheel --no-deps --wheel-dir wheelhouse .
       - run: python -m pip install --no-index --find-links wheelhouse oiblogscore
       - run: oiblogscore --help
         working-directory: ${{ runner.temp }}
       - run: python tools/check_quality.py
       - run: python tools/catalog.py stats
+      - run: python tools/catalog.py find "Lengauer-Tarjan" --exact
+      - run: python tools/blind_eval.py prepare baseline "${{ runner.temp }}/blind-baseline" --seed 7
       - name: Run unit tests
         shell: bash
         run: |

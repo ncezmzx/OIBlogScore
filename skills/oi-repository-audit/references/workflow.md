@@ -22,6 +22,19 @@ CLI 不可用时可以只读人工列清单、复核有限样本，但不得声�
 
 在当前快照重新生成报告；核对目标过滤器并不降低全仓分母，回查 NOT_CHECKED 和依赖缺失。
 
+## 结论与证据
+
+| 结论 | 含义 | 使用条件 |
+|---|---|---|
+| `PASS` | 明确范围内完成检查且未发现问题 | 有位置和依据；不是全文正确性证书 |
+| `FAIL` | 有合法反例或可复核的无效步骤 | finding 注明“命题为假/证明无效/实现不符” |
+| `SUSPECTED` | 有具体疑点但未确认 | 写出疑点、影响和缺失证据 |
+| `NOT_CHECKED` | 该适用维度尚未完成 | 保留待办，不得计入完成 |
+| `NEEDS_CONTEXT` | 缺题面、规格、依赖或材料 | 列出缺失项；保留待办 |
+| `NOT_APPLICABLE` | 该维度确实不适用 | 说明理由并记录范围 |
+
+缺少题面、依赖或规格时交 `NEEDS_CONTEXT`；未完成本维检查才用 `NOT_CHECKED`。`COMPLETE` 只表示配置范围处理完成，不是技术正确性。未安装 CLI 时可用 `PYTHONPATH=src python -m oiblogscore.cli`；Windows Git Bash 的 `/tmp` 路径先转成原生路径。
+
 ## 示例
 
 只检查 `notes/` 的证明：`oiblogscore audit . --path notes/ --dimension proof`。即使队列清空，也不能把未查技术维度计入全仓已审。

@@ -39,6 +39,9 @@ def aggregate(items, mapping, labels, rubric):
             count = result['totals']
             count['targets'] += 1
             count['correct'] += int(correct is True)
+            if correct is not None:
+                count['assessed'] += 1
+                count['assessed_correct'] += int(correct)
             if expected['disposition'] == 'NOT_CHECKED':
                 count['abstention_opportunities'] += 1
                 count['correct_abstentions'] += int(correct is True)
@@ -61,6 +64,7 @@ def aggregate(items, mapping, labels, rubric):
     for result in output.values():
         c = result['totals']
         result['rates'] = dict(target_accuracy=rate(c['correct'], c['targets']),
+                               assessed_accuracy=rate(c['assessed_correct'], c['assessed']),
                                scoped_precision=rate(c['detected'], c['defect_assertions']),
                                scoped_recall=rate(c['detected'], c['defects']),
                                scoped_f1=rate(2*c['detected'], c['defects'] + c['defect_assertions']),

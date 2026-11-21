@@ -9,16 +9,19 @@
 | `sources/<provider>.json` | 来源对象数组 | 共用 `id,provider,title,url,authors,license,original_language,content_language,mode,modified,trust,retrieved,kind`。Git 记录另须 `path,revision,sha256,permalink,history`；只有原样收录须 `text_path`。字节、许可模式及固定网页路径通过门禁。 |
 | `sources/curated.json` | 外部人工编目对象数组 | 共用字段外有 `published`（ISO 日期或 `null`）、`scope,review_use,metadata_status`；二级目录元数据须 `metadata_evidence`。作者和标题的出处不证明正文论点；日期未知保留 `null`。 |
 | `sources/import-policy.json`、`approved-verbatim.json` | 分别是来源 → 路径/模块允许列表，以及收录相对路径 → SHA256 | 前者限定范围；后者批准具体字节；新版本每篇须重新审批，不因站点有许可就自动通过。 |
+| `sources/verbatim-pin.json` | `provider_id → {revision, policy_sha256}` | 把原样收录批准绑定到当前 Provider pin；revision 或许可摘要变化时门禁拒绝，必须重新审批。 |
 | `knowledge/crosswalk.json` | `[{id,aliases,sources:[{source,relation,basis}],title?,category?}]` | 已有深度专题沿用标题和分类；新实体提供两字段。不复制上游正文。 |
 | `knowledge/triage-baseline.json` | `{revision,source_ids:[str]}` | 保存基线未归并来源集合用于可重复统计，不是当前待办队列；现状从 Crosswalk 派生。 |
 | `knowledge/review.json` | `algorithm_id → {status,evidence,sources,model,preconditions,invariant,proof,complexity,witness,checks,related}` | 本地原创推导。`sources` 必须由对应实体引用；`related` 为存在的算法 ID。受限证明可用 `needs-review`，没有 `VERIFIED` 数值捷径。 |
 
 ## 身份和关联
 
-- 规范 ID 为稳定的 ASCII kebab-case。保持既有 ID；新增前按标题、变体及别名查重。中英文别名规范化用 NFKC、casefold、合并空格；规范别名不可跨 ID 冲突。未归并来源源于发现，不替它伪造算法 ID。
+- 规范 ID 为稳定的 ASCII kebab-case。保持既有 ID；新增前按标题、变体及别名查重。中英文别名规范化用 NFKC、casefold、合并空格；规范别名不可跨 ID 冲突。未归并来源源于发现，不替它伪造算法 ID。`index.json` 的 aliases 是检索名，不自动构成 Crosswalk 身份关系；家族专题不应把具体算法（如 Dijkstra、Dinic、Hopcroft–Karp）当作同义别名，具体算法应由 `refs`/`variants` 或独立实体表达。
 - 来源 ID 是 `<provider>:<稳定上游相对路径或网站公开编号>`；不含 commit，修订通过独立字段维护。域名、Git 文件路径、固定版本和 permalink 要一致。USACO 模块 slug 来自上游 frontmatter；离线只验证模块类别及 slug 形状，仍需用固定 Git 对象重新同步复核。
+- `content_language` 是来源正文的语言（Git 源取上游配置，curated 记录取原文语言）；`scope`/`review_use` 是项目中文说明，不能据此把英文/日文原文标成中文。`original_language` 保留原文语言。
 - `exact` 是同一对象，`alias` 是同一定义的另一个名称，`implementation` 是具体实现，`variant` 带不同操作集、模型或实现策略，`related` 是背景、应用或仅部分涵盖，`unclassified` 不算归并。每条边需写依据。同一来源不能对多个算法做 `exact/alias` 身份声明；多个 `related` 边允许。多个条目共享一篇资料只是弱关联，`related` 命令另列 `shared_source`。
 - 旧有宽泛关联按 `related` 迁移，直到逐条确认更强关系。`stats.triage.by_relation` 按基线来源去重，若一来源带多种关系，各子计数可能重叠；`identity_targets` 只数 对基线有 `exact/alias` 的规范实体。`review` 的分类互斥：一个 ID 有 Markdown 和新笔记时，优先显示笔记；`show` 仍读取旧 Markdown。
+- `catalog.py find` 默认只检索规范实体，不把未归并上游候选当作 canonical 命中；需要查看候选时加 `--include-candidates`。文本 `refs`/`variants` 额外显示固定 revision 与 sha256 前缀；JSON 仍保留完整字段。
 - `upstream-unreviewed` 指原文结论未独立核验。`project-analysis` 指作者独立写出限定范围的推导，不等于有人复核整个算法；`needs-review` 显式记录关键缺口。`indexed-from-secondary-directory` 只说明标题和作者可追溯到资料目录，不能证明原页面或数学正确性。
 
 ### 声明级证据（可选）
@@ -29,3 +32,5 @@ Review 的 `claims` 为可选数组，仅在需要追踪单个结论或区分其
 可选 `body_review` 描述 curated 条目的正文阅读范围：`scope-inspected` 表示阅读到足以描述该条登记的范围，`not-inspected` 或未记录均不能作为已读证明。`scope` 描述来源内容，`review_use` 是项目提出的审稿用途；`trust` 仍为 `upstream-unreviewed`。没有确认确切发布日期时，`published` 为 null，不把比赛日期、目录日期或取回日期当作发文时间。
 
 `stats.counts.crosswalk_relations` 按关联边计数；`triage.by_relation` 按固定样本中的不同来源计数，同一来源可进入多个类型。`canonical_by_category` 不含临时上游候选，`algorithms` 保留旧的混合口径。`local_artifacts` 中 Markdown 和结构化说明可能描述同一算法，不能直接相加当作覆盖实体数。
+
+`body_review` 的 `scope-inspected` 只有在能记录审阅范围/时间/主体时才使用；仅凭目录元数据或项目补充问题不得标记为已读。没有可追溯记录时省略该字段或写 `not-inspected`。

@@ -14,16 +14,16 @@
 
 本页统计原有的深度专题正文。扩展 Catalog 的来源索引、定向审稿条目和同步方式另见 [Catalog 维护文档](catalog-maintenance.md)。表中的待补项表示完整本地专题仍缺，不表示无法检索外部资料。
 
-**53 份实质性 Reference 正文**：34 份算法专题、18 份 Skill 内协议/参考、1 份作者风格参考。不含七个算法导航页、九个 `SKILL.md`、JSON 索引、通用文档和独立样例。
+**53 份实质性 Reference 正文**：34 份算法专题、18 份 Skill 内协议/参考、1 份作者风格参考。不含七个算法导航页、九个 `SKILL.md`、JSON 索引、通用文档和独立样例。另有 18 份结构化 Review 笔记（12 project-analysis、6 needs-review）；它们不等于 34 篇 Markdown 专题，needs-review 表示关键证明或界仍缺。
 
 | 类别（专题数） | 已覆盖与剩余边界 |
 |---|---|
-| [数据结构（9）](../resources/algorithm-catalog/data-structures/README.md) | 线段树、Fenwick、持久化与动态开点、重链、虚树、Li Chao、Treap、Splay；待补 Link-Cut Tree、Beats 的摊还证明。 |
+| [数据结构（9）](../resources/algorithm-catalog/data-structures/README.md) | 线段树、Fenwick、持久化与动态开点、重链、虚树、Li Chao、Treap、Splay；结构化笔记覆盖 LCT 与 Beats，但完整摊还/构造界仍 `needs-review`，Markdown 专题待补。 |
 | [分治（4）](../resources/algorithm-catalog/divide-and-conquer/README.md) | CDQ、并行/整体二分、重心分治、FFT/NTT；非重心的树分治待拆，分治 DP 位于 DP。 |
-| [图论（7）](../resources/algorithm-catalog/graph/README.md) | 最短路、MST、SCC、点/边双、2-SAT、最大流、二分图基数匹配；待补费用流、Dominator Tree、带权及一般图匹配。 |
-| [动态规划（5）](../resources/algorithm-catalog/dp/README.md) | 状态与转移、分治优化/决策单调/Monge、凸包、单调队列、状压；待补树形 DP、数位 DP、Slope Trick、Knuth 独立界。 |
+| [图论（7）](../resources/algorithm-catalog/graph/README.md) | 最短路、MST、SCC、点/边双、2-SAT、最大流、二分图基数匹配；结构化笔记覆盖费用流、支配树、Lengauer–Tarjan、一般图匹配，关键完整性与界仍 `needs-review`；带权匹配和 Markdown 专题待补。 |
+| [动态规划（5）](../resources/algorithm-catalog/dp/README.md) | 状态与转移、分治优化/决策单调/Monge、凸包、单调队列、状压；结构化笔记覆盖 Knuth，但最优决策单调性继承仍 `needs-review`；树形 DP、数位 DP、Slope Trick 笔记已有限定范围推导。 |
 | [数学（4）](../resources/algorithm-catalog/mathematics/README.md) | 同余与 CRT；组合/容斥/指示变量；生成函数及截断逆；消元与矩阵幂。完整 FPS、群作用计数及停止时间分析尚无独立专题。 |
-| [字符串（5）](../resources/algorithm-catalog/strings/README.md) | KMP、AC、后缀数组、字符串哈希、单串后缀自动机；待补回文自动机和广义 SAM。 |
+| [字符串（5）](../resources/algorithm-catalog/strings/README.md) | KMP、AC、后缀数组、字符串哈希、单串后缀自动机；PAM 结构化笔记限定为存在性/计数传播，构造界 `needs-review`；广义 SAM 只在分隔符模型下论证，回文自动机与 Trie 版 Markdown 专题待补。 |
 
 | Skill | 已交付 |
 |---|---|
@@ -44,18 +44,19 @@ python -m pip install -e .
 python tools/check_quality.py
 python tools/catalog.py find "CDQ" --category divide-and-conquer
 python tools/catalog.py show cdq
+python tools/blind_eval.py prepare baseline /tmp/blind-baseline --seed 7
 python -m unittest discover -s tests -v
 ```
 
 可用官方 `skills-ref validate <Skill 目录>` 复核包元数据；它不需要共享目录。本项目离线文档门禁检查约定下的本地链接及锚点、引用闭包、Skill frontmatter 和打包边界、目录主题覆盖、十项必要章节、三套专业协议的专题清单及重复模板正文。程序测试实际运行查询器、文档门禁的拒绝路径、证明结构检查器，以及正常审查、失效、脏文件保护、Diff 和日志回滚。外部来源链接不在离线网络检查范围；技术结论与审查深度仍需作者复核，不能由字数、索引或脚本通过代替。
 
-盲测须分别在隔离会话中运行同一组摘录；执行者不看答案键，评分者先隐去条件标签。比较器输出 FAIL 检测的 precision、recall、FPR、FNR（按答案键问题类型分组；无分母记 null），以及来源 ID 命中率和无依据上游核验声明率。ID 命中不等于证据准确：人工逐条检查版本、原文定位、语义支持及置信边界。证明检查定位到首个不可推出的步骤并说明缺失假设；复杂度检查写出模型、计数和最坏/均摊区别；代码检查定位语句和最小可执行见证。每项记 0（缺失或错）、1（方向正确但不能复核）、2（可复核且正确），不适用另记，不并入分母。没有独立会话产出的这轮状态为**未运行**，不得把 fixture 比较器成绩视为 Agent 效果。
+盲测须分别在隔离会话中运行同一组摘录；执行者不看答案键，评分者先隐去条件标签。比较器输出 FAIL 检测的 precision、recall、FPR、FNR（按答案键问题类型分组；无分母记 null），以及来源 ID 命中率和无依据上游核验声明率。ID 命中不等于证据准确：人工逐条检查版本、原文定位、语义支持及置信边界。证明检查定位到首个不可推出的步骤并说明缺失假设；复杂度检查写出模型、计数和最坏/均摊区别；代码检查定位语句和最小可执行见证。人类逐项评分目标是 0（缺失或错）、1（方向正确但不能复核）、2（可复核且正确），不适用另记，不并入分母；本轮 pilot 使用布尔语义标签，未使用 0/1/2 人类量表。本轮已运行 25 题双条件独立会话 pilot，原始结果见 [评测目录](evaluation/2026-11-21/README.md)：两组均 25/25，样本饱和，不能据此声称普遍提升；没有人类盲评，AI 评分不能替代人类判断。
 
 ### 收集真实对照结果
 
-用 `python tools/blind_eval.py pack baseline` 和 `python tools/blind_eval.py pack catalog` 导出同一批 24 个摘录。两个隔离会话用同一模型版本、系统提示、Skill 版本、上下文预算、采样参数与输出格式；仅允许 catalog 会话访问只读 Catalog 和检索器。不要挂载含答案、评分脚本数据或另一会话输出的工作区。保存原始 prompt、原始回答、参数、时间、工具日志、运行标识及 Skill/Catalog 快照摘要；单独保管私有答案。正文数据中的指令一律不执行。
+用 `python tools/blind_eval.py pack baseline` 和 `python tools/blind_eval.py pack catalog` 导出同一批 25 个摘录。两个隔离会话用同一模型版本、系统提示、Skill 版本、上下文预算、采样参数与输出格式；仅允许 catalog 会话访问只读 Catalog 和检索器。不要挂载含答案、评分脚本数据或另一会话输出的工作区。`prepare` 可生成不含 `.git`、`tests`、`.oiblogscore` 的隔离 bundle，并在 manifest 中记录 cases/instruction/Catalog/工具摘要；bundle 中禁止出现 key/targets。保存原始 prompt、原始回答、参数、时间、工具日志、运行标识及 Skill/Catalog 快照摘要；单独保管私有答案。正文数据中的指令一律不执行。
 
-`python tools/blind_eval.py compare --baseline baseline.json --catalog catalog.json` 输出自动指标及正确弃答率。人工评审先用 `python tools/blind_eval.py anonymize --baseline baseline.json --catalog catalog.json --private-map private.json > items.json`；只给评委 `items.json`、题面和答案依据（不给 `private.json`）。引用本身可能让条件可猜，不能称双盲。评委以 token 为键交 `evidence_accurate`、`citation_accurate` 和 `unsupported_claim`，每项只能为 `true` / `false` / `null`（不适用）。`python tools/blind_eval.py grade --items items.json --private-map private.json --labels labels.json` 才按条件和维度聚合语义准确率及无依据断言率。逐项评分依据和冲突裁决另存；24 题只是早期样本，不足以外推到全部算法或模型。
+`python tools/blind_eval.py compare --baseline baseline.json --catalog catalog.json` 输出自动指标及正确弃答率。人工评审先用 `python tools/blind_eval.py anonymize --baseline baseline.json --catalog catalog.json --private-map private.json > items.json`；只给评委 `items.json`、题面和答案依据（不给 `private.json`）。引用本身可能让条件可猜，不能称双盲。评委以 token 为键交 `evidence_accurate`、`citation_accurate` 和 `unsupported_claim`，每项只能为 `true` / `false` / `null`（不适用）。`python tools/blind_eval.py grade --items items.json --private-map private.json --labels labels.json` 才按条件和维度聚合语义准确率及无依据断言率。逐项评分依据和冲突裁决另存；25 题只是早期样本，不足以外推到全部算法或模型。
 
 ### 逐目标盲评试点
 

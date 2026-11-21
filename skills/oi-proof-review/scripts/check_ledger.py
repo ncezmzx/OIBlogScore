@@ -31,7 +31,7 @@ def inspect(record):
         deps = row.get('depends_on')
         if key in claims or not strings(deps) or len(set(deps)) != len(deps):
             raise LedgerError('Duplicate ID or invalid dependencies: ' + key)
-        if row.get('direction') not in ('statement', 'forward', 'reverse', 'equivalence') or row.get('status') not in ('PASS', 'FAIL', 'SUSPECTED', 'NOT_CHECKED'):
+        if row.get('direction') not in ('statement', 'forward', 'reverse', 'equivalence') or row.get('status') not in ('PASS', 'FAIL', 'SUSPECTED', 'NOT_CHECKED', 'NEEDS_CONTEXT', 'NOT_APPLICABLE'):
             raise LedgerError('Unknown direction or status: ' + key)
         claims[key] = row
         outstanding[key] = len(deps)

@@ -7,6 +7,7 @@ from pathlib import Path
 import sys
 
 from catalog_io import local_path, read_text
+from console import utf8_stdio
 
 from catalog_data import RELATIONS, ROOT, build, name_key, normalize, read, related, source_view
 
@@ -16,12 +17,15 @@ def load(root=ROOT):
     return read(local_path(root, 'index.json'))
 
 
-def search(data, query='', category=None, provider=None, tag=None, exact=False, include_related=False):
+def search(data, query='', category=None, provider=None, tag=None, exact=False, include_related=False,
+           include_candidates=False):
     if len(query) > 4096:
         raise ValueError('Search query exceeds 4096 characters')
     needle = name_key(query)
     matches, eligible = [], {}
     for row in data['algorithms'].values():
+        if row.get('identity') and not include_candidates:
+            continue
         if (category and row['category'] != category) or (tag and tag not in (row['id'], row['category'])):
             continue
         materials = [data['sources'][sid] for sid in row['sources']]
@@ -115,6 +119,7 @@ SUMMARY_COMMANDS = ('stats', 'candidates')
 
 
 def main(argv=None):
+    utf8_stdio()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', type=Path, default=ROOT, help='Catalog data directory (not the repository root)')
     subs = parser.add_subparsers(dest='command', required=True)
@@ -131,6 +136,8 @@ def main(argv=None):
         else:
             cmd.add_argument('--exact', action='store_true', help='filter to exact IDs, aliases and titles')
             cmd.add_argument('--include-related', action='store_true', help='append authored neighbours of exact hits')
+            cmd.add_argument('--include-candidates', action='store_true',
+                             help='also search unmerged upstream source candidates')
     for name in ITEM_COMMANDS:
         cmd = subs.add_parser(name)
         cmd.add_argument('id')
@@ -157,7 +164,8 @@ def main(argv=None):
             if command == 'find':
                 if args.category and args.category not in data['categories']:
                     raise ValueError('Unknown category: ' + args.category)
-                rows = search(data, args.query, args.category, args.provider, args.tag, args.exact, args.include_related)
+                rows = search(data, args.query, args.category, args.provider, args.tag, args.exact,
+                              args.include_related, args.include_candidates)
             else:
                 rows = list(source_search(data, args.query, args.provider, args.tag, args.kind, args.author))
             rows = rows[:args.limit] if args.limit else rows
@@ -228,7 +236,9 @@ def main(argv=None):
                 dump(refs)
             else:
                 for item in refs:
-                    print('{id}\t{title}\t{mode}\t{url}\t{relation}\t{trust}\t{license}'.format(**item))
+                    detail = dict(item, revision=item.get('revision', ''),
+                                  sha256=(item.get('sha256') or '')[:12])
+                    print('{id}\t{title}\t{mode}\t{url}\t{relation}\t{trust}\t{license}\t{revision}\t{sha256}'.format(**detail))
         elif command == 'related':
             groups = related(data, key)
             if args.json:

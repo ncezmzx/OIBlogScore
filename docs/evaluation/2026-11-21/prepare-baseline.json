@@ -1,0 +1,13 @@
+{
+  "condition": "baseline",
+  "destination": "C:\\Users\\minzixuan\\AppData\\Local\\Temp\\oiblogscore-eval-6jppxs8r\\baseline",
+  "manifest": {
+    "condition": "baseline",
+    "seed": 7,
+    "cases_sha256": "1fce202ff17a799c1a069e16c6cb8171b91453901dcf5da42b3dd22fc978bbdd",
+    "instruction_sha256": "f85d6a7628d25ccb4d850d074612a1d9ad1f6f8ced4e6d9f8bb98f1f448baf8e",
+    "catalog_sha256": "e659003786f3900954b8b202868fbe753c2974467fbe7b0d67255519c5902b12",
+    "tooling_sha256": "113195968fa986df6262b2b0e913b8bef62dd6814a7d064d7efcf6ef906b765f",
+    "source_head": "376ea781ee6899031812c96aeb2f96585b39b196"
+  }
+}

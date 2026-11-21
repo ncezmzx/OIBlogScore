@@ -1,0 +1,438 @@
+[
+  {
+    "token": "18686cc29effbbdd50593c31",
+    "id": "A04",
+    "verdict": "FAIL",
+    "reason": "错误：递推 T(n)=2T(n/2)+Θ(nlogn) 由主定理得 Θ(nlog²n)，不是 Θ(nlogn)。",
+    "source_ids": [],
+    "upstream_verified": false
+  },
+  {
+    "token": "73bbc4bb259202412880b811",
+    "id": "A13",
+    "verdict": "FAIL",
+    "reason": "错误：区间 add 可在部分覆盖节点的值集合中引入多于一个不同值，原 different-values 势不能直接沿用，需重新摊还分析。",
+    "source_ids": [
+      "oi-wiki:ds/seg-beats.md"
+    ],
+    "upstream_verified": false
+  },
+  {
+    "token": "f146c6546275bec184bac03c",
+    "id": "A17",
+    "verdict": "PASS",
+    "reason": "成立。已知 opt 双侧单调后取 [opt(l,r-1),opt(l+1,r)] 交集合法；按层望远镜求和为 O(n²)，无需额外代价条件。",
+    "source_ids": [],
+    "upstream_verified": false
+  },
+  {
+    "token": "9b8fa1b4b9edd467978174a9",
+    "id": "A25",
+    "verdict": "FAIL",
+    "reason": "(1)成立，已证双侧单调即可限定搜索区间。(2)错误，逐层重排代价和为首层 n log n 到末层 0，总计 Θ(n log² n)。(3)错误，赋给 int64_t 不改变 int 乘法运算，仍可能溢出，须先提升操作数。(4)未给定义与规模，不能判定其线性声明。",
+    "source_ids": [],
+    "upstream_verified": false
+  },
+  {
+    "token": "e9fff3874a059053b63d13ab",
+    "id": "A21",
+    "verdict": "FAIL",
+    "reason": "错误。当前最长回文后缀计数只记其自身出现；须按长度降序沿 fail 链累加，才能得到每个回文串的总出现次数。",
+    "source_ids": [],
+    "upstream_verified": false
+  },
+  {
+    "token": "4aa45297069da9ebb3a49a1b",
+    "id": "A21",
+    "verdict": "FAIL",
+    "reason": "错误：某回文串出现于多个位置时未必都是当前最长回文后缀，须沿 fail 链累加计数，否则总出现次数偏小。",
+    "source_ids": [
+      "oi-wiki:string/pam.md"
+    ],
+    "upstream_verified": false
+  },
+  {
+    "token": "138d7a2be539cb03d13ca3d8",
+    "id": "A24",
+    "verdict": "NOT_CHECKED",
+    "reason": "无法核验：未给未来删除时刻、在线区间分发定义与算法细节，“最坏 O(log n)”无实现可检；按缺失规格判未查。",
+    "source_ids": [],
+    "upstream_verified": false
+  },
+  {
+    "token": "9e6d2a44c5532b499974a761",
+    "id": "A10",
+    "verdict": "NOT_CHECKED",
+    "reason": "无法判定。该算法仅有名称与线性结论，缺少定义、伪码、规格和证明，无法核验。",
+    "source_ids": [],
+    "upstream_verified": false
+  },
+  {
+    "token": "4d2e695ef59fb00206558713",
+    "id": "A18",
+    "verdict": "FAIL",
+    "reason": "错误。断点带多重度；两个同位置 a 的 max(0,x-a) 需保留两个断点，只留一个会使斜率增加量由 2 变为 1。",
+    "source_ids": [],
+    "upstream_verified": false
+  },
+  {
+    "token": "bb9e0da5a87baaee455cd494",
+    "id": "A01",
+    "verdict": "PASS",
+    "reason": "正确：取最短路首个未定点 x，其前驱已松弛，非负后缀使所选最小暂定值不超过该路长，结合上界得定点正确。",
+    "source_ids": [
+      "cp-algorithms:graph/dijkstra.md"
+    ],
+    "upstream_verified": false
+  },
+  {
+    "token": "db7f6251522219e44b1e64cf",
+    "id": "A03",
+    "verdict": "FAIL",
+    "reason": "错误：整数域 x²=1 还有 x=−1，改写为 x=1 丢失负解，不是等价变形。",
+    "source_ids": [],
+    "upstream_verified": false
+  },
+  {
+    "token": "bb1186d337b78e6814d6acd2",
+    "id": "A19",
+    "verdict": "FAIL",
+    "reason": "错误。存在平行边时删掉一个 ID 后同端点对可能仍有活跃边，不能据此结束整个区间；每对需记录多个插入时间。",
+    "source_ids": [],
+    "upstream_verified": false
+  },
+  {
+    "token": "50570c3fb6e5d7f7db127ac2",
+    "id": "A03",
+    "verdict": "FAIL",
+    "reason": "错误。整数域 x²=1 的解为 x=1 或 x=-1；只能由 x=1 推出 x²=1，反向改写不等价。",
+    "source_ids": [],
+    "upstream_verified": false
+  },
+  {
+    "token": "422d5923d4c5a4e254c20a19",
+    "id": "A02",
+    "verdict": "FAIL",
+    "reason": "错误。存在负边时 Dijkstra 弹出即定点的性质不成立；后弹出的点标签可能更小，需 Bellman-Ford 等算法。",
+    "source_ids": [],
+    "upstream_verified": false
+  },
+  {
+    "token": "102cd900962bfe2b49b1a8d5",
+    "id": "A23",
+    "verdict": "PASS",
+    "reason": "正确：字典序前 k 个无序点对互异且无自环，k≤C(n,2) 可恰取 k 条边，构成合法简单图。",
+    "source_ids": [],
+    "upstream_verified": false
+  },
+  {
+    "token": "89c8b9d5f6a67b4bb8147e66",
+    "id": "A09",
+    "verdict": "FAIL",
+    "reason": "错误。元素可为负时前缀和不再单调，如 [3,-5,4] 的前缀和为 3,-2,2；二进制提升找第一个≥2 会失效。",
+    "source_ids": [],
+    "upstream_verified": false
+  },
+  {
+    "token": "48bcc25438646144e3c0d882",
+    "id": "A05",
+    "verdict": "PASS",
+    "reason": "正确：0/1 权非负，二叉堆懒惰删除，堆规模不超过 E+1，时间 O((V+E)log(E+2))；不必用双端队列。",
+    "source_ids": [
+      "cp-algorithms:graph/dijkstra.md"
+    ],
+    "upstream_verified": false
+  },
+  {
+    "token": "75e7619b363a1dfaeef1347c",
+    "id": "A01",
+    "verdict": "PASS",
+    "reason": "正确。按最短路取首个未定点，其前驱已定并松弛；剩余边非负，选出的最小暂定值不超过该最短路长，论证成立。",
+    "source_ids": [],
+    "upstream_verified": false
+  },
+  {
+    "token": "9e1202145703a7ac003d2670",
+    "id": "A22",
+    "verdict": "PASS",
+    "reason": "正确。首次正面所需次数服从 p=1/2 的几何分布，期望 2；掷硬币次数无有限上界，最坏情形可无限延长。",
+    "source_ids": [],
+    "upstream_verified": false
+  },
+  {
+    "token": "7d6e6a007259ba3b903e098b",
+    "id": "A06",
+    "verdict": "FAIL",
+    "reason": "错误：补前导零后 01..09 被当作含 0，N=10 时答案虚增；须用 started 状态区分前导零与真零。",
+    "source_ids": [
+      "oi-wiki:dp/number.md"
+    ],
+    "upstream_verified": false
+  },
+  {
+    "token": "a0f99811bb9653b937110052",
+    "id": "A04",
+    "verdict": "FAIL",
+    "reason": "错误。第 d 层每个节点耗时 (n/2^d)log(n/2^d)，该层合计 n(log n-d)，逐层相加为 Θ(n log² n)，非 Θ(n log n)。",
+    "source_ids": [],
+    "upstream_verified": false
+  },
+  {
+    "token": "39af51bf3cb711a7f86e7731",
+    "id": "A17",
+    "verdict": "PASS",
+    "reason": "正确：已证最右 opt 双侧单调时，opt(l,r) 落在 [opt(l,r−1),opt(l+1,r)]∩合法域内，逐层宽度望远镜求和为 O(n)；无需额外代价条件。",
+    "source_ids": [
+      "cp-algorithms:dynamic_programming/knuth-optimization.md"
+    ],
+    "upstream_verified": false
+  },
+  {
+    "token": "1b72b37c7637cd8147a45d90",
+    "id": "A22",
+    "verdict": "PASS",
+    "reason": "正确：T 为首次成功所需次数，服从 p=1/2 的几何分布，E[T]=1+E[T]/2 得 2；T 无有限上界。",
+    "source_ids": [],
+    "upstream_verified": false
+  },
+  {
+    "token": "de447f34895c1e84996e323c",
+    "id": "A09",
+    "verdict": "FAIL",
+    "reason": "错误：[3,−5,4] 前缀和为 3,−2,2 非单调，“前缀和≥2”不是单调谓词，Fenwick 二进制提升失效。",
+    "source_ids": [
+      "oi-wiki:ds/fenwick.md"
+    ],
+    "upstream_verified": false
+  },
+  {
+    "token": "21205bd5ed4166aaa91c4fe7",
+    "id": "A05",
+    "verdict": "PASS",
+    "reason": "正确。0/1 权非负，普通二叉堆 Dijkstra 加陈旧项检查可求最短路；堆中元素 O(E)，复杂度 O((V+E)log(E+2))。",
+    "source_ids": [],
+    "upstream_verified": false
+  },
+  {
+    "token": "e28f189b06e42d94de905d56",
+    "id": "A02",
+    "verdict": "FAIL",
+    "reason": "错误：负边使定点不再成立；反例 s→a=1,s→b=2,b→a=−2，a 先弹出为 1，实际最短路为 0。",
+    "source_ids": [
+      "cp-algorithms:graph/dijkstra.md"
+    ],
+    "upstream_verified": false
+  },
+  {
+    "token": "7c55885816a354d7b8a25d73",
+    "id": "A18",
+    "verdict": "FAIL",
+    "reason": "错误：断点多重度即斜率变化量，同位置两个断点不能合并；a=b 时函数变为 2max(0,x−a)，保留一个会改变函数。",
+    "source_ids": [
+      "oi-wiki:dp/opt/slope-trick.md"
+    ],
+    "upstream_verified": false
+  },
+  {
+    "token": "af231662fc2a62c1efdcc0fe",
+    "id": "A15",
+    "verdict": "FAIL",
+    "reason": "错误：残量网络含负费用反向边，原始正向边非负不能推出可走残量边非负；Dijkstra 须配势函数或改 SPFA。",
+    "source_ids": [
+      "oi-wiki:graph/flow/min-cost.md"
+    ],
+    "upstream_verified": false
+  },
+  {
+    "token": "5acf9906a8c304969a1af562",
+    "id": "A07",
+    "verdict": "FAIL",
+    "reason": "错误。严格 LIS 应替换 lower_bound 位置；upper_bound 会把相等元素当作可延长，如 [1,1] 会得到长度 2。",
+    "source_ids": [],
+    "upstream_verified": false
+  },
+  {
+    "token": "16a9c66f8c0f7ebb4f02dc21",
+    "id": "A07",
+    "verdict": "FAIL",
+    "reason": "错误：严格 LIS 应替换 lower_bound；用 upper_bound 会把相等的 x 追加，如 [2,2] 得长度 2，重复项延长答案。",
+    "source_ids": [
+      "cp-algorithms:dynamic_programming/longest_increasing_subsequence.md"
+    ],
+    "upstream_verified": false
+  },
+  {
+    "token": "bcc978a6030f48f6f67669bd",
+    "id": "A19",
+    "verdict": "FAIL",
+    "reason": "错误：允许平行边时删掉一个 ID 不代表端点对失活，其余同端点边仍连通；按端点对合并区间会误删。",
+    "source_ids": [],
+    "upstream_verified": false
+  },
+  {
+    "token": "89666df584eeed98137f0fe8",
+    "id": "A14",
+    "verdict": "FAIL",
+    "reason": "错误：祖先 rev 未下推时左右子槽仍是翻转前语义，旋转方向与 zig-zig/zig-zag 选取会错；区间翻转 splay 须先自顶向下下推标记。",
+    "source_ids": [
+      "oi-wiki:ds/lct.md"
+    ],
+    "upstream_verified": false
+  },
+  {
+    "token": "750f71940fa579005cba3a65",
+    "id": "A20",
+    "verdict": "FAIL",
+    "reason": "错误。克隆状态的 endpos 是其子集，标准做法 clone 计 0、新建状态计 1；clone 计 1 会重复计数导致答案偏大。",
+    "source_ids": [],
+    "upstream_verified": false
+  },
+  {
+    "token": "162e8b32ec8f9d82827bf2fd",
+    "id": "A11",
+    "verdict": "FAIL",
+    "reason": "错误：按 (x,y) 排序后同 x 点可被分到两侧，不分组会把 x 相等的右半点计入，违反严格小于。",
+    "source_ids": [
+      "oi-wiki:misc/cdq-divide.md"
+    ],
+    "upstream_verified": false
+  },
+  {
+    "token": "6922e00743b3fd9f20aa7487",
+    "id": "A12",
+    "verdict": "FAIL",
+    "reason": "错误。插入、删除、再插入使 P(t) 不单调；P(mid) 为假时左半可能曾有真值，直接丢弃左半会漏解。",
+    "source_ids": [],
+    "upstream_verified": false
+  },
+  {
+    "token": "8d2a7ecb6bc9621043e3a420",
+    "id": "A23",
+    "verdict": "PASS",
+    "reason": "正确。前 k 个字典序无序点对互不相同、无自环，且 k 不超过总数时总能取足，满足恰 k 条边要求。",
+    "source_ids": [],
+    "upstream_verified": false
+  },
+  {
+    "token": "78f179a3512a0d619e4ffca8",
+    "id": "A11",
+    "verdict": "FAIL",
+    "reason": "错误。不按 x 分组会让同 x 的点分居左右并被计入，违反严格小于；应处理同 x 或分组后统计。",
+    "source_ids": [],
+    "upstream_verified": false
+  },
+  {
+    "token": "85fcadca50fd215ac6b999c0",
+    "id": "A13",
+    "verdict": "FAIL",
+    "reason": "错误。部分覆盖节点做 add 后其值集合可与未加部分组合出多个新值，并非至多一个；势能界需重新论证。",
+    "source_ids": [],
+    "upstream_verified": false
+  },
+  {
+    "token": "fa679e4eabf0900303d826ed",
+    "id": "A20",
+    "verdict": "FAIL",
+    "reason": "错误：clone 是被分裂的历史等价类，初始计数应为 0；计 1 时 abb 的 b 会得 3（实际为 2）。",
+    "source_ids": [
+      "cp-algorithms:string/suffix-automaton.md"
+    ],
+    "upstream_verified": false
+  },
+  {
+    "token": "19080563bd77c4bb1c7903f9",
+    "id": "A24",
+    "verdict": "NOT_CHECKED",
+    "reason": "无法判定。未给未来删除时刻与在线区间分发定义，也无算法细节，无法验证最坏 O(log n)。",
+    "source_ids": [],
+    "upstream_verified": false
+  },
+  {
+    "token": "3b8cff2ad6adb3358787de3f",
+    "id": "A10",
+    "verdict": "NOT_CHECKED",
+    "reason": "无法核验：算法只有名称和线性结论，无定义、伪码、规格与证明，任何正确性主张都不可检查。",
+    "source_ids": [],
+    "upstream_verified": false
+  },
+  {
+    "token": "8b8e8ab5fb669ab3d15182bd",
+    "id": "A12",
+    "verdict": "FAIL",
+    "reason": "错误：插入-删除-再插入使 P(t) 非单调，P(mid) 为假不代表前半无真；整体二分要求单调真值边界。",
+    "source_ids": [
+      "oi-wiki:misc/parallel-binsearch.md"
+    ],
+    "upstream_verified": false
+  },
+  {
+    "token": "854ed2b19dc81bd684df9cc7",
+    "id": "A14",
+    "verdict": "FAIL",
+    "reason": "错误。旋转前须沿路径下推 rev，否则父子左右关系已反转，zig-zig/zig-zag 判定及旋转结果均会出错。",
+    "source_ids": [],
+    "upstream_verified": false
+  },
+  {
+    "token": "8728076b7fc69a9a88e075cc",
+    "id": "A25",
+    "verdict": "FAIL",
+    "reason": "（1）正确：已证双侧单调即可将搜索限制在[opt(l,r−1),opt(l+1,r)]∩合法域，逐层可望远镜求和。（2）错误：T(n)=2T(n/2)+Θ(nlogn)由主定理为Θ(nlog²n)。（3）错误：乘法先按int计算，赋给int64_t不能防溢出，须先提升操作数。（4）未查：仅有函数名、无算法与规模，线性声称无依据。",
+    "source_ids": [
+      "cp-algorithms:dynamic_programming/knuth-optimization.md"
+    ],
+    "upstream_verified": false
+  },
+  {
+    "token": "ff826877da2d0b558c525d9d",
+    "id": "A16",
+    "verdict": "FAIL",
+    "reason": "错误：DFS 父亲只在某条路径上，不一定是立即支配者；菱形图中 b 的 idom 可为更高祖先而非 DFS 父。",
+    "source_ids": [
+      "oi-wiki:graph/dominator-tree.md"
+    ],
+    "upstream_verified": false
+  },
+  {
+    "token": "9358899a8bd024af1fd0596b",
+    "id": "A06",
+    "verdict": "FAIL",
+    "reason": "错误。补前导零会把这些零当作普通表示中的零；如 N=10 时 5 补成 05 被误计，普通表示并无零。",
+    "source_ids": [],
+    "upstream_verified": false
+  },
+  {
+    "token": "73f9ad7350466cff3a7a5f2c",
+    "id": "A08",
+    "verdict": "FAIL",
+    "reason": "错误。dx 及坐标差先以 int 计算，±2×10^9 坐标的差可达 4×10^9，已溢出；且第二项差在转换前也溢出。",
+    "source_ids": [],
+    "upstream_verified": false
+  },
+  {
+    "token": "964f49253250b5ece0304791",
+    "id": "A15",
+    "verdict": "FAIL",
+    "reason": "错误。残量网络含反向边，费用为正向费用的相反数，可为负；直接用 Dijkstra 不成立，需势能或 SPFA。",
+    "source_ids": [],
+    "upstream_verified": false
+  },
+  {
+    "token": "73bf4768c52f25ffd2964681",
+    "id": "A16",
+    "verdict": "FAIL",
+    "reason": "错误。立即支配者不一定是 DFS 父亲；如 s→a、s→b、a→c、b→c，c 的 idom 为 s 而非 DFS 父亲 a。",
+    "source_ids": [],
+    "upstream_verified": false
+  },
+  {
+    "token": "1fe7de19d114f60c161ff56e",
+    "id": "A08",
+    "verdict": "FAIL",
+    "reason": "错误：b.x−a.x 等差值可达 4e9，在 int 中已溢出；先写 int dx 再转 __int128 不能修复。",
+    "source_ids": [
+      "oi-wiki:geometry/2d.md"
+    ],
+    "upstream_verified": false
+  }
+]

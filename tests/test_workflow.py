@@ -1,7 +1,9 @@
 import contextlib
 import io
 import json
+import os
 from pathlib import Path
+import stat
 import subprocess
 import tempfile
 import unittest
@@ -24,6 +26,11 @@ class Workflow(unittest.TestCase):
         self.git('init', '-q')
         self.git('config', 'user.name', 'Reviewer')
         self.git('config', 'user.email', 'reviewer@example.test')
+        # User-level Git policy must not decide whether this suite passes.
+        for key, value in (('core.autocrlf', 'false'), ('core.safecrlf', 'false'),
+                           ('commit.gpgsign', 'false'), ('tag.gpgsign', 'false'),
+                           ('core.hooksPath', '.git/hooks')):
+            self.git('config', key, value)
 
     def git(self, *args):
         subprocess.run(['git', '-C', str(self.root), *args], check=True, stdout=subprocess.PIPE)
@@ -172,7 +179,8 @@ class Workflow(unittest.TestCase):
         repo = Repo(self.root)
         outcomes = repair(repo, discover(repo), 'safe')
         self.assertEqual(a.read_bytes(), good.encode())
-        self.assertEqual(outcomes, [{'path': 'dirty.md', 'status': 'dirty (skipped)'}])
+        self.assertEqual([(item['path'], item['status']) for item in outcomes], [('dirty.md', 'dirty (skipped)')])
+        self.assertIn('worktree', outcomes[0]['detail'])
         self.assertEqual(repo.read('style.json', {})['dirty.md']['sources'], ['good.md'])
         self.assertIn('尚未提交', bad.read_text())
 
@@ -501,6 +509,8 @@ class Workflow(unittest.TestCase):
         calls = []
         def edit(fd):
             fsync(fd)
+            if stat.S_ISDIR(os.fstat(fd).st_mode):
+                return
             calls.append(fd)
             if len(calls) == 2:  # pending journal was first; article temp file second
                 path.write_bytes(original + b'external edit\n')
@@ -521,6 +531,8 @@ class Workflow(unittest.TestCase):
                 original = path.read_bytes()
                 calls = []
                 def fail_second(*args):
+                    if operation == 'fsync' and stat.S_ISDIR(os.fstat(args[0]).st_mode):
+                        return real(*args)
                     calls.append(args)
                     if len(calls) == 2:
                         raise OSError(errno.ENOSPC, 'fixture fault')
@@ -574,14 +586,16 @@ class Workflow(unittest.TestCase):
         repo = Repo(self.root)
         self.assertTrue(repo.dirty('论文.md'))
         with contextlib.redirect_stdout(io.StringIO()):
-            repair(repo, discover(repo), 'safe')
+            outcomes = repair(repo, discover(repo), 'safe')
         self.assertEqual(path.read_bytes(), crlf)
         self.assertEqual(repo.read('repairs.json', []), [])
+        self.assertEqual(outcomes[0]['status'], 'dirty (skipped)')
+        self.assertIn('core.autocrlf', outcomes[0]['detail'])
 
     def test_repo_path_refuses_nonportable_names(self):
         repo = Repo(self.root)
         for value in ('C:notes.md', 'C:/notes.md', r'\\server\share\notes.md', r'dir\x.md',
-                      'AUX.md', 'name. ', '../x.md', '.GiT/config'):
+                      'AUX.md', 'name. ', '../x.md', '.GiT/config', '/etc/passwd', '/'):
             with self.subTest(value=value), self.assertRaises(ValueError):
                 repo.path(value)
         self.assertEqual(repo.path('目录/文章.md').relative_to(repo.root).as_posix(), '目录/文章.md')
@@ -597,3 +611,132 @@ class Workflow(unittest.TestCase):
         self.assertNotEqual(before['audit.json'], after['audit.json'])
         self.assertEqual(before['repairs.json'], after['repairs.json'])
         self.assertEqual(after, build(repo, manifest)['authority_sha256'])
+
+    def test_zero_candidates_is_not_complete(self):
+        repo = Repo(self.root)
+        manifest = discover(repo)
+        schedule(repo, manifest)
+        report = build(repo, manifest)
+        self.assertEqual(report['discovered'], 0)
+        self.assertEqual(report['status'], 'INCOMPLETE')
+        self.assertFalse(report['completion']['audit'])
+        self.assertTrue(any(item.get('reason') == 'No candidate articles discovered in the configured scope'
+                            for item in report['unresolved']))
+
+    def test_missing_tracked_article_preserves_cache(self):
+        body = '# Example\n'
+        self.write('x.md', body)
+        self.commit()
+        repo = Repo(self.root)
+        manifest = discover(repo)
+        for task in schedule(repo, manifest, 'full'):
+            self.submit(repo, task)
+        self.assertEqual(build(repo, manifest)['status'], 'COMPLETE')
+        (self.root / 'x.md').unlink()
+        missing = discover(repo)
+        self.assertEqual(missing['missing_tracked'], ['x.md'])
+        self.assertEqual(missing['articles'], {})
+        self.assertTrue(any(issue['path'] == 'x.md' for issue in missing['discovery_issues']))
+        self.assertEqual(schedule(repo, missing), [])
+        self.assertEqual(set(repo.read('audit.json', {})['tasks']['x.md']), set(DIMENSIONS))
+        self.assertEqual(build(repo, missing)['status'], 'INCOMPLETE')
+        self.write('x.md', body)
+        restored = discover(repo)
+        self.assertEqual(schedule(repo, restored), [])
+        self.assertEqual(build(repo, restored)['status'], 'COMPLETE')
+
+    def test_inventory_change_during_discovery_is_rejected(self):
+        article = self.write('x.md', 'body')
+        self.commit()
+        repo = Repo(self.root)
+        real = Path.read_bytes
+        added = []
+        def mutate(path):
+            raw = real(path)
+            if not added and path.samefile(article):
+                added.append(True)
+                (self.root / 'late.md').write_bytes(b'late')
+            return raw
+        with patch.object(Path, 'read_bytes', mutate):
+            with self.assertRaisesRegex(ValueError, 'inventory changed'):
+                discover(repo)
+
+    def test_case_collisions_are_rejected(self):
+        self.write('Dup.md', 'first')
+        self.commit()
+        blob = subprocess.check_output(['git', '-C', str(self.root), 'rev-parse', 'HEAD:Dup.md']).strip().decode('ascii')
+        self.git('update-index', '--add', '--cacheinfo', '100644,{},dup.md'.format(blob))
+        self.git('commit', '-qm', 'case fixture')
+        manifest = discover(Repo(self.root))
+        issues = {issue['path']: issue['reason'] for issue in manifest['discovery_issues']}
+        self.assertIn('Dup.md', issues)
+        self.assertIn('dup.md', issues)
+        self.assertIn('collision', issues['Dup.md'])
+        self.assertEqual(manifest['articles'], {})
+
+    def test_changed_rejects_unavailable_cached_base(self):
+        self.write('x.md', 'text')
+        self.commit()
+        repo = Repo(self.root)
+        repo.save('audit.json', {'tasks': {}, 'commit': 'a' * 40})
+        with self.assertRaisesRegex(ValueError, 'unavailable'):
+            schedule(repo, discover(repo))
+
+    def test_submit_rejects_worktree_change_after_discovery(self):
+        path = self.write('x.md', '# Example\n')
+        self.commit()
+        repo = Repo(self.root)
+        manifest = discover(repo)
+        task = schedule(repo, manifest)[0]
+        path.write_bytes(path.read_bytes() + b'late\n')
+        result = self.write('.oiblogscore/result.json', json.dumps(dict(task, verdict='PASS', evidence='Checked.')))
+        with self.assertRaisesRegex(ValueError, 'Inputs changed'):
+            submit(repo, manifest, result)
+        self.assertNotIn('result', repo.read('audit.json', {})['tasks']['x.md']['algorithm'])
+
+    def test_atomic_does_not_leave_readonly_temp_file(self):
+        from oiblogscore.repository import atomic
+        target = self.root / 'readonly.txt'
+        target.write_bytes(b'old')
+        os.chmod(target, 0o444)
+        if os.name != 'nt' and stat.S_IMODE(target.stat().st_mode) != 0o444:
+            self.skipTest('filesystem does not preserve permission bits')
+        if os.name == 'nt':
+            with self.assertRaises(PermissionError):
+                atomic(target, b'new')
+            self.assertEqual(target.read_bytes(), b'old')
+        else:
+            atomic(target, b'new')
+            self.assertEqual(target.read_bytes(), b'new')
+            self.assertEqual(stat.S_IMODE(target.stat().st_mode), 0o444)
+        leftovers = [p.name for p in self.root.iterdir() if p.name not in ('readonly.txt', '.git')]
+        self.assertEqual(leftovers, [])
+
+    def test_lock_release_keeps_replacement_lock(self):
+        repo = Repo(self.root)
+        lock = repo.path('.oiblogscore/lock')
+        with repo.lock():
+            lock.write_text('someone else', encoding='ascii')
+        self.assertTrue(lock.exists())
+        lock.unlink()
+
+    def test_lock_blocks_second_command(self):
+        self.write('x.md', 'text')
+        self.commit()
+        repo = Repo(self.root)
+        stderr = io.StringIO()
+        with repo.lock(), contextlib.redirect_stderr(stderr):
+            self.assertEqual(main(['scan', str(self.root)]), 2)
+        self.assertIn('locked', stderr.getvalue().lower())
+
+    @unittest.skipIf(os.name == 'nt', 'Git fileMode is not observable on Windows fixtures')
+    def test_git_file_mode_false_ignores_executable_bits(self):
+        path = self.write('x.md', 'text')
+        self.commit()
+        os.chmod(path, 0o755)
+        if not path.stat().st_mode & stat.S_IXUSR:
+            self.skipTest('filesystem does not expose executable bits')
+        self.git('config', 'core.fileMode', 'false')
+        self.assertFalse(Repo(self.root).dirty('x.md'))
+        self.git('config', 'core.fileMode', 'true')
+        self.assertTrue(Repo(self.root).dirty('x.md'))

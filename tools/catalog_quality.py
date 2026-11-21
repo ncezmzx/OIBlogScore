@@ -11,6 +11,9 @@ from catalog_data import EXTRA, RELATIONS, category, name_key, normalize, read, 
 
 HEX = re.compile(r'[0-9a-f]{64}')
 ID = re.compile(r'[a-z0-9]+(?:-[a-z0-9]+)*')
+THIRD_PARTY = re.compile(
+    r'(taken from (?:the )?(?:paper|book|article)|reprinted from|adapted from|all rights reserved|used with permission)',
+    re.I)
 
 
 def https(value):
@@ -37,6 +40,10 @@ def _check_sources(root, issues):
     providers, records = sources(root)
     policy = read(local_path(root, 'sources/import-policy.json'))
     approvals = read(local_path(root, 'sources/approved-verbatim.json'))
+    pins = read(local_path(root, 'sources/verbatim-pin.json'))
+    if not isinstance(pins, dict):
+        issues.append('Verbatim pin record must be an object')
+        pins = {}
     expected_assets = {'upstream/cp-algorithms/LICENSE.txt'}
     common = set('title url license license_url mode permissions policy_url retrieved terms'.split())
     pinned = set('language policy_path policy_sha256 repository revision'.split())
@@ -68,6 +75,14 @@ def _check_sources(root, issues):
             issues.append(pid + ': missing effective permission for approved copies')
         if profile.get('repository') and (not safe_path(profile['policy_path']) or profile['policy_url'] != 'https://github.com/{repository}/blob/{revision}/'.format(**profile) + quote(profile['policy_path'])):
             issues.append(pid + ': license policy URL does not match pinned path')
+        if profile.get('mode') == 'selected-verbatim':
+            pin = pins.get(pid)
+            expected = {'revision': profile['revision'], 'policy_sha256': profile['policy_sha256']}
+            if pin != expected:
+                issues.append(pid + ': verbatim approval is not bound to the current provider pin')
+    selected = {pid for pid, profile in providers.items() if profile.get('mode') == 'selected-verbatim'}
+    if set(pins) != selected:
+        issues.append('Verbatim pin record must cover exactly the selected-verbatim providers')
     ids, urls, digests = set(), set(), {}
     allowlisted_copies = set(policy['cp-algorithms'])
     observed_copies = set()
@@ -138,9 +153,12 @@ def _check_sources(root, issues):
                 issues.append(key + ': missing or modified upstream text')
             else:
                 try:
-                    read_text(path)
+                    text = read_text(path)
                 except (ValueError, OSError) as exc:
                     issues.append(key + ': invalid verbatim text: ' + str(exc))
+                else:
+                    if THIRD_PARTY.search(text):
+                        issues.append(key + ': verbatim text contains third-party provenance markers; review the license or use external-index')
         elif row['mode'] != 'external-index' or 'text_path' in row:
             issues.append(key + ': disallowed redistribution mode')
     assets = {p.relative_to(directory).as_posix() for p in (directory/'upstream').rglob('*') if p.is_file()}
@@ -214,6 +232,13 @@ def check_knowledge(root, issues):
     for key, card in cards.items():
         if not isinstance(card['category'], str) or card['category'] not in categories:
             issues.append(key + ': unknown category')
+        elif card.get('legacy'):
+            path = card.get('path')
+            expected = card['category'] + '/' + key + '.md'
+            if not isinstance(path, str) or not path:
+                issues.append(key + ': legacy topic requires a path')
+            elif path != expected:
+                issues.append(key + ': legacy topic path does not match category/id')
         aliases = card['aliases']
         if not isinstance(aliases, list) or any(not isinstance(a,str) or not a.strip() for a in aliases):
             issues.append(key + ': invalid aliases')

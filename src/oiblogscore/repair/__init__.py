@@ -25,6 +25,7 @@ def repair(repo, manifest, mode, paths=()):
         try:
             before = read_text(repo.path(name))
         except UnicodeDecodeError:
+            outcomes.append({'path': name, 'status': 'not utf-8 (skipped)'})
             continue
         if digest(before.encode()) != article['content_hash']:
             outcomes.append({'path': name, 'status': 'input changed'})
@@ -46,7 +47,11 @@ def repair(repo, manifest, mode, paths=()):
             outcomes.append({'path': name, 'status': 'active journal (skipped)'})
             continue
         if repo.dirty(name):
-            outcomes.append({'path': name, 'status': 'dirty (skipped)'})
+            detail = repo.dirty_detail(name) or {'reason': 'unclean worktree'}
+            message = detail['reason']
+            if detail.get('filters'):
+                message += '; Git may normalize line endings or attributes: ' + ', '.join(detail['filters'])
+            outcomes.append({'path': name, 'status': 'dirty (skipped)', 'detail': message})
             continue
         lines = before.splitlines(keepends=True)
         edits = []

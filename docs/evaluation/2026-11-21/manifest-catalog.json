@@ -1,0 +1,9 @@
+{
+  "condition": "catalog",
+  "seed": 7,
+  "cases_sha256": "1fce202ff17a799c1a069e16c6cb8171b91453901dcf5da42b3dd22fc978bbdd",
+  "instruction_sha256": "c6874c3beb6cd62d446d099a63d981b418c47eabfe96988826763f32f8a86cf3",
+  "catalog_sha256": "e659003786f3900954b8b202868fbe753c2974467fbe7b0d67255519c5902b12",
+  "tooling_sha256": "113195968fa986df6262b2b0e913b8bef62dd6814a7d064d7efcf6ef906b765f",
+  "source_head": "376ea781ee6899031812c96aeb2f96585b39b196"
+}

@@ -5,7 +5,7 @@ import os
 import re
 from pathlib import PurePosixPath
 
-from ..repository import digest, git, stamp
+from ..repository import RESERVED_STATE, digest, folded_name, git, stamp
 from .dependencies import ARTICLES, CODE, DependencyGraph
 from .manifest import rule_fingerprint
 
@@ -16,17 +16,41 @@ CATEGORIES = {
     'search': r'二分|回溯|\bdfs\b|\bbfs\b', 'flow': r'网络流|dinic|最大流',
     'geometry': r'计算几何|凸包|叉积', 'counting': r'组合数学|容斥|计数',
 }
+
+
+def inventory(repo):
+    def listed(*args):
+        return {os.fsdecode(item) for item in git(repo.root, 'ls-files', '-z', *args).stdout.split(b'\0') if item}
+    return listed('--cached'), listed('--others', '--exclude-standard')
+
+
+def visible(names):
+    return {name for name in names if name != RESERVED_STATE and not name.startswith(RESERVED_STATE + '/')}
+
+
 def discover(repo):
-    names = {os.fsdecode(p) for p in git(repo.root, 'ls-files', '-z', '--cached', '--others', '--exclude-standard').stdout.split(b'\0') if p}
+    tracked, untracked = inventory(repo)
+    names = visible(tracked | untracked)
     files, exclusions, issues = set(), [], []
+    missing_tracked = set()
+    collisions = {}
+    for name in names:
+        collisions.setdefault(folded_name(name), []).append(name)
+    colliding = {name for group in collisions.values() if len(group) > 1 for name in group}
+    for name in sorted(colliding):
+        issues.append({'path': name, 'reason': 'portable path collision (case/Unicode); rename before review'})
     for name in sorted(names):
-        if name.startswith('.oiblogscore/'):
+        if name in colliding:
             continue
         try:
             if repo.path(name).is_file():
                 files.add(name)
+            elif name in tracked:
+                missing_tracked.add(name)
         except ValueError as exc:
             issues.append({'path': name, 'reason': str(exc)})
+    for name in sorted(missing_tracked):
+        issues.append({'path': name, 'reason': 'tracked file missing from worktree; restore it or commit the deletion'})
     hashes, texts = {}, {}
 
     def content(name):
@@ -97,6 +121,16 @@ def discover(repo):
     for name, expected in hashes.items():
         if digest(repo.path(name).read_bytes()) != expected:
             raise ValueError('File changed during discovery; rerun: ' + name)
+    final_tracked, final_untracked = inventory(repo)
+    if visible(final_tracked) != visible(tracked) or visible(final_untracked) != visible(untracked):
+        raise ValueError('Git-visible file inventory changed during discovery; rerun')
+    for name in sorted(missing_tracked):
+        try:
+            if repo.path(name).is_file():
+                raise ValueError('Tracked file appeared during discovery; rerun: ' + name)
+        except ValueError as exc:
+            if 'appeared during discovery' in str(exc):
+                raise
     return dict(snapshot_consistency='revalidated', repository=repo.text_git('remote', 'get-url', 'origin'), branch=repo.text_git('branch', '--show-current'),
                 commit=repo.text_git('rev-parse', '--verify', 'HEAD'), scanned_at=stamp(), rules=rules,
-                articles=articles, exclusions=exclusions, discovery_issues=issues)
+                articles=articles, exclusions=exclusions, discovery_issues=issues, missing_tracked=sorted(missing_tracked))

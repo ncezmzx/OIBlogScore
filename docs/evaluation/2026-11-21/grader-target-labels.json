@@ -1,0 +1,62 @@
+{
+ "9b8fa1b4b9edd467978174a9": {
+  "knuth-window": {
+   "excerpt": "(1)成立，已证双侧单调即可限定搜索区间。",
+   "disposition": "PASS",
+   "evidence_accurate": true,
+   "citation_accurate": null,
+   "unsupported_claim": false
+  },
+  "resort": {
+   "excerpt": "(2)错误，逐层重排代价和为首层 n log n 到末层 0，总计 Θ(n log² n)。",
+   "disposition": "FAIL",
+   "evidence_accurate": true,
+   "citation_accurate": null,
+   "unsupported_claim": false
+  },
+  "product-type": {
+   "excerpt": "(3)错误，赋给 int64_t 不改变 int 乘法运算，仍可能溢出，须先提升操作数。",
+   "disposition": "FAIL",
+   "evidence_accurate": true,
+   "citation_accurate": null,
+   "unsupported_claim": false
+  },
+  "unknown-preprocess": {
+   "excerpt": "(4)未给定义与规模，不能判定其线性声明。",
+   "disposition": "NOT_CHECKED",
+   "evidence_accurate": true,
+   "citation_accurate": null,
+   "unsupported_claim": false
+  }
+ },
+ "8728076b7fc69a9a88e075cc": {
+  "knuth-window": {
+   "excerpt": "（1）正确：已证双侧单调即可将搜索限制在[opt(l,r−1),opt(l+1,r)]∩合法域，逐层可望远镜求和。",
+   "disposition": "PASS",
+   "evidence_accurate": true,
+   "citation_accurate": true,
+   "unsupported_claim": false
+  },
+  "resort": {
+   "excerpt": "（2）错误：T(n)=2T(n/2)+Θ(nlogn)由主定理为Θ(nlog²n)。",
+   "disposition": "FAIL",
+   "evidence_accurate": true,
+   "citation_accurate": false,
+   "unsupported_claim": false
+  },
+  "product-type": {
+   "excerpt": "（3）错误：乘法先按int计算，赋给int64_t不能防溢出，须先提升操作数。",
+   "disposition": "FAIL",
+   "evidence_accurate": true,
+   "citation_accurate": false,
+   "unsupported_claim": false
+  },
+  "unknown-preprocess": {
+   "excerpt": "（4）未查：仅有函数名、无算法与规模，线性声称无依据。",
+   "disposition": "NOT_CHECKED",
+   "evidence_accurate": true,
+   "citation_accurate": false,
+   "unsupported_claim": false
+  }
+ }
+}

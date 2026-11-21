@@ -1,0 +1,176 @@
+{
+  "catalog": {
+    "all": {
+      "evidence_accurate": {
+        "passed": 25,
+        "assessed": 25,
+        "rate": 1.0
+      },
+      "unsupported_claim": {
+        "passed": 0,
+        "assessed": 25,
+        "rate": 0.0
+      },
+      "citation_accurate": {
+        "passed": 17,
+        "assessed": 18,
+        "rate": 0.9444444444444444
+      }
+    },
+    "complexity": {
+      "evidence_accurate": {
+        "passed": 6,
+        "assessed": 6,
+        "rate": 1.0
+      },
+      "unsupported_claim": {
+        "passed": 0,
+        "assessed": 6,
+        "rate": 0.0
+      },
+      "citation_accurate": {
+        "passed": 3,
+        "assessed": 3,
+        "rate": 1.0
+      }
+    },
+    "algorithm": {
+      "evidence_accurate": {
+        "passed": 9,
+        "assessed": 9,
+        "rate": 1.0
+      },
+      "unsupported_claim": {
+        "passed": 0,
+        "assessed": 9,
+        "rate": 0.0
+      },
+      "citation_accurate": {
+        "passed": 7,
+        "assessed": 7,
+        "rate": 1.0
+      }
+    },
+    "proof": {
+      "evidence_accurate": {
+        "passed": 7,
+        "assessed": 7,
+        "rate": 1.0
+      },
+      "unsupported_claim": {
+        "passed": 0,
+        "assessed": 7,
+        "rate": 0.0
+      },
+      "citation_accurate": {
+        "passed": 5,
+        "assessed": 5,
+        "rate": 1.0
+      }
+    },
+    "code": {
+      "evidence_accurate": {
+        "passed": 3,
+        "assessed": 3,
+        "rate": 1.0
+      },
+      "unsupported_claim": {
+        "passed": 0,
+        "assessed": 3,
+        "rate": 0.0
+      },
+      "citation_accurate": {
+        "passed": 2,
+        "assessed": 3,
+        "rate": 0.6666666666666666
+      }
+    }
+  },
+  "baseline": {
+    "all": {
+      "evidence_accurate": {
+        "passed": 25,
+        "assessed": 25,
+        "rate": 1.0
+      },
+      "unsupported_claim": {
+        "passed": 0,
+        "assessed": 25,
+        "rate": 0.0
+      },
+      "citation_accurate": {
+        "passed": 0,
+        "assessed": 0,
+        "rate": null
+      }
+    },
+    "complexity": {
+      "evidence_accurate": {
+        "passed": 6,
+        "assessed": 6,
+        "rate": 1.0
+      },
+      "unsupported_claim": {
+        "passed": 0,
+        "assessed": 6,
+        "rate": 0.0
+      },
+      "citation_accurate": {
+        "passed": 0,
+        "assessed": 0,
+        "rate": null
+      }
+    },
+    "algorithm": {
+      "evidence_accurate": {
+        "passed": 9,
+        "assessed": 9,
+        "rate": 1.0
+      },
+      "unsupported_claim": {
+        "passed": 0,
+        "assessed": 9,
+        "rate": 0.0
+      },
+      "citation_accurate": {
+        "passed": 0,
+        "assessed": 0,
+        "rate": null
+      }
+    },
+    "proof": {
+      "evidence_accurate": {
+        "passed": 7,
+        "assessed": 7,
+        "rate": 1.0
+      },
+      "unsupported_claim": {
+        "passed": 0,
+        "assessed": 7,
+        "rate": 0.0
+      },
+      "citation_accurate": {
+        "passed": 0,
+        "assessed": 0,
+        "rate": null
+      }
+    },
+    "code": {
+      "evidence_accurate": {
+        "passed": 3,
+        "assessed": 3,
+        "rate": 1.0
+      },
+      "unsupported_claim": {
+        "passed": 0,
+        "assessed": 3,
+        "rate": 0.0
+      },
+      "citation_accurate": {
+        "passed": 0,
+        "assessed": 0,
+        "rate": null
+      }
+    }
+  }
+}

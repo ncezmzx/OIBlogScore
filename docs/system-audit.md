@@ -1,5 +1,7 @@
 # 系统审计记录
 
+本文按轮次追加；每节数字对应该轮基线，最新状态见末节和 [本轮完整报告](round-report-2026-11-21.md)。
+
 基准：`64950590e19b76219f8e0555adbd0956259b5bc1`。基准门禁和 44 项测试通过；下表区分可复现的工程问题、已经正确实现的能力和仍需人工验证的边界。
 
 | 模块 | 基准确认及缺陷 | 本轮处理与未决事项 |
@@ -11,7 +13,7 @@
 | Sources、许可、同步 | 固定 commit 和原样哈希可验证；候选 Provider 文件可同时换许可摘要，旧批准可在新 pin 上隐式使用 | 固定 commit 必须是真 commit，按对象模式读取普通 blob；换许可另审，换 verbatim pin 显式审批。五个固定上游的真实 dry-run/staging 均已复现。不能据此给第三方素材确权。 |
 | Crosswalk、Triage、检索 | 身份/变体/相关已区分，排名可解释；分类与数量口径混合，裸源检索未按匹配字段排名 | 固定样本回归，分开报告身份、关联边、候选和本地覆盖；检索可选读编辑关联，不能当作实体合并。多数 related 仍只是可追溯线索。 |
 | Review、Blog | 有 Markdown、结构化笔记和来源索引，数学新结论未因结构门禁而核验；部分博客只有二级元数据 | 为整体二分加受限模型的推导与反例；对照 AtCoder 原文登记倒序仅删除变体。未批量复制博客；其他记录不追认正文已读或技术已验证。 |
-| Skills 与评测 | 九包可通过结构门禁；盲测工具只处理十题和自动/合成评分，未实测模型 | 强化九包交付要求、24 案例、独立 oracle、按维度和盲标签评分；没有实际外部 Agent 会话，因此不能判断提升。 |
+| Skills 与评测 | 九包可通过结构门禁；盲测工具当时只处理十题和自动/合成评分，未实测模型 | 强化九包交付要求、25 案例、独立 oracle、按维度和盲标签评分；没有实际外部 Agent 会话，因此不能判断提升。 |
 | 安装与 CI | wheel 安装 CLI，Skills/Catalog 从 checkout 使用；Linux CI 已有两个版本，缺安装外目录 smoke 和 Windows job | 增加 Windows 与仓库外 CLI 检查；明确 wheel 边界。CI 生效由发布后的实际运行结果证明，本分支不自动发布。 |
 
 数学复核只覆盖所列模型、推导和小例，不覆盖一般图匹配完整性、Lengauer–Tarjan 算法证明、完全在线动态连通性、混合 Beats 操作或 Trie 广义 SAM；这些不得用相邻专题或上游权威替代。详见 [工程验收和盲测协议](engineering-quality.md)。
@@ -20,7 +22,7 @@
 
 - Linux 上使用 Python 3.8.20、3.11.2、3.12.12 分别运行 `python tools/check_quality.py` 和 `PYTHONPATH=src python -m unittest discover -s tests -v`。每个版本均为 63 通过、0 失败、0 跳过；C++ lazy propagation 与坐标差溢出见证实际用 g++ 编译运行，后者用 UBSan 验证指定错误实现。没有执行待审博客中的命令或代码。
 - 五个固定上游都实际取回固定提交，运行 dry-run 与独立目录 staging。五份生成清单与当前清单逐字节一致，计划无新增、删除、内容或元数据变化；47 篇原样文件、许可文本和批准文件也逐字节一致。这不是验证所有上游数学结论或未来版本的转载权限。
-- 在独立 venv 下执行 `pip install .`，从 checkout 外调用 `oiblogscore --help`，实际执行临时仓库示例（scan、full、submit、report、incremental、resume、repair、verify、rollback）。最终原文与 Git 基线字节一致。所有十个 Catalog 子命令均已运行；24 道盲测题在两个导出中的题面一致。
+- 在独立 venv 下执行 `pip install .`，从 checkout 外调用 `oiblogscore --help`，实际执行临时仓库示例（scan、full、submit、report、incremental、resume、repair、verify、rollback）。最终原文与 Git 基线字节一致。所有十个 Catalog 子命令均已运行；25 道盲测题在两个导出中的题面一致。
 - Windows CI 已配置，但本轮没有 Windows 执行器；没有真实隔离 Agent 运行或独立评分记录。两组真实指标均为空，不以合成提交或 oracle 替代。
 
 当前 `stats`：1,014 来源（47 verbatim）、10 个 Provider、113 个规范实体、323 个上游候选、337 条 Crosswalk 关联（11 exact、1 alias、2 implementation、22 variant、301 related）、34 Markdown 专题、17 结构化 Review、2 Claims、30 Blog、2 Editorial、2 Paper。49 个规范实体至少有一项本地知识，8 个有身份来源；固定样本 360 条中 37 条已有关联、323 待处理，9 个身份来源对应 6 个规范实体。
@@ -43,7 +45,7 @@
 
 知识定点复核：Beats 声明只覆盖 chmin + 求和，补上初始势能、部分覆盖增量和混合 add 的合法反例；Knuth 声明给出转移和明确充分条件，单调性继承仍为 `needs-review`。整体二分限定单位插入、非负计数，允许负坐标但不允许负更新；每轮分桶重放、清空 Fenwick，非递归且不重排序，`U+1` 只作为哨兵。现有穷举 oracle 对照首个满足条件的前缀。Blackout 2 仍是离线只删边变体。其他高风险专题未提升核验状态。
 
-盲测基础设施：支持两个条件共享 seed 顺序；F1 无分母时返回 null。合成比较仅测试工具，不是 Agent 输出。真实运行时另存模型、采样参数、Prompt/Skill/Catalog 摘要、相同时间和 token 预算、权限清单、seed、原输出和工具日志；私有答案、分组映射不交给 Agent。24 题仍采用每题一个自动主判定，理由、引用语义及多缺陷给分尚需独立人工。不得把资料命中率称为证据准确率。
+盲测基础设施：支持两个条件共享 seed 顺序；F1 无分母时返回 null。合成比较仅测试工具，不是 Agent 输出。真实运行时另存模型、采样参数、Prompt/Skill/Catalog 摘要、相同时间和 token 预算、权限清单、seed、原输出和工具日志；私有答案、分组映射不交给 Agent。25 题仍采用每题一个自动主判定，理由、引用语义及多缺陷给分尚需独立人工。不得把资料命中率称为证据准确率。
 
 性能单次采样（Linux x86_64 / Python 3.11.2）：2000 篇极短 Markdown、30 个共享头文件、12000 任务。发现 0.285s，分配 0.245s，恢复 0.224s，报告 0.047s；Catalog 加载 0.070s、20 次搜索共 0.078s，进程峰值 RSS 74056 KiB。不代表大正文或复杂依赖闭包；发现二次读入开销随已读字节增长，分配与恢复的 JSON 序列化随任务数增长。
 
@@ -95,3 +97,11 @@
 | 真实 Agent 对照盲测 | BLOCKED | 不执行，没有真实模型回答或独立评分。 |
 
 三次采样（Linux x86_64 / Python 3.11.2，发现＋恢复分配＋构造报告）：1200 篇短文件共享头文件且有缺失边，中位 0.336s / 最大 0.348s；16 篇约 1.1 MB 文本，中位 2.595s / 最大 2.603s；120 个节点形成环，中位 0.437s / 最大 0.439s。整个进程累计峰值 RSS 126408 KiB，不能拆分到单个场景。环上逐文章生成传递闭包可达到平方级输出；长正文主要受重复全文扫描影响。尚未以放大 Catalog、歧义或大量失败缓存设计独立负载。
+
+## 2026-11-21 全系统修缮（本轮）
+
+起点与结束 HEAD 均为 `376ea781ee6899031812c96aeb2f96585b39b196`，未提交。Windows Python 3.8/3.12/3.14 与 WSL Python 3.10 全量 95 项测试通过（Windows 2 项因平台跳过，WSL 0 项跳过）；门禁通过；3.12 wheel 离线安装、仓库外 CLI 和完整修复/回滚工作流通过；Catalog 全部子命令通过。Python 3.11、macOS、长路径、真实 CI 与最终上游 sync dry-run 未运行。
+
+当前 `stats`：1,014 来源（46 verbatim、968 external-index）、10 Provider、114 规范实体、323 上游候选、339 条 Crosswalk 关联（11 exact、1 alias、1 implementation、22 variant、304 related）、34 Markdown 专题、18 结构化 Review（12 project-analysis、6 needs-review）、2 Claims、30 Blog、2 Editorial、2 Paper；`independently-verified` 为 0。移除了一条含第三方论文证明摘录的 verbatim，新增 verbatim pin 绑定与第三方标记门禁；LT 拆为独立 needs-review 实体；LCT、费用流、PAM 降为 needs-review。
+
+真实盲测：两个独立 Qoder 会话在 25 题上均 25/25 verdict，18/18 检出、0 误报；证据 25/25；Catalog 引用独立评分 18/18、主代理复核 17/18；A25 逐目标两组均 3/4（`product-type` 应为 CONDITIONAL，两组都写 FAIL）。样本饱和、无人类盲评、主对照模型后端未暴露，不能宣称收益。结论 `PASS WITH LIMITATIONS`；完整报告见 [round-report-2026-11-21.md](round-report-2026-11-21.md)。

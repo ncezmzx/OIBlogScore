@@ -952,7 +952,7 @@
       {
         "source": "oi-wiki:graph/graph-matching/general-weight-match.md",
         "relation": "related",
-        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+        "basis": "加权匹配与一般图最大基数匹配的操作模型不同；只保留弱关联，本实体笔记不覆盖带权算法。"
       },
       {
         "source": "library-checker:graph/general_matching/info.toml",
@@ -1018,8 +1018,7 @@
     "category": "graph",
     "title": "支配树",
     "aliases": [
-      "Dominator Tree",
-      "Lengauer-Tarjan"
+      "Dominator Tree"
     ],
     "sources": [
       {
@@ -2718,8 +2717,8 @@
       },
       {
         "source": "cp-algorithms:string/suffix-tree-ukkonen.md",
-        "relation": "implementation",
-        "basis": "Ukkonen 为在线构造，维护活动点与后缀链接。"
+        "relation": "related",
+        "basis": "Ukkonen 在线构造教程，不是具体实现；该实体只保留构造变体的弱关联，KACTL 头文件才是实现。"
       }
     ]
   },
@@ -2803,6 +2802,27 @@
         "source": "cp-algorithms:combinatorics/bracket_sequences.md",
         "relation": "related",
         "basis": "括号序列是卡特兰数的应用，也有额外的排序和构造问题。"
+      }
+    ]
+  },
+  {
+    "id": "lengauer-tarjan",
+    "category": "graph",
+    "title": "Lengauer–Tarjan 支配树算法",
+    "aliases": [
+      "Lengauer-Tarjan",
+      "LT Algorithm"
+    ],
+    "sources": [
+      {
+        "source": "oi-wiki:graph/dominator-tree.md",
+        "relation": "related",
+        "basis": "同一上游页面覆盖支配树与 LT 算法；本实体只登记 LT 核查契约，未独立证明半支配引理或 link-eval 复杂度。"
+      },
+      {
+        "source": "library-checker:graph/dominatortree/info.toml",
+        "relation": "related",
+        "basis": "固定题面定义支配树输出，不提供 LT 正确性或复杂度证明。"
       }
     ]
   }

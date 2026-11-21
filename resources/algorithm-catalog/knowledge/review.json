@@ -1,6 +1,6 @@
 {
   "min-cost-flow": {
-    "status": "project-analysis",
+    "status": "needs-review",
     "model": "固定流量最小费用，或先最大流量再最小费用；与允许任意负费用循环的可行循环问题区分。",
     "checks": [
       "在现有残量图可达边上核对约化费用 c(u,v)+p[u]−p[v]≥0；Dijkstra 有效性来自此条件，而非原始边均非负。",
@@ -23,7 +23,7 @@
     "complexity": "初始 Bellman–Ford O(VE)；A 次堆 Dijkstra O(A(E+V)log(E+2))，加路径恢复 O(AV)；一般整数边仅给 A≤总流 F。"
   },
   "link-cut-tree": {
-    "status": "project-analysis",
+    "status": "needs-review",
     "model": "维护动态森林的边增删、换根与路径聚合；虚子树聚合不是基本 LCT 的免费功能。",
     "checks": [
       "区分辅助树父指针与路径父关系；辅助树根不能只靠 parent==0 判定，应按当前父子槽判断。",
@@ -69,7 +69,7 @@
     "complexity": "每位至多 4|S| 个状态，每状态枚举 B 个数字，O(LB|S|)，滚动表 O(|S|)。"
   },
   "palindromic-tree": {
-    "status": "project-analysis",
+    "status": "needs-review",
     "model": "在线添加字符，维护不同回文子串及后缀链接，不把出现次数当成不同回文数。",
     "checks": [
       "先校验 −1/0 两根以及从奇根继续扩展的边界；回文后缀链接必须指向更短真后缀。",
@@ -151,7 +151,8 @@
     "witness": "[7,5,5] chmin(5) 后三项同为 5，最大值计数由 1 变 3；若在 x=second 时套速更公式就留下错误计数。",
     "checks": [
       "用逻辑值而非 lazy 节点过期值定义势能。",
-      "混合区间加法可能一次增加多个不同值，上面的部分交叉 +1 论证随即失效。"
+      "混合区间加法可能一次增加多个不同值，上面的部分交叉 +1 论证随即失效。",
+      "add+chmin 的势能不能直接沿用：[1,2,1,2] 前半加 10 使根的不同值数从 2 增到 4；这否定论证迁移，不否定 chmin 结论。"
     ],
     "related": [
       "segment-tree"
@@ -171,8 +172,7 @@
             "location": "区间最值操作（区间取最小值的基本模型）"
           }
         ],
-        "derivation": "初始每层不同值数之和≤n。全覆盖强制下探时阈值 x≤严格次大值，至少两类旧值合并或被至多一类替代，势能至少降 1；其他全覆盖节点也不增。部分覆盖节点每层至多两个，各至多新增 x；求和与惰性下推不改变逻辑数组。访问节点数由边界节点和强制下探节点数控制。",
-        "counterexample": "[1,2,1,2] 的前半加 10 后根节点的不同值数从 2 增至 4；这否定势能增量论证向 add 的直接迁移，不否定 chmin 结论。"
+        "derivation": "初始每层不同值数之和≤n。全覆盖强制下探时阈值 x≤严格次大值，至少两类旧值合并或被至多一类替代，势能至少降 1；其他全覆盖节点也不增。部分覆盖节点每层至多两个，各至多新增 x；求和与惰性下推不改变逻辑数组。访问节点数由边界节点和强制下探节点数控制。"
       }
     ]
   },
@@ -186,7 +186,7 @@
     "model": "有向流图，根 s 需要可达；使用可迭代集合算法而非 Lengauer–Tarjan。",
     "preconditions": "先删不可达点；D(s)={s}，其余初始化为全部可达顶点，迭代 D(v)={v}∪所有前驱集合的交。",
     "invariant": "每轮仍保留真实支配点；沿一条避开 x 的 s→v 简单路径逐步删除虚假的 x∈D(v)，根提供第一个删除。",
-    "proof": "对路径长度归纳，避开 x 的路径长 k 时，最迟第 k 轮删除 x，故 V−1 轮后精确。对 v 的两个严格支配点 x,y，在一条简单 s→v 路径上设 x 在 y 之前；任何避开 x 到 y 的路接上该路径 y 之后的后缀就避开 x 到 v，矛盾。所以严格支配点全序，最大的为唯一直接支配点。",
+    "proof": "对路径长度归纳，避开 x 的路径长 k 时，最迟第 k 轮删除 x，故 V−1 轮后精确。对 v 的两个严格支配点 x,y，在一条简单 s→v 路径上设 x 在 y 之前；任何避开 x 到 y 的路接上该路径 y 之后的后缀就避开 x 到 v，矛盾；若拼接出现重复点，删去回路得到简单路径，仍避开 x。所以严格支配点全序，最大的为唯一直接支配点。",
     "complexity": "V−1 轮，每轮 O(E ceil(V/w)+V ceil(V/w)) 位集字操作；直接支配点可用最大 |D(x)|，对每个 v 枚举其严格支配点，另 O(V²)（各集合大小预计算）。",
     "witness": "菱形 s→a,b→t：a、b 均不是 t 的支配点，idom(t)=s；DFS 中先通过 a 不构成唯一必经的证明。",
     "checks": [
@@ -292,7 +292,7 @@
     "preconditions": "标准充分条件为区间包含单调 W(b,c)≤W(a,d) 和四边形不等式 W(a,c)+W(b,d)≤W(a,d)+W(b,c)（a≤b≤c≤d）；一致选最右最优，并设置对角线边界。",
     "invariant": "只有在证明 opt[i][j−1]≤opt[i][j]≤opt[i+1][j] 后，左右两侧界都可用。",
     "proof": "此处只推导由 opt 双侧界到复杂度，不独立证明任意 W 满足上述条件时，dp 必继承所需 Monge 性质；审查时需按标准定理核对规格或提供该引理。",
-    "complexity": "固定区间长度 d，区间 i 的搜索宽受 opt[i+1][i+d]−opt[i][i+d−1]+1 限制，求和中间项抵消，剩 O(n)。所有长度 O(n²)，另计 W 预处理和每个候选代价。",
+    "complexity": "固定当前区间长度 L，区间 [i,i+L−1] 的搜索宽受 opt[i+1][i+L−1]−opt[i][i+L−2]+1 限制；对 i 求和时中间项抵消，每层 O(n)。所有长度 O(n²)，另计 W 预处理和每个候选代价。",
     "witness": "三项权为 [5,−10,5] 用区间权和时，内区间 [5] 的 5 大于整段 0；标准单调包含条件失败，不能照搬定理。",
     "checks": [
       "遇到非标准边界或三角域缺项标 needs-review。",
@@ -368,18 +368,18 @@
     "status": "needs-review",
     "evidence": "original-derivation",
     "sources": [
-      "oi-wiki:graph/graph-matching/general-match.md",
-      "oi-wiki:graph/graph-matching/general-weight-match.md"
+      "oi-wiki:graph/graph-matching/general-match.md"
     ],
-    "model": "无向一般图最大基数匹配，只核查增广证书和奇环收缩义务。",
+    "model": "无向一般图最大基数匹配，只核查增广证书和奇环收缩义务；加权匹配不在本笔记范围。",
     "preconditions": "交替森林由未匹配根出发，偶层顶点扩展；只对同棵森林的两偶层点之间非树边讨论奇环。",
     "invariant": "扩展后匹配仍为不相交边集；收缩前要保存花基和交替路径以供展开。",
     "proof": "若找到合法增广路径，翻转使内部每点保留一条匹配边、两个端点各得一条，基数加一。反之若有更大匹配，两匹配对称差分解交替路径和环，至少有一条多出一条新匹配边的路径。尚未独立证明缩花后存在性等价及展开全过程。",
-    "complexity": "一次合法增广至多 O(V) 路径长度，至多 floor(V/2) 次成功增广。查找复杂度需按具体收缩、标记重置和 LCA 过程另证，不把路径翻转界当全算法界。",
+    "complexity": "一次合法增广至多 O(V) 路径长度，至多 floor(V/2) 次成功增广。常见实现报 O(V³)（或稀疏表示下的 O(VE)），但查找复杂度仍需按具体收缩、标记重置和 LCA 过程另证；本笔记不独立证明该上界，也不把路径翻转界当全算法界。",
     "witness": "三角形 a-b-c-a，匹配 b-c，根 a：从 a 经 b-c 到 c 可用非树边 c-a 得奇交替闭路。只按二分层合法性无条件丢弃会忽略花结构。",
     "checks": [
       "核对花基应为两偶点在森林上的交汇点。",
-      "展开后重新独立验证所有边交替及端点确为游离。"
+      "展开后重新独立验证所有边交替及端点确为游离。",
+      "LCA、嵌套花展开、重边、自环和非连通图均不在本笔记完成证明；保持 needs-review。"
     ],
     "related": [
       "matching"
@@ -405,6 +405,29 @@
       "binary-search",
       "fenwick-tree",
       "cdq"
+    ]
+  },
+  "lengauer-tarjan": {
+    "status": "needs-review",
+    "evidence": "original-derivation",
+    "sources": [
+      "oi-wiki:graph/dominator-tree.md",
+      "library-checker:graph/dominatortree/info.toml"
+    ],
+    "model": "有向流图，选取根 s；对可达顶点做 DFS 编号，按编号逆序计算半支配点 semi，经 link-eval 与 bucket 求直接支配点。不可达点先删除；自环与重边不改变支配关系。",
+    "preconditions": "DFS 树覆盖所有待处理顶点；semi(w) 取能到达 w 且内部点 DFS 编号均大于 w 的路径起点的最小编号（内部点不含端点）；bucket 在父节点被 link 后结算；idom[w] 与 semi[w] 不同时沿 idom 链修正。",
+    "invariant": "逆序处理时，semi(w) 已由所有相关前驱的 eval 值确定；link 后祖先链的 label 保留压缩路径上 semi 最小的候选；bucket 延迟到父节点接入后结算，避免使用未链接的祖先。",
+    "proof": "本笔记只登记定义、处理顺序和最终修正关系，供审查者对照。未独立证明半支配点引理、eval/compress 的路径压缩正确性、bucket 结算的完备性以及最终 idom 修正的充分性。因此结论保持 needs-review，不能由小图 oracle 或上游权威替代证明。",
+    "complexity": "简单 link-eval 实现通常报 O((V+E) log V)，带平衡 link 的版本报 O((V+E) α(V,E))；两种界都依赖具体实现与摊还论证。本笔记未复证这些界，也不把小图测试当作复杂度证明。",
+    "witness": "s→a、a→b、s→b：DFS 先访问 a 时 b 的树父为 a，但 s→b 绕过 a，故 DFS 父不是 idom；idom(b)=s。semi(b) 仍由 DFS 编号与回边确定。",
+    "checks": [
+      "semi 定义中的内部点不含路径端点；DFS 编号唯一，比较用严格大于。",
+      "bucket 必须在 link(parent(w), w) 之后结算；idom[w] 与 semi[w] 不等时沿 idom 链修正。",
+      "不可达点先删除；自环、重边与非连通图不构成 LT 证明，需按定义处理。",
+      "简单 link-eval 与平衡 link 的复杂度不可混用；本笔记不认证任一实现的生产级界。"
+    ],
+    "related": [
+      "dominator-tree"
     ]
   }
 }

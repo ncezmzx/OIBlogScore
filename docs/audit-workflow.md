@@ -21,7 +21,7 @@
 
 `FAIL` 或 `SUSPECTED` 要附至少一个 finding。语言项的 finding 额外提供 `repair_class` (`A/B/C/D`)，可附建议原句和替换句（这些不会被 CLI 写回）。票据、指纹不符或任务已完成时提交被拒绝。修订已完成结论用 Full + 路径和维度重开。步骤可以批量重复或者由宿主并行分发，不要共享不同 worker 的结果文件。
 
-5. 从报告查看所有文章和未知项。若用户批准修复，用 `repair`，比对 journal 并 `verify`，随后处理新队列。修复改变内容会使旧审查失效，即使精确验证已经通过。技术复审结束后再次 `report`。
+5. 从报告查看所有文章和未知项。若用户批准修复，用 `repair`，比对 journal 并 `verify`，随后处理新队列。修复改变内容会使旧审查失效，即使精确验证已经通过。技术复审结束后再次 `report`。`verify` 不修改正文；没有活跃修复时输出空并提示 no-op，不是通过。`COMPLETE` 只表示配置范围处理完成，不是文章无误。Windows Git Bash 的 `/tmp` 路径先转成原生路径；CLI 不可用时按 Skill 的只读降级流程记录 `NOT_CHECKED`/`NEEDS_CONTEXT`。
 
 
 `dependency_edges` 中的 `configured` 是维护者显式给出的路径，`heuristic` 是文本解析的命中，不保证与站点构建行为相同。在 `oiblogscore.json` 的 `dependencies` 中加边；对于已报告的动态引用，可用 `dependency_resolutions` 按源文件和原始引用文本给出对应 Git 可见路径。空数组表示维护者明确确认不纳入，并非默认忽略。未解析引用会使仓库报告保持 `INCOMPLETE`，即使该批任务均已有其他结论。

@@ -19,8 +19,10 @@ def schedule(repo, manifest, mode='incremental', paths=(), types=(), categories=
         raise ValueError('Invalid audit dimensions')
     state['scope'] = [list(paths), list(types), list(categories), list(dimensions)]
     tasks, work = state['tasks'], []
+    retained = set(manifest.get('missing_tracked', ())) | {
+        issue['path'] for issue in manifest.get('discovery_issues', []) if issue.get('path')}
     for name in list(tasks):
-        if name not in manifest['articles']:
+        if name not in manifest['articles'] and name not in retained:
             del tasks[name]
     for name, article in manifest['articles'].items():
         record = tasks.setdefault(name, {})

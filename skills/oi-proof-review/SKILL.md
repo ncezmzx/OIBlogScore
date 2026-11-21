@@ -26,7 +26,7 @@ description: 审查算法竞赛博客的数学推导、定理条件和正确性�
 
 若有 OIBlogScore checkout，在其中运行 `python tools/catalog.py`。用 `find <术语>` 找 canonical ID，读 `review <id>` 中的成立条件和反例，再用 `refs <id>` 核对版本与原始材料。将引用定理的适用假设写成依赖；仅有 sources-only 时先检查原文或独立推导，否则结论保留未查。 只有来源索引时，不得标记来源结论为 VERIFIED；无法访问共享库时按本包协议独立核验，并记录限制。
 
-- **触发**：开始审查具体算法、实现变体或原文章节有定理引用时；纯文字修复不触发。
+- **触发**：开始审查定理、引理、不变量、充要条件或证明引用时；纯文字修复不触发。
 - **检索**：在 checkout 用 `python tools/catalog.py find <术语>`，用 `refs <id>` 追源，用 `review <id>` 读本地分析；需要区分实现时用 `variants <id>`。
 - **消歧**：比较 `find --json` 的 `matching_fields`；遇到同名、相似结果或变体先按模型和假设区分，再用 canonical ID 查询。候选来源不能当作已建立映射；无覆盖时明确记录，不从相似条目迁移结论。
 - **证据层**：来源的 `upstream-unreviewed` 与本地 `project-analysis`、`needs-review` 不同；相关资料不等于算法相同。检索命中不构成通过证据。

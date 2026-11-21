@@ -12,3 +12,5 @@
 `style.json` 保存句段均长、常见句子开头、短语、口语和第一人称标记、词汇、标点、中英混排计数和简洁度代理指标。只有能提取相同作者标签的文件被纳入参考，身份不明确时不纳入；同名身份要由 Agent 复核。统计不直接驱动自动改写，不抹掉口癖。
 
 修改前比较 HEAD、索引及工作区字节，只写 Git 干净的文章；不调用可能触发工作树过滤器的 `git status`。同仓库其他文件有修改不影响。日志先写原稿、旧哈希、新哈希和候选操作，再替换文件，最后确认写入。`resume` 对中断状态仅在内容等于旧值或新值时收敛，否则报告冲突。`verify` 不覆盖外部修改，退出码 1 表示验证失败。回滚依赖当前文件与日志预期精确匹配、且未暂存；冲突时停止，保留作者工作，由人工用日志中的备份做三方合并。一次只允许同一文章有一份活跃修复日志。工具不会调用 reset、clean、checkout、commit 或 push。
+
+Windows `core.autocrlf=true` 或 `.gitattributes` 的 text/eol 处理会让工作区字节与 HEAD blob 不同。CLI 不按 Git 归一化结果写回，而是把文件判为 dirty 跳过，并在 `.oiblogscore/repair-run.json` 的 `detail` 中记录 `core.autocrlf=...` 或属性；这是保守拒绝，不是成功。需要自动修复时，在该仓库设置 `core.autocrlf=false` 并重新 checkout，或只审查。`core.fileMode=false`（常见于 WSL/DrvFs）时忽略可执行位差异，避免把所有 100644 文件误判为 dirty。非 UTF-8 文章跳过并记录 `not utf-8 (skipped)`。建议 `safe` 总是显式 `--path`；不带路径会处理全仓命中文章。没有活跃修复时 `verify` 的空结果是 no-op，不是通过。

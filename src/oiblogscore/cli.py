@@ -39,7 +39,16 @@ def parser():
     return p
 
 
+def _utf8_stdio():
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding='utf-8', errors='backslashreplace')
+        except (AttributeError, OSError):
+            pass
+
+
 def main(argv=None):
+    _utf8_stdio()
     args = parser().parse_args(argv)
     try:
         repo = Repo(args.repository)
@@ -73,6 +82,9 @@ def main(argv=None):
                 schedule(repo, manifest)
             elif command == 'verify':
                 checks = verify_journal(repo)
+                if not checks:
+                    print('No active or interrupted repairs to verify; this does not certify article correctness.',
+                          file=sys.stderr)
                 print(json.dumps(checks, ensure_ascii=False, indent=2))
                 if any(check['errors'] for check in checks):
                     exit_code = 1
@@ -86,7 +98,11 @@ def main(argv=None):
             elif command == 'scan':
                 print('{} candidates: .oiblogscore/manifest.json'.format(report['discovered']))
         return exit_code
-    except (OSError, ValueError, subprocess.CalledProcessError, KeyError, TypeError, EOFError) as exc:
+    except subprocess.CalledProcessError as exc:
+        detail = exc.stderr.decode('utf-8', errors='replace').strip() if isinstance(exc.stderr, bytes) else str(exc)
+        print('oiblogscore: git failed: {}'.format(detail), file=sys.stderr)
+        return 2
+    except (OSError, ValueError, KeyError, TypeError, EOFError) as exc:
         print('oiblogscore: {}'.format(exc), file=sys.stderr)
         return 2
 

@@ -1,12 +1,19 @@
 """Audit result contract and persistence. This does not judge evidence semantics."""
 import re
 
-from ..repository import stamp
+from ..repository import digest, stamp
 
 DIMENSIONS = ('algorithm', 'proof', 'complexity', 'code', 'counterexample', 'language')
 VERDICTS = ('PASS', 'SUSPECTED', 'FAIL', 'NOT_CHECKED', 'NEEDS_CONTEXT', 'NOT_APPLICABLE')
 PENDING = frozenset({'NOT_CHECKED', 'NEEDS_CONTEXT'})
 SEVERITIES = ('Critical', 'Major', 'Minor', 'Suggestion')
+
+
+def verify_inputs(repo, article):
+    """The manifest may be seconds old; re-read bytes before accepting a review."""
+    for name, expected in article['inputs'].items():
+        if digest(repo.path(name).read_bytes()) != expected:
+            raise ValueError('Inputs changed during audit; regenerate the queue: ' + name)
 
 
 def validate_result(result, dim):
@@ -67,5 +74,6 @@ def submit(repo, manifest, result_path):
     if task.get('result', {}).get('verdict', 'NOT_CHECKED') not in PENDING:
         raise ValueError('Task already finalized; start a full targeted audit to replace it')
     findings = validate_result(result, dim)
+    verify_inputs(repo, article)
     task['result'] = dict(result, findings=findings, reviewed_at=stamp())
     repo.save('audit.json', state)

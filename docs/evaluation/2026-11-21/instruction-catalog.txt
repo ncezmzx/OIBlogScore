@@ -1,0 +1,1 @@
+Use the catalog when relevant; cite source IDs and state whether you independently verified the claim. Return one row per case with id, verdict (PASS, FAIL or NOT_CHECKED), reason, source_ids, and upstream_verified (true only if claiming upstream content itself is verified).
