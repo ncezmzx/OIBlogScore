@@ -9,6 +9,7 @@ import subprocess
 import shutil
 from tempfile import TemporaryDirectory
 import sys
+import unicodedata
 from urllib.parse import quote
 
 from catalog_schema import LAYOUTS
@@ -24,7 +25,7 @@ def sha(data):
 
 
 def git(checkout, *args):
-    return subprocess.check_output(['git', '-C', str(checkout), *args], stderr=subprocess.PIPE)
+    return subprocess.check_output(['git', '--no-replace-objects', '-C', str(checkout), *args], stderr=subprocess.PIPE)
 
 
 def records(provider, config, checkout, policy):
@@ -32,19 +33,31 @@ def records(provider, config, checkout, policy):
     if not re.fullmatch(r'[0-9a-f]{40}', revision):
         raise ValueError('A full commit SHA is required')
 
+    if git(checkout, 'cat-file', '-t', revision).strip() != b'commit':
+        raise ValueError('Pinned object must be a commit')
+
+    tree = {}
+    for entry in git(checkout, 'ls-tree', '-r', '-z', revision).split(b'\0'):
+        if entry:
+            metadata, name = entry.split(b'\t', 1)
+            mode, kind, oid = metadata.split(b' ')
+            tree[name.decode('utf-8')] = (mode, kind, oid.decode('ascii'))
+
     def read(path):
-        return git(checkout, 'show', revision + ':' + path)
+        mode, kind, oid = tree[path]
+        if mode not in (b'100644', b'100755') or kind != b'blob':
+            raise ValueError('Upstream path is not a regular blob: ' + path)
+        return git(checkout, 'cat-file', 'blob', oid)
 
     license_bytes = read(config['policy_path'])
     if sha(license_bytes) != config['policy_sha256']:
         raise ValueError(provider + ': license declaration changed; review before updating the pinned hash')
-    paths = git(checkout, 'ls-tree', '-r', '-z', '--name-only', revision).decode().strip('\0').split('\0')
-    paths = [n for n in paths if n.startswith(LAYOUTS[provider])]
+    paths = [name for name in tree if name.startswith(LAYOUTS[provider])]
     nav = {}
     if provider == 'oi-wiki':
         for title, path in re.findall(r'^\s*-\s+(.+?):\s+(\S+\.md)\s*$', read('mkdocs.yml').decode(), re.M):
             nav[path] = title.strip('"\'')
-    rows, assets, seen_allowlist = [], {}, set()
+    rows, assets, seen_allowlist, portable = [], {}, set(), {}
     allowlist = set(policy.get(provider, []))
     base = f"https://github.com/{config['repository']}"
     for path in paths:
@@ -60,6 +73,9 @@ def records(provider, config, checkout, policy):
             continue
         if provider == 'kactl' and (not path.endswith('.h') or folder in ('contest', 'various')):
             continue
+        folded = unicodedata.normalize('NFC', path).casefold()
+        if portable.setdefault(folded, path) != path:
+            raise ValueError('Nonportable upstream path collision: ' + portable[folded] + ' / ' + path)
         raw = read(path)
         text = raw.decode('utf-8', errors='replace')
         stem = Path(name).stem
@@ -145,6 +161,14 @@ def broken_references(knowledge, removed):
             'triage_baseline': sorted(missing.intersection(baseline))}
 
 
+def candidate_approval(approval, config):
+    if (not isinstance(approval, dict) or set(approval) != {'revision', 'policy_sha256', 'files'}
+            or approval['revision'] != config['revision'] or approval['policy_sha256'] != config['policy_sha256']
+            or not isinstance(approval['files'], dict)):
+        raise ValueError('Approval must name the new revision, unchanged policy_sha256, and per-file hashes')
+    return approval['files']
+
+
 def require_valid(root):
     from catalog_quality import check_sources
     issues = check_sources(root)
@@ -161,18 +185,22 @@ def main(argv=None):
     parser.add_argument('provider', choices=LAYOUTS)
     parser.add_argument('checkout', type=Path)
     parser.add_argument('--output', type=Path, help='new directory only; never overwrites existing files')
-    parser.add_argument('--approvals', type=Path, default=ROOT/'approved-verbatim.json', help='reviewed digests of verbatim files')
+    parser.add_argument('--approvals', type=Path, help='explicit reviewed digests of verbatim files for a new pin')
     parser.add_argument('--providers', type=Path, default=ROOT/'providers.json', help='reviewed candidate pin file')
     args = parser.parse_args(argv)
     try:
         if args.output and args.output.exists():
             raise ValueError('Output already exists; use a fresh staging directory')
-        if args.output and ROOT.parent in (args.output.resolve(), *args.output.resolve().parents):
-            raise ValueError('Output must be outside the catalog')
+        if args.output:
+            output = args.output.resolve()
+            if ROOT.parent in (output, *output.parents) or '.git' in {p.lower() for p in output.parts}:
+                raise ValueError('Output must be outside the catalog and Git metadata')
         require_valid(ROOT.parent)
         config = load(args.providers)[args.provider]
+        if not isinstance(config, dict):
+            raise ValueError('Candidate provider must be an object')
         current_config = load(ROOT / 'providers.json')[args.provider]
-        permitted = {'revision','policy_sha256','policy_url','retrieved'}
+        permitted = {'revision','policy_url','retrieved'}
         if {k:v for k,v in config.items() if k not in permitted} != {k:v for k,v in current_config.items() if k not in permitted}:
             raise ValueError('Candidate changes provider identity or licensing policy; review the policy separately')
         if config['policy_url'] != 'https://github.com/{repository}/blob/{revision}/'.format(**config) + quote(config['policy_path']):
@@ -190,7 +218,11 @@ def main(argv=None):
         candidate_profiles[args.provider] = config
         files = {name: encoded(rows), **assets}
         if args.provider == 'cp-algorithms':
-            approved = load(args.approvals)
+            if config['revision'] != current_config['revision'] and args.approvals is None:
+                raise ValueError('New verbatim pin requires explicit --approvals, even for unchanged bytes')
+            approved = load(args.approvals or ROOT / 'approved-verbatim.json')
+            if config['revision'] != current_config['revision']:
+                approved = candidate_approval(approved, config)
             imported = {r['id'].split(':', 1)[1]: r['sha256'] for r in rows if r['mode'] == 'verbatim'}
             if imported != approved:
                 raise ValueError('Verbatim payloads changed; inspect diff, attribution and license before approving new digests')
@@ -207,13 +239,13 @@ def main(argv=None):
             require_valid(candidate)
         if args.output:
             args.output.mkdir(parents=False, exist_ok=False)
-            for relative, data in files.items():
+            for relative, data in sorted(files.items(), key=lambda pair: pair[0] == name):
                 p = local_path(args.output, relative)
                 p.parent.mkdir(parents=True, exist_ok=True)
                 with p.open('xb') as stream:
                     stream.write(data)
         return 0
-    except (OSError, ValueError, subprocess.CalledProcessError, KeyError) as exc:
+    except (OSError, ValueError, subprocess.CalledProcessError, KeyError, TypeError) as exc:
         print(str(exc), file=sys.stderr)
         return 2
 

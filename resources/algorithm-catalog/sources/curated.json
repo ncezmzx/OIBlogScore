@@ -716,5 +716,28 @@
     "modified": false,
     "retrieved": "2026-11-20",
     "license": "not-established"
+  },
+  {
+    "id": "atcoder:abc264-4583",
+    "provider": "atcoder",
+    "title": "E - Blackout 2 Editorial",
+    "authors": [
+      "physics0523"
+    ],
+    "url": "https://atcoder.jp/contests/abc264/editorial/4583",
+    "original_language": "ja",
+    "content_language": "zh",
+    "kind": "editorial",
+    "scope": "官方题解把仅删除电线的离线序列倒序转为加边，在恢复对应边前记录已通电城市数，并用并查集维护分量是否有电源。",
+    "review_use": "项目核对点：正向删除后的图对应倒序恢复前的图；任意加删或在线输入不能直接套用。分别核对边 ID 和计数范围。",
+    "published": null,
+    "trust": "upstream-unreviewed",
+    "metadata_status": "indexed-from-public-metadata",
+    "metadata_evidence": "https://atcoder.jp/contests/abc264/editorial",
+    "body_review": "scope-inspected",
+    "mode": "external-index",
+    "modified": false,
+    "retrieved": "2026-11-19",
+    "license": "not-established"
   }
 ]

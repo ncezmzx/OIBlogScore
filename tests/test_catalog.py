@@ -120,3 +120,17 @@ class CatalogTests(unittest.TestCase):
             run = command('sync_catalog.py','cp-algorithms',root,'--output',root)
             self.assertEqual(run.returncode,2)
             self.assertIn('already exists',run.stderr)
+
+    @unittest.skipUnless(shutil.which('g++') and sys.platform.startswith('linux'), 'GNU/Linux UBSan compiler required')
+    def test_cpp_orientation_widening_and_ubsan_witness(self):
+        with tempfile.TemporaryDirectory() as temp:
+            exe = Path(temp) / 'orientation'
+            for flags in [[], ['-DBROKEN']]:
+                subprocess.run(['g++', '-std=c++17', '-fsanitize=undefined', '-fno-sanitize-recover=undefined',
+                                *flags, str(FIXTURES/'orientation.cpp'), '-o', str(exe)], check=True, timeout=15)
+                run = subprocess.run([str(exe)], input='-2000000000 2000000000\n', capture_output=True, text=True, timeout=3)
+                if flags:
+                    self.assertNotEqual(run.returncode, 0)
+                    self.assertIn('signed integer overflow', run.stderr)
+                else:
+                    self.assertEqual((run.returncode, run.stdout.strip()), (0, '1'))

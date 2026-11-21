@@ -24,3 +24,8 @@
 ### 声明级证据（可选）
 
 Review 的 `claims` 为可选数组，仅在需要追踪单个结论或区分其核验状态时填写。每项包含条目内唯一 `claim_id`、`statement`、`status`、`assumptions` 和 `evidence`（本条已关联的 `source` 与原文 `location`）。自有分析和独立核验都要求 `derivation`；确有反例时可填 `counterexample`，不要求凑字段。`needs-review`、`disputed`、`deprecated` 要求 `status_reason`。`independently-verified` 额外要求 `reviewer`、`reviewed_at`、`verification`（可复现的核验方法）；门禁只检查记录形状与关联，不认证签名、身份或推导。`upstream-unreviewed` 是来源状态，不能用作本地声明的核验证明；没有 `claims` 的旧笔记不自动获得独立核验状态。
+
+
+可选 `body_review` 描述 curated 条目的正文阅读范围：`scope-inspected` 表示阅读到足以描述该条登记的范围，`not-inspected` 或未记录均不能作为已读证明。`scope` 描述来源内容，`review_use` 是项目提出的审稿用途；`trust` 仍为 `upstream-unreviewed`。没有确认确切发布日期时，`published` 为 null，不把比赛日期、目录日期或取回日期当作发文时间。
+
+`stats.counts.crosswalk_relations` 按关联边计数；`triage.by_relation` 按固定样本中的不同来源计数，同一来源可进入多个类型。`canonical_by_category` 不含临时上游候选，`algorithms` 保留旧的混合口径。`local_artifacts` 中 Markdown 和结构化说明可能描述同一算法，不能直接相加当作覆盖实体数。

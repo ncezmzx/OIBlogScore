@@ -4,8 +4,8 @@ import hashlib
 import re
 from urllib.parse import quote, urlsplit
 
-from catalog_io import local_path
-from catalog_schema import LICENSES, check_claims, check_record, matches_url, safe_path, terms
+from catalog_io import local_path, read_text
+from catalog_schema import LAYOUTS, LICENSES, check_claims, check_record, matches_url, safe_path, terms
 from catalog_data import EXTRA, RELATIONS, category, name_key, normalize, read, sources
 
 
@@ -22,7 +22,11 @@ def https(value):
 
 
 def checksum(path):
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    digest = hashlib.sha256()
+    with path.open('rb') as stream:
+        for chunk in iter(lambda: stream.read(65536), b''):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def _check_sources(root, issues):
@@ -34,7 +38,19 @@ def _check_sources(root, issues):
     policy = read(local_path(root, 'sources/import-policy.json'))
     approvals = read(local_path(root, 'sources/approved-verbatim.json'))
     expected_assets = {'upstream/cp-algorithms/LICENSE.txt'}
+    common = set('title url license license_url mode permissions policy_url retrieved terms'.split())
+    pinned = set('language policy_path policy_sha256 repository revision'.split())
+    invalid_profiles = set()
     for pid, profile in providers.items():
+        expected = common | (pinned if pid in LAYOUTS else set())
+        if (not isinstance(profile, dict) or profile.keys() != expected
+                or any(not isinstance(profile[k], str) or not profile[k].strip()
+                       for k in expected - {'license_url','policy_url','permissions','terms'})
+                or not isinstance(profile['permissions'], dict) or not isinstance(profile['terms'], dict)
+                or any(profile[k] is not None and not https(profile[k]) for k in ('license_url','policy_url'))):
+            issues.append(pid + ': malformed provider schema')
+            invalid_profiles.add(pid)
+            continue
         if not ID.fullmatch(pid) or not https(profile['url']) or profile.get('license') not in LICENSES:
             issues.append(pid + ': invalid provider identity/license')
         if set(profile['permissions']) != {'copy', 'modify', 'redistribute'} or set(profile['permissions'].values()) - {'license-conditional', 'not-established'}:
@@ -60,6 +76,8 @@ def _check_sources(root, issues):
             issues.append('Unknown source provider or malformed source record')
             continue
         pid = row['provider']
+        if pid in invalid_profiles:
+            continue
         profile = providers[pid]
         errors = check_record(row, profile)
         if errors:
@@ -75,8 +93,12 @@ def _check_sources(root, issues):
         if pid == 'codeforces' and (not re.fullmatch(r'codeforces:[0-9]+', key) or urlsplit(row['url']).path != '/blog/entry/' + key.split(':',1)[1]
                                     or any(not isinstance(a,str) or not re.fullmatch(r'[A-Za-z0-9_.-]+', a) for a in row['authors'])):
             issues.append(key + ': invalid Codeforces article ID or author handle')
-        if row.get('published') is not None:
-            date.fromisoformat(row['published'])
+        for field in ('published', 'retrieved'):
+            if row.get(field) is not None:
+                try:
+                    date.fromisoformat(row[field])
+                except ValueError:
+                    issues.append(key + ': invalid calendar date: ' + field)
         url = row['url']
         if key in ids or url in urls or not key.startswith(pid + ':') or not https(url) or urlsplit(url).hostname != urlsplit(profile['url']).hostname:
             issues.append(key + ': duplicate ID/URL or invalid URL/provider')
@@ -86,7 +108,6 @@ def _check_sources(root, issues):
                 or not row['title'].strip() or not row['original_language'] or not row['content_language']
                 or not isinstance(row['authors'], list) or any(not isinstance(a, str) or not a.strip() for a in row['authors'])):
             issues.append(key + ': invalid attribution, license or trust separation')
-        date.fromisoformat(row['retrieved'])
         if 'repository' in profile:
             repo = 'https://github.com/' + profile['repository']
             path = row['path']
@@ -115,13 +136,18 @@ def _check_sources(root, issues):
             path = local_path(root, "sources/" + relative)
             if not path.is_file() or path.is_symlink() or checksum(path) != row['sha256']:
                 issues.append(key + ': missing or modified upstream text')
+            else:
+                try:
+                    read_text(path)
+                except (ValueError, OSError) as exc:
+                    issues.append(key + ': invalid verbatim text: ' + str(exc))
         elif row['mode'] != 'external-index' or 'text_path' in row:
             issues.append(key + ': disallowed redistribution mode')
     assets = {p.relative_to(directory).as_posix() for p in (directory/'upstream').rglob('*') if p.is_file()}
     if assets != expected_assets or observed_copies != allowlisted_copies or observed_copies != approvals.keys():
         issues.append('Untracked or missing upstream assets/allowlist entries')
-    license_file = directory / 'upstream/cp-algorithms/LICENSE.txt'
-    if license_file.exists() and checksum(license_file) != providers['cp-algorithms']['policy_sha256']:
+    license_file = local_path(root, 'sources/upstream/cp-algorithms/LICENSE.txt')
+    if 'cp-algorithms' in providers and 'cp-algorithms' not in invalid_profiles and license_file.is_file() and checksum(license_file) != providers['cp-algorithms']['policy_sha256']:
         issues.append('Bundled CC BY-SA license differs from pinned original')
     return issues
 
@@ -151,6 +177,9 @@ def check_knowledge(root, issues):
             continue
         cards[key] = dict(topic, refs=[], legacy=True)
     seen = set()
+    if not isinstance(crosswalk, list):
+        issues.append('Crosswalk must be an array')
+        crosswalk = []
     for row in crosswalk:
         if not isinstance(row, dict) or not isinstance(row.get('id'), str):
             issues.append('Malformed crosswalk record')
@@ -204,7 +233,7 @@ def check_knowledge(root, issues):
             issues.append(key + ': no traceable sources')
         if card.get('path') and sources_by_id is not None:
             try:
-                body = local_path(root, card['path']).read_text(encoding='utf-8')
+                body = read_text(local_path(root, card['path']))
                 urls = set(re.findall(r'\]\((https://[^)]+)\)', body))
                 known = {sources_by_id[sid]['url'] for sid in card['refs'] if sid in sources_by_id}
                 if urls - known:
@@ -217,11 +246,14 @@ def check_knowledge(root, issues):
     for key, note in notes.items():
         card = cards.get(key, {})
         if (not isinstance(note, dict) or (fields - note.keys() or note.keys() - fields - {'claims'}) or not card or card.get('identity')
-                or note['status'] not in {'project-analysis','needs-review'} or note['evidence'] != 'original-derivation'
-                or not note['sources'] or set(note['sources']) - set(card['refs'])
+                or not isinstance(note['status'], str) or note['status'] not in {'project-analysis','needs-review'} or note['evidence'] != 'original-derivation'
+                or not isinstance(note['sources'], list) or not note['sources']
+                or any(not isinstance(s, str) for s in note['sources'])
+                or len(set(note['sources'])) != len(note['sources']) or set(note['sources']) - set(card['refs'])
                 or not isinstance(note['checks'], list) or any(not isinstance(v, str) or not v.strip() for v in note['checks'])
                 or len(set(note['checks'])) < 2
-                or set(note['related']) - cards.keys() or key in note['related']):
+                or not isinstance(note['related'], list) or any(not isinstance(s, str) for s in note['related'])
+                or len(set(note['related'])) != len(note['related']) or set(note['related']) - cards.keys() or key in note['related']):
             issues.append(key + ': incomplete or untraceable project reasoning')
             continue
         issues.extend(f'{key}: {error}' for error in check_claims(note.get('claims', []), set(note['sources'])))
@@ -233,7 +265,7 @@ def check_knowledge(root, issues):
                 issues.append(f'{key}: duplicate review prose ({field})')
             else:
                 used.add(normalize(value))
-        if not re.search(r'O\(|Θ\(|Ω\(|ceil|floor|Σ', note['complexity']):
+        if isinstance(note['complexity'], str) and not re.search(r'O\(|Θ\(|Ω\(|ceil|floor|Σ', note['complexity']):
             issues.append(key + ': complexity requires an explicit bound or work expression')
     return issues
 

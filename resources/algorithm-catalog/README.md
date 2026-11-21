@@ -33,3 +33,5 @@ python tools/catalog.py stats
 所有查询离线进行。`find` 的精确规范别名优先；关键词可以命中关联资料标题。`refs` 返回全部**已关联**来源，不承诺覆盖互联网。`related` 分别标识人工交叉引用和共享来源形成的弱关联。`--limit 0` 取消结果截断。来源记录有公开访问地址；固定提交是同步、溯源和核对版本的依据。详见[维护与验收](../../docs/catalog-maintenance.md)。
 
 检索时，`index.json` 只描述本地 Markdown；`tools/catalog.py` 会校验后合成 Source、Crosswalk、Review 和本地条目。`find` 默认保留部分匹配和来源标题线索；先排精确 ID、别名、标题，再排部分匹配。`find --json` 给出 `matching_fields` 和 `ambiguous_exact`，`--exact` 只保留精确命中而不强制选一个。候选不是等价映射；未映射的来源仍可经 `search-sources` 找到。指定独立数据目录时把 `--root` 放在子命令之前。
+
+需要看明确编辑关联时用 `python tools/catalog.py find link-cut-tree --include-related`，弱关联排在直接命中之后，不当作同义词。`stats` 分开报告规范实体、本地知识覆盖、临时候选和关联边。

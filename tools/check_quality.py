@@ -91,7 +91,7 @@ def check(root):
             for script, command in re.findall(r'^python (tools/[\w-]+\.py)(?: ([\w-]+))?', text, re.M):
                 if not (root / script).is_file():
                     issues.append(f'{path}: nonexistent documented tool: {script}')
-                known = SEARCH_COMMANDS + ITEM_COMMANDS + SUMMARY_COMMANDS if script == 'tools/catalog.py' else ('pack','compare') if script == 'tools/blind_eval.py' else None
+                known = SEARCH_COMMANDS + ITEM_COMMANDS + SUMMARY_COMMANDS if script == 'tools/catalog.py' else ('pack','compare','anonymize','grade','grade-targets') if script == 'tools/blind_eval.py' else None
                 if command and known is not None and command not in known:
                     issues.append(f'{path}: unknown documented command: {script} {command}')
         edges[path] = set()

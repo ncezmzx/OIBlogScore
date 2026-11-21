@@ -59,7 +59,7 @@ def check_record(row, profile):
     if not isinstance(row, dict):
         return ['Source record must be an object']
     fields = BASE | (PIN if profile.get('repository') else CURATED)
-    optional = {'text_path'} if profile.get('repository') else {'metadata_evidence'}
+    optional = {'text_path'} if profile.get('repository') else {'metadata_evidence', 'body_review'}
     if fields - row.keys() or row.keys() - fields - optional:
         return ['missing or unknown source fields: ' + ', '.join(sorted((fields - row.keys()) | (row.keys() - fields - optional)))]
     string_fields = fields - {'authors','modified','published'}
@@ -72,6 +72,8 @@ def check_record(row, profile):
         if (row['published'] is not None and (not isinstance(row['published'], str) or not re.fullmatch(r'\d{4}-\d{2}-\d{2}', row['published']))
                 or row['metadata_status'] not in ('indexed-from-public-metadata','cited-by-local-reference','indexed-from-secondary-directory')):
             return ['invalid curated metadata status or publication date']
+        if 'body_review' in row and row['body_review'] not in ('scope-inspected', 'not-inspected'):
+            return ['invalid curated body review status']
         if row['metadata_status'] == 'indexed-from-secondary-directory' and not row.get('metadata_evidence'):
             return ['secondary metadata requires provenance']
     return []

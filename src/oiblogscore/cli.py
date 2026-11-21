@@ -44,13 +44,14 @@ def main(argv=None):
     try:
         repo = Repo(args.repository)
         command = args.command
+        exit_code = 0
         with repo.lock():
             paths = getattr(args, 'path', [])
             if isinstance(paths, str):
                 paths = [paths]
             for path in paths:
                 repo.path(path)
-            paths = [Path(path).as_posix() for path in paths]
+            paths = [repo.path(path).relative_to(repo.root).as_posix() for path in paths]
             manifest = discover(repo)
             if command == 'audit' or command == 'repair' and args.mode == 'audit-only':
                 queue = schedule(repo, manifest, 'full' if getattr(args, 'full', False) else 'incremental', paths,
@@ -74,7 +75,7 @@ def main(argv=None):
                 checks = verify_journal(repo)
                 print(json.dumps(checks, ensure_ascii=False, indent=2))
                 if any(check['errors'] for check in checks):
-                    return 1
+                    exit_code = 1
             report = build(repo, manifest)
             repo.save('manifest.json', {**manifest, 'articles': {name: {key: value for key, value in article.items() if key != 'results'} for name, article in report['articles'].items()}})
             repo.save('report.json', report)
@@ -84,7 +85,7 @@ def main(argv=None):
                 print(json.dumps(report, ensure_ascii=False, indent=2) if args.json else view, end='\n')
             elif command == 'scan':
                 print('{} candidates: .oiblogscore/manifest.json'.format(report['discovered']))
-        return 0
+        return exit_code
     except (OSError, ValueError, subprocess.CalledProcessError, KeyError, TypeError, EOFError) as exc:
         print('oiblogscore: {}'.format(exc), file=sys.stderr)
         return 2

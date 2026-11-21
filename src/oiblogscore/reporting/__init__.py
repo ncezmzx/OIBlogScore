@@ -1,15 +1,22 @@
 """Repository reports never count stale or pending results as reviewed."""
 from collections import Counter
+from html import escape
+import json
+import re
+import unicodedata
 
-from ..audit import DIMENSIONS, SEVERITIES, VERDICTS
+from ..audit import DIMENSIONS, PENDING, SEVERITIES, VERDICTS, load_state
 from ..repair import verify_journal
+from ..repository import digest
 
 
 def build(repo, manifest):
-    state = repo.read('audit.json', {'tasks': {}, 'commit': ''})
+    state = load_state(repo)
     changed = repo.changed(state['commit'])
     journal = repo.read('repairs.json', [])
-    verified = verify_journal(repo)
+    verified = verify_journal(repo, journal)
+    authority = {name: digest(json.dumps(value, sort_keys=True).encode('ascii'))
+                 for name, value in (('audit.json', state), ('repairs.json', journal))}
     verdicts, severity = Counter(), Counter()
     reviewed = 0
     unresolved = list(manifest['discovery_issues'])
@@ -25,9 +32,9 @@ def build(repo, manifest):
             for finding in results[dim]['findings']:
                 severity[finding['severity']] += 1
                 unresolved.append(dict(finding, path=name, dimension=dim))
-            if verdict in ('NOT_CHECKED', 'SUSPECTED') and not results[dim]['findings']:
+            if verdict in PENDING | {'SUSPECTED'} and not results[dim]['findings']:
                 unresolved.append(dict(path=name, dimension=dim, reason=results[dim]['evidence']))
-        done = all(result['verdict'] != 'NOT_CHECKED' for result in results.values())
+        done = not article['unresolved_dependencies'] and all(result['verdict'] not in PENDING for result in results.values())
         reviewed += done
         edits = [edit for e in journal if e['path'] == name and e['status'] == 'applied' for edit in e['edits'] if edit['active']]
         language = results['language']['findings']
@@ -41,8 +48,9 @@ def build(repo, manifest):
     count = len(manifest['articles'])
     all_verified = not any(item['errors'] for item in verified)
     # 'Discovered' means the configured Git-visible scope was enumerated.
-    discovery_ok = not manifest['discovery_issues']
-    return dict(manifest, discovered=count, reviewed=reviewed, unreviewed=count-reviewed,
+    discovery_ok = not manifest['discovery_issues'] and not any(
+        a['unresolved_dependencies'] for a in manifest['articles'].values())
+    return dict(manifest, authority_sha256=authority, discovered=count, reviewed=reviewed, unreviewed=count-reviewed,
                 repaired=len({e['path'] for e in journal if e['status'] == 'applied'}),
                 completion=dict(discovery=discovery_ok, audit=reviewed == count, verification=all_verified),
                 status='COMPLETE' if discovery_ok and reviewed == count and all_verified else 'INCOMPLETE',
@@ -51,21 +59,34 @@ def build(repo, manifest):
                 verification=verified, repair_run=repo.read('repair-run.json', []), unresolved=unresolved)
 
 
+def inline(text):
+    """Render repository-controlled data as text, not links, HTML or terminal controls."""
+    line = ''.join(c if unicodedata.category(c) not in {'Cc', 'Cf'} else f'\\u{ord(c):04x}' for c in str(text))
+    return re.sub(r'([\\`*_{}\[\]()#!|~])', r'\\\1', escape(line, quote=False))
+
+
 def markdown(report):
-    lines = ['# OIBlogScore Repository Report', '', '**{}** · {} · `{}`'.format(report['status'], report['branch'], report['commit']),
-             '', 'Repository: ' + report['repository'], 'Scanned: ' + report['scanned_at'], '',
+    lines = ['# OIBlogScore Repository Report', '', '**{}** · {} · `{}`'.format(report['status'], inline(report['branch']), report['commit']),
+             '', 'Repository: ' + inline(report['repository']), 'Scanned: ' + report['scanned_at'], '',
              'Discovered: {discovered} · Reviewed: {reviewed} · Unreviewed: {unreviewed} · Repaired: {repaired}'.format(**report),
              '', 'Completion: ' + ', '.join('{}={}'.format(k, v) for k, v in report['completion'].items()),
              'Verdicts: ' + ', '.join('{}={}'.format(k, v) for k, v in report['verdicts'].items()),
              'Severity: ' + ', '.join('{}={}'.format(k, v) for k, v in report['severity'].items()), '', '## Articles', '']
     for name, item in report['articles'].items():
-        lines.append('- {}: {} | {} | language={} / edits={} / confirm={}'.format(name.replace('\n', '\\n'), item['kind'],
+        lines.append('- {}: {} | {} | language={} / edits={} / confirm={}'.format(inline(name), item['kind'],
                      ', '.join('{}: {}'.format(k, v['verdict']) for k, v in item['results'].items()),
                      item['language_issues'], item['automatic_edits'], item['awaiting_confirmation']))
     lines += ['', '## Repairs', '']
     for entry in report['repairs']:
-        lines.append('- {}: {} ({})'.format(entry['path'], entry['status'], entry.get('verification', 'pending')))
+        lines.append('- {}: {} ({})'.format(inline(entry['path']), entry['status'], entry.get('verification', 'pending')))
     lines += ['', '## Unresolved', '']
-    lines.extend('- {}: {}'.format(f['path'], f.get('message', f.get('reason', ''))) for f in report['unresolved'])
+    for item in report['unresolved']:
+        location = ':'.join(inline(item[key]) for key in ('path', 'dimension', 'location') if key in item)
+        detail = item.get('message', item.get('reason', ''))
+        if 'reference' in item:
+            detail += ' (' + item['dependency_from'] + ': ' + item['reference'] + ')'
+        lines.append('- {}: {}'.format(location, inline(detail)))
+        if 'evidence' in item:
+            lines.append('  - Evidence: ' + inline(item['evidence']))
     lines += ['', 'See report.json for findings, evidence, per-edit reasons, exact diffs and verification details.']
     return '\n'.join(lines) + '\n'

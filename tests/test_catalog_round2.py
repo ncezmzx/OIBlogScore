@@ -94,7 +94,7 @@ class CatalogRound2(unittest.TestCase):
     def test_blind_packs_and_synthetic_comparison(self):
         key = read(FIXTURE/'key.json'); data = build()
         self.assertEqual(pack('catalog')['cases'], pack('baseline')['cases'])
-        self.assertEqual(len(pack('catalog')['cases']), 10)
+        self.assertEqual(len(pack('catalog')['cases']), 25)
         self.assertTrue(all(set(r)=={'id','text'} for r in pack('catalog')['cases']))
         rows = [dict(id=k,verdict=v['verdict'],reason='synthetic scoring fixture',source_ids=[],upstream_verified=False) for k,v in key.items()]
         wrong = [dict(r) for r in rows]
@@ -112,3 +112,56 @@ class CatalogRound2(unittest.TestCase):
             self.assertEqual(scores['baseline']['false_positives'],1)
             self.assertEqual(scores['baseline']['missed_issues'],{'negative-edge':1})
             self.assertEqual(scores['baseline']['unsupported_upstream_verification_claims'],1)
+
+    def test_blind_anonymize_and_human_metrics(self):
+        from blind_eval import anonymize, grade
+        key = read(FIXTURE/'key.json')
+        baseline = [dict(id='A01', verdict='PASS', reason='witness', source_ids=[], upstream_verified=False)]
+        items, mapping = anonymize(baseline, baseline)
+        self.assertEqual(len(set(mapping)), 2)
+        self.assertTrue(all('condition' not in row for row in items))
+        rows = {row['token']: dict(evidence_accurate=True, citation_accurate=None, unsupported_claim=False) for row in items}
+        stats = grade(items, mapping, rows, key)
+        self.assertEqual(stats['catalog']['proof']['evidence_accurate']['rate'], 1)
+        self.assertIsNone(stats['baseline']['proof']['citation_accurate']['rate'])
+        with self.assertRaises(ValueError):
+            grade(items, mapping, {}, key)
+
+    def test_seeded_pack_and_f1_denominators(self):
+        self.assertEqual(pack('baseline', 17)['cases'], pack('catalog', 17)['cases'])
+        self.assertNotEqual(pack('baseline', 17)['cases'], pack('baseline', 18)['cases'])
+        key = {'x': dict(verdict='PASS', issue='none', algorithm=None, dimension='proof')}
+        row = dict(id='x', verdict='PASS', reason='synthetic', source_ids=[], upstream_verified=False)
+        metrics = score([row], key, {'algorithms': {}}, 'baseline')['defect_metrics']
+        self.assertIsNone(metrics['precision'])
+        self.assertIsNone(metrics['recall'])
+        self.assertIsNone(metrics['f1'])
+        row['verdict'] = 'FAIL'
+        metrics = score([row], key, {'algorithms': {}}, 'baseline')['defect_metrics']
+        self.assertEqual((metrics['f1'], metrics['false_positive_rate']), (0, 1))
+
+    def test_target_grade_separates_miss_bad_evidence_and_conditional(self):
+        from target_grading import aggregate
+        rubric = read(FIXTURE/'targets.json')
+        one = dict(id='A25', reason='knuth cost types missing')
+        items = [dict(one, token='x'), dict(one, token='y')]
+        mapping = {'x': 'baseline', 'y': 'catalog'}
+        def label(excerpt, disposition, evidence=True, citation=None):
+            return dict(excerpt=excerpt, disposition=disposition, evidence_accurate=evidence,
+                        citation_accurate=citation, unsupported_claim=not evidence)
+        correct = {'knuth-window': label('knuth','PASS'), 'resort': label('cost','FAIL'),
+                   'product-type': label('types','CONDITIONAL'), 'unknown-preprocess': label('missing','NOT_CHECKED')}
+        imperfect = dict(correct, **{'resort': None, 'product-type': label('types','FAIL',True,False),
+                                     'knuth-window': label('knuth','PASS',False)})
+        result = aggregate(items, mapping, {'x': imperfect, 'y': correct}, rubric)
+        self.assertEqual(result['catalog']['rates']['scoped_recall'], 1)
+        self.assertIsNone(result['catalog']['rates']['citation_accurate'])
+        rows = result['baseline']['cases']['A25']
+        self.assertIsNone(rows['resort']['correct'])
+        self.assertFalse(rows['product-type']['correct'])
+        self.assertTrue(rows['knuth-window']['correct'])
+        self.assertFalse(rows['knuth-window']['judgment']['evidence_accurate'])
+        self.assertEqual(result['baseline']['rates']['correct_abstention'], 1)
+        self.assertEqual(result['baseline']['rates']['scoped_precision'], 0)
+        with self.assertRaisesRegex(ValueError, 'distinct'):
+            aggregate(items, mapping, {'x': dict(correct, resort=label('knuth','FAIL')), 'y': correct}, rubric)

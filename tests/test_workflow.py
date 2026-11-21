@@ -336,3 +336,262 @@ class Workflow(unittest.TestCase):
             rule.write_text('updated version')
             replacement = schedule(repo, discover(repo), 'resume')[0]
             self.assertNotEqual(task['fingerprint'], replacement['fingerprint'])
+
+    def test_pending_context_and_unresolved_dependencies_block_completion(self):
+        self.write('x.mdx', 'import Component from "./view.js"\nconst v = import(dynamicName)')
+        self.write('view.js', 'export default 1')
+        self.write('helper.h', 'int x;')
+        self.write('oiblogscore.json', '{"dependencies":{"x.mdx":["helper.h"]}}')
+        self.commit()
+        repo = Repo(self.root)
+        manifest = discover(repo)
+        expected = {('view.js', 'heuristic'), ('helper.h', 'configured')}
+        self.assertEqual({(e['target'], e['kind']) for e in manifest['articles']['x.mdx']['dependency_edges']}, expected)
+        queue = schedule(repo, manifest)
+        self.submit(repo, queue[0], verdict='NEEDS_CONTEXT')
+        for task in queue[1:]:
+            self.submit(repo, task, verdict='NOT_APPLICABLE')
+        report = build(repo, manifest)
+        self.assertEqual(report['verdicts']['NEEDS_CONTEXT'], 1)
+        self.assertEqual(schedule(repo, manifest, 'resume'), queue[:1])
+        self.submit(repo, queue[0])
+        report = build(repo, manifest)
+        self.assertFalse(report['completion']['audit'])
+        self.assertEqual(report['articles']['x.mdx']['audit_status'], 'PENDING')
+        self.assertFalse(report['completion']['discovery'])
+        self.assertEqual(report['status'], 'INCOMPLETE')
+        self.write('oiblogscore.json', json.dumps({'dependency_resolutions': {'x.mdx': {'import(dynamicName)': ['helper.h']}}}))
+        resolved = discover(Repo(self.root))['articles']['x.mdx']
+        self.assertFalse(resolved['unresolved_dependencies'])
+        self.assertIn('helper.h', resolved['inputs'])
+        self.assertNotEqual(resolved['fingerprint'], manifest['articles']['x.mdx']['fingerprint'])
+
+    def test_discovery_parses_and_hashes_same_article_bytes(self):
+        from hashlib import sha256
+        article = self.write('x.md', '动态规划')
+        self.commit()
+        repo = Repo(self.root)
+        real = Path.read_bytes
+        calls = []
+
+        def mutate(path):
+            raw = real(path)
+            if path == article:
+                calls.append(raw)
+                article.write_bytes(b'new bytes')
+            return raw
+
+        with patch.object(Path, 'read_bytes', mutate):
+            with self.assertRaisesRegex(ValueError, 'changed during discovery'):
+                discover(repo)
+        self.assertEqual(len(calls), 2)
+        row = discover(repo)['articles']['x.md']
+        self.assertEqual(row['inputs']['x.md'], sha256(b'new bytes').hexdigest())
+        self.assertNotIn('dp', row['categories'])
+
+    def test_failed_article_replace_reconciles_as_aborted(self):
+        original = '# Notes\n\n下篇再聊。。\n'
+        path = self.write('x.md', original)
+        self.commit()
+        repo = Repo(self.root)
+        with contextlib.redirect_stdout(io.StringIO()), patch('oiblogscore.repair.journal.atomic', side_effect=OSError('disk failure')):
+            with self.assertRaisesRegex(OSError, 'disk failure'):
+                repair(repo, discover(repo), 'safe')
+        self.assertEqual(path.read_bytes(), original.encode())
+        self.assertIn('pending', repo.read('repairs.json', [])[0])
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(main(['resume', str(self.root)]), 0)
+        self.assertEqual(repo.read('repairs.json', [])[0]['status'], 'aborted')
+        self.assertEqual(verify_journal(repo), [])
+
+    def test_duplicate_configuration_key_fails_closed(self):
+        self.write('oiblogscore.json', '{"exclude":[],"exclude":["*"]}')
+        with self.assertRaisesRegex(ValueError, 'duplicate JSON key exclude'):
+            Repo(self.root)
+
+    def test_report_renders_finding_payload_as_data(self):
+        from oiblogscore.reporting import markdown
+        self.write('x.md', 'text')
+        self.commit()
+        repo = Repo(self.root)
+        manifest = discover(repo)
+        task = schedule(repo, manifest)[0]
+        finding = dict(severity='Major', location='line 1', message='![img](https://example.test/pixel)',
+                       evidence='<script>\x1b[2J</script>')
+        result = self.write('.oiblogscore/result.json', json.dumps(dict(task, verdict='FAIL', evidence='witness', findings=[finding])))
+        submit(repo, manifest, result)
+        rendered = markdown(build(repo, manifest))
+        self.assertIn('x.md:algorithm:line 1', rendered)
+        self.assertNotIn('![img](', rendered)
+        self.assertNotIn('<script>', rendered)
+        self.assertNotIn('\x1b', rendered)
+
+    def test_repair_git_checks_use_object_bytes_without_worktree_status(self):
+        from oiblogscore.repository import git
+        self.write('x.md', '# Notes\n\n下篇再聊。。\n')
+        self.commit()
+        repo = Repo(self.root)
+        with patch('oiblogscore.repository.git', wraps=git) as calls:
+            self.assertFalse(repo.dirty('x.md'))
+        commands = [call.args[1] for call in calls.call_args_list]
+        self.assertEqual(commands, ['ls-files', 'ls-tree', 'cat-file'])
+        state = {'tasks': {}, 'commit': '--output=should-not-exist'}
+        repo.save('audit.json', state)
+        with self.assertRaisesRegex(ValueError, 'Invalid cached audit base commit'):
+            schedule(repo, discover(repo))
+        self.assertFalse((self.root/'should-not-exist').exists())
+
+    def test_dependency_literal_call_and_ambiguous_fallback(self):
+        self.write('x.mdx', 'const x = import("./view.js");\n[ambiguous](appendix)')
+        self.write('view.js', 'value')
+        self.write('appendix.md', 'markdown')
+        self.write('appendix.tex', 'latex')
+        self.commit()
+        row = discover(Repo(self.root))['articles']['x.mdx']
+        self.assertIn('view.js', row['inputs'])
+        self.assertNotIn('appendix.md', row['inputs'])
+        self.assertIn(['x.mdx', 'appendix'], row['unresolved_dependencies'])
+
+    def test_corrupt_cached_result_is_not_reported_as_pass(self):
+        self.write('x.md', 'text')
+        self.commit()
+        repo = Repo(self.root)
+        task = schedule(repo, discover(repo))[0]
+        self.submit(repo, task)
+        state = repo.read('audit.json', {})
+        state['tasks']['x.md']['algorithm']['result']['path'] = 'other.md'
+        repo.save('audit.json', state)
+        with self.assertRaisesRegex(ValueError, 'does not match its task'):
+            build(repo, discover(repo))
+
+    def test_failed_verify_updates_persisted_report(self):
+        original = '# Notes\n\n下篇再聊。。\n'
+        article = self.write('x.md', original)
+        self.commit()
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(main(['repair', str(self.root), '--mode', 'safe']), 0)
+        article.write_bytes((original + '用户改动\n').encode())
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(main(['verify', str(self.root)]), 1)
+        report = Repo(self.root).read('report.json', {})
+        self.assertFalse(report['completion']['verification'])
+        self.assertEqual(report['articles']['x.md']['repair_status'], 'UNVERIFIED')
+        self.assertEqual(article.read_bytes(), (original + '用户改动\n').encode())
+
+    def test_rollback_refuses_repair_now_in_head(self):
+        path = self.write('x.md', '# Notes\n\n下篇再聊。。\n')
+        self.commit()
+        repo = Repo(self.root)
+        with contextlib.redirect_stdout(io.StringIO()):
+            repair(repo, discover(repo), 'safe')
+        repaired = path.read_bytes()
+        self.commit()
+        with self.assertRaisesRegex(ValueError, 'HEAD'):
+            rollback(repo, 'x.md')
+        self.assertEqual(path.read_bytes(), repaired)
+
+    def test_edit_during_temp_file_flush_does_not_get_overwritten(self):
+        from os import fsync
+        path = self.write('x.md', '# Notes\n\n下篇再聊。。\n')
+        self.commit()
+        repo = Repo(self.root)
+        original = path.read_bytes()
+        calls = []
+        def edit(fd):
+            fsync(fd)
+            calls.append(fd)
+            if len(calls) == 2:  # pending journal was first; article temp file second
+                path.write_bytes(original + b'external edit\n')
+        with contextlib.redirect_stdout(io.StringIO()), patch('oiblogscore.repository.os.fsync', side_effect=edit):
+            with self.assertRaisesRegex(ValueError, 'changed before write'):
+                repair(repo, discover(repo), 'safe')
+        self.assertEqual(path.read_bytes(), original + b'external edit\n')
+
+    def test_repair_fsync_replace_and_final_journal_faults(self):
+        import errno
+        from os import fsync, replace
+        for operation, real in [('fsync', fsync), ('replace', replace)]:
+            with self.subTest(operation=operation):
+                name = operation + '.md'
+                path = self.write(name, '# Notes\n\n下篇再聊。。\n')
+                self.commit()
+                repo = Repo(self.root)
+                original = path.read_bytes()
+                calls = []
+                def fail_second(*args):
+                    calls.append(args)
+                    if len(calls) == 2:
+                        raise OSError(errno.ENOSPC, 'fixture fault')
+                    return real(*args)
+                with contextlib.redirect_stdout(io.StringIO()), patch('oiblogscore.repository.os.' + operation, side_effect=fail_second):
+                    with self.assertRaises(OSError):
+                        repair(repo, discover(repo), 'safe', [name])
+                self.assertEqual(path.read_bytes(), original)
+                with contextlib.redirect_stdout(io.StringIO()):
+                    self.assertEqual(main(['resume', str(self.root)]), 0)
+                self.assertEqual(repo.read('repairs.json', [])[-1]['status'], 'aborted')
+        path = self.write('final.md', '# Notes\n\n下篇再聊。。\n')
+        self.commit()
+        repo = Repo(self.root)
+        save = repo.save
+        def fail_final(name, value):
+            if name == 'repairs.json' and value[-1]['status'] == 'applied':
+                raise OSError(errno.ENOSPC, 'fixture final journal fault')
+            return save(name, value)
+        with contextlib.redirect_stdout(io.StringIO()), patch.object(repo, 'save', side_effect=fail_final):
+            with self.assertRaises(OSError):
+                repair(repo, discover(repo), 'safe', ['final.md'])
+        self.assertIn('下篇再聊。\n'.encode(), path.read_bytes())
+        self.assertIn('pending', repo.read('repairs.json', [])[-1])
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(main(['resume', str(self.root)]), 0)
+        self.assertEqual(repo.read('repairs.json', [])[-1]['status'], 'applied')
+
+    def test_damaged_pending_journal_does_not_reconcile_or_write(self):
+        path = self.write('x.md', '# Notes\n\n下篇再聊。。\n')
+        self.commit()
+        repo = Repo(self.root)
+        original = path.read_bytes()
+        with contextlib.redirect_stdout(io.StringIO()), patch('oiblogscore.repair.journal.atomic', side_effect=OSError('fixture')):
+            with self.assertRaises(OSError):
+                repair(repo, discover(repo), 'safe')
+        journal = repo.read('repairs.json', [])
+        journal[-1]['pending']['update']['edits'][0]['line'] = 0
+        repo.save('repairs.json', journal)
+        with contextlib.redirect_stderr(io.StringIO()):
+            self.assertEqual(main(['resume', str(self.root)]), 2)
+        self.assertEqual(path.read_bytes(), original)
+        self.assertEqual(repo.read('repairs.json', []), journal)
+
+    def test_autocrlf_worktree_difference_is_not_silently_repaired(self):
+        self.git('config', 'core.autocrlf', 'true')
+        path = self.write('论文.md', '# Notes\n\n下篇再聊。。\n')
+        self.commit()
+        crlf = path.read_bytes().replace(b'\n', b'\r\n')
+        path.write_bytes(crlf)
+        repo = Repo(self.root)
+        self.assertTrue(repo.dirty('论文.md'))
+        with contextlib.redirect_stdout(io.StringIO()):
+            repair(repo, discover(repo), 'safe')
+        self.assertEqual(path.read_bytes(), crlf)
+        self.assertEqual(repo.read('repairs.json', []), [])
+
+    def test_repo_path_refuses_nonportable_names(self):
+        repo = Repo(self.root)
+        for value in ('C:notes.md', 'C:/notes.md', r'\\server\share\notes.md', r'dir\x.md',
+                      'AUX.md', 'name. ', '../x.md', '.GiT/config'):
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                repo.path(value)
+        self.assertEqual(repo.path('目录/文章.md').relative_to(repo.root).as_posix(), '目录/文章.md')
+
+    def test_report_authority_changes_when_audit_updates(self):
+        self.write('x.md', 'text')
+        self.commit()
+        repo = Repo(self.root)
+        manifest = discover(repo)
+        before = build(repo, manifest)['authority_sha256']
+        schedule(repo, manifest)
+        after = build(repo, manifest)['authority_sha256']
+        self.assertNotEqual(before['audit.json'], after['audit.json'])
+        self.assertEqual(before['repairs.json'], after['repairs.json'])
+        self.assertEqual(after, build(repo, manifest)['authority_sha256'])

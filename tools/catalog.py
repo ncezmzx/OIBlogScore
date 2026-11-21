@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 import sys
 
-from catalog_io import local_path
+from catalog_io import local_path, read_text
 
 from catalog_data import RELATIONS, ROOT, build, name_key, normalize, read, related, source_view
 
@@ -16,9 +16,11 @@ def load(root=ROOT):
     return read(local_path(root, 'index.json'))
 
 
-def search(data, query='', category=None, provider=None, tag=None, exact=False):
+def search(data, query='', category=None, provider=None, tag=None, exact=False, include_related=False):
+    if len(query) > 4096:
+        raise ValueError('Search query exceeds 4096 characters')
     needle = name_key(query)
-    matches = []
+    matches, eligible = [], {}
     for row in data['algorithms'].values():
         if (category and row['category'] != category) or (tag and tag not in (row['id'], row['category'])):
             continue
@@ -27,10 +29,11 @@ def search(data, query='', category=None, provider=None, tag=None, exact=False):
             materials = [s for s in materials if s['provider'] == provider]
             if not materials:
                 continue
+        eligible[row['id']] = row
         fields = [('id', row['id']), *[('alias', a) for a in row['aliases']], ('title', row['title'])]
         hits = []
         if not needle:
-            hits.append((7, {'field': 'all', 'value': '', 'match': 'browse'}))
+            hits.append((8, {'field': 'all', 'value': '', 'match': 'browse'}))
         else:
             for field, text in fields:
                 key = name_key(text)
@@ -38,22 +41,46 @@ def search(data, query='', category=None, provider=None, tag=None, exact=False):
                     hits.append(({'id':0, 'alias':1, 'title':2}[field], {'field':field, 'value':text, 'match':'exact'}))
                 elif needle in key:
                     hits.append((3 if field == 'alias' else 4, {'field':field, 'value':text, 'match':'contains'}))
+            if needle == name_key(row['category']):
+                hits.append((6, {'field':'category', 'value':row['category'], 'match':'filter-match'}))
             for item in materials:
                 if needle in name_key(item['title']):
-                    hits.append((5, {'field':'source_title', 'value':item['title'], 'source_id':item['id'], 'match':'contains'}))
+                    relation = next((a['relation'] for a in row.get('associations', ()) if a['source'] == item['id']), 'unclassified')
+                    hits.append((5, {'field':'source_title', 'value':item['title'], 'source_id':item['id'],
+                                     'match':'contains', 'relation':relation, 'trust':item.get('trust')}))
         if exact:
             hits = [hit for hit in hits if hit[1]['match'] == 'exact']
         if hits:
             hits.sort(key=lambda item: item[0])
             rank = hits[0][0]
             matches.append((rank, row['id'], dict(row, match=hits[0][1], matching_fields=[h[1] for h in hits])))
-    ambiguous = sum(rank <= 2 for rank, _, _ in matches) > 1
-    return [dict(row, ambiguous_exact=ambiguous) for _, _, row in sorted(matches)]
+    exact_ids = {key for rank, key, _ in matches if rank <= 2}
+    ambiguous = len(exact_ids) > 1
+    if include_related and not exact and exact_ids:
+        # Only authored edges, not all shared-source neighbours. Broad
+        # tutorials would otherwise promote unrelated entities.
+        weak = {}
+        for key, note in data.get('notes', {}).items():
+            for other in note['related']:
+                for src, dst in ((key, other), (other, key)):
+                    if src in exact_ids and dst in eligible:
+                        weak.setdefault(dst, []).append(dict(field='editorial_relation', value=src, match='related'))
+        direct = {key for _, key, _ in matches}
+        for key in sorted(weak.keys() - direct):
+            hits = sorted(weak[key], key=lambda h: h['value'])
+            matches.append((7, key, dict(eligible[key], match=hits[0], matching_fields=hits)))
+    notes = data.get('notes', {})
+    return [dict(row, ambiguous_exact=ambiguous, has_review=row['id'] in notes,
+                 claim_states=sorted({c['status'] for c in notes.get(row['id'], {}).get('claims', ())}))
+            for _, _, row in sorted(matches)]
 
 
 def source_search(data, query='', provider=None, tag=None, kind=None, author=None):
+    if len(query) > 4096:
+        raise ValueError('Search query exceeds 4096 characters')
     needle = name_key(query)
-    for sid, row in sorted(data['sources'].items()):
+    matches = []
+    for sid, row in data['sources'].items():
         if (provider and row['provider'] != provider) or (kind and row['kind'] != kind):
             continue
         if author and not any(name_key(author) in name_key(name) for name in row['authors']):
@@ -66,11 +93,16 @@ def source_search(data, query='', provider=None, tag=None, kind=None, author=Non
         hits = [dict(field=k, value=v, match='exact' if needle == name_key(v) else 'contains')
                 for k, v in fields if needle and needle in name_key(v)]
         if hits or not needle:
-            yield dict(view, matching_fields=hits)
+            def rank(hit):
+                return (hit['match'] != 'exact', ('id','title','author','scope').index(hit['field']))
+            hits.sort(key=rank)
+            matches.append((rank(hits[0]) if hits else (True, 4), sid, dict(view, matching_fields=hits)))
+    for _, _, row in sorted(matches):
+        yield row
 
 
 def local_text(path, root=ROOT):
-    return local_path(root, path).read_text(encoding='utf-8')
+    return read_text(local_path(root, path))
 
 
 def dump(value):
@@ -98,6 +130,7 @@ def main(argv=None):
             cmd.add_argument('--author')
         else:
             cmd.add_argument('--exact', action='store_true', help='filter to exact IDs, aliases and titles')
+            cmd.add_argument('--include-related', action='store_true', help='append authored neighbours of exact hits')
     for name in ITEM_COMMANDS:
         cmd = subs.add_parser(name)
         cmd.add_argument('id')
@@ -124,7 +157,7 @@ def main(argv=None):
             if command == 'find':
                 if args.category and args.category not in data['categories']:
                     raise ValueError('Unknown category: ' + args.category)
-                rows = search(data, args.query, args.category, args.provider, args.tag, args.exact)
+                rows = search(data, args.query, args.category, args.provider, args.tag, args.exact, args.include_related)
             else:
                 rows = list(source_search(data, args.query, args.provider, args.tag, args.kind, args.author))
             rows = rows[:args.limit] if args.limit else rows
@@ -158,6 +191,16 @@ def main(argv=None):
                   'review': dict(Counter(row['review'] for row in data['algorithms'].values())),
                   'local_artifacts': dict(markdown=sum('path' in r for r in data['algorithms'].values()),
                                           structured=len(data['notes'])),
+                  'counts': dict(sources=len(data['sources']), providers=len(data['providers']),
+                                 upstream_candidates=sum(bool(r.get('identity')) for r in data['algorithms'].values()),
+                                 crosswalk_relations=dict(Counter(a['relation'] for r in data['algorithms'].values()
+                                                                  if not r.get('identity') for a in r.get('associations', []))),
+                                 canonical_with_local_knowledge=sum('path' in r or key in data['notes']
+                                                                     for key, r in data['algorithms'].items() if not r.get('identity')),
+                                 canonical_with_identity_source=sum(any(a['relation'] in ('exact','alias') for a in r.get('associations', []))
+                                                                    for r in data['algorithms'].values() if not r.get('identity')),
+                                 claims=sum(len(n.get('claims', [])) for n in data['notes'].values())),
+                  'canonical_by_category': dict(Counter(r['category'] for r in data['algorithms'].values() if not r.get('identity'))),
                   'canonical': sum(not row.get('identity') for row in data['algorithms'].values()),
                   'curated': dict(Counter(row['kind'] for row in data['sources'].values() if 'metadata_status' in row))})
             return 0

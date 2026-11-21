@@ -27,17 +27,24 @@ def discover(repo):
                 files.add(name)
         except ValueError as exc:
             issues.append({'path': name, 'reason': str(exc)})
-    hashes = {}
+    hashes, texts = {}, {}
 
     def content(name):
-        return repo.path(name).read_bytes()
+        if name in texts:
+            return texts[name]
+        raw = repo.path(name).read_bytes()
+        hashes[name] = digest(raw)
+        if PurePosixPath(name).suffix.lower() in ARTICLES | CODE:
+            texts[name] = raw
+        return raw
 
     def hash_file(name):
         if name not in hashes:
-            hashes[name] = digest(content(name))
+            content(name)
         return hashes[name]
 
-    graph = DependencyGraph(files, content, repo.config.get('dependencies', {}))
+    graph = DependencyGraph(files, content, repo.config.get('dependencies', {}),
+                            repo.config.get('dependency_resolutions', {}))
 
     rules = rule_fingerprint(repo, files, hash_file)
     articles = {}
@@ -76,7 +83,7 @@ def discover(repo):
             kind, reason = 'article', 'front matter, algorithm keywords or blog directory'
         if not enc_ok:
             issues.append({'path': name, 'reason': 'not UTF-8; Agent must resolve encoding'})
-        deps, missing = graph.closure(name)
+        deps, missing, edges = graph.closure(name)
         # Undeclared shared code can be added explicitly in config.
         inputs = {p: hash_file(p) for p in sorted(deps | {name})}
         fingerprint = digest(json.dumps([inputs, sorted(missing), rules], sort_keys=True).encode())
@@ -84,7 +91,12 @@ def discover(repo):
                               categories=categories, content_hash=inputs[name], inputs=inputs,
                               fingerprint=fingerprint, code=sorted(d for d in deps if PurePosixPath(d).suffix.lower() in CODE),
                               resources=sorted(d for d in deps if PurePosixPath(d).suffix.lower() not in CODE),
-                              unresolved_dependencies=[list(item) for item in sorted(missing)])
-    return dict(repository=repo.text_git('remote', 'get-url', 'origin'), branch=repo.text_git('branch', '--show-current'),
+                              dependency_edges=edges, unresolved_dependencies=[list(item) for item in sorted(missing)])
+    # Check bytes, not size or timestamps. This detects persistent changes to
+    # observed inputs, not ABA changes or a simultaneous multi-file snapshot.
+    for name, expected in hashes.items():
+        if digest(repo.path(name).read_bytes()) != expected:
+            raise ValueError('File changed during discovery; rerun: ' + name)
+    return dict(snapshot_consistency='revalidated', repository=repo.text_git('remote', 'get-url', 'origin'), branch=repo.text_git('branch', '--show-current'),
                 commit=repo.text_git('rev-parse', '--verify', 'HEAD'), scanned_at=stamp(), rules=rules,
                 articles=articles, exclusions=exclusions, discovery_issues=issues)
