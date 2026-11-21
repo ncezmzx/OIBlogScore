@@ -376,7 +376,9 @@ class Workflow(unittest.TestCase):
 
         def mutate(path):
             raw = real(path)
-            if path == article:
+            # Git resolves the repository root; on Windows the fixture path
+            # may still use a different spelling for the same directory.
+            if path.samefile(article):
                 calls.append(raw)
                 article.write_bytes(b'new bytes')
             return raw
