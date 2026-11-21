@@ -39,7 +39,7 @@ oiblogscore audit . --path notes/ --type md --category dp --dimension proof
 oiblogscore report .                       # 或 --json
 ```
 
-Git 可见的 Markdown、MDX、LaTeX、HTML 会进入候选集。README、文档、疑似生成页、草稿、归档均会单独分类，默认不丢弃；用 `oiblogscore.json`（参见 [示例](config.example.json)）排除目录、补充依赖或配置审查规则文件。`COMPLETE` 不是「没有问题」：它表示配置范围已发现、已处理、修复已验证，报告可能仍有 `FAIL` 或 `SUSPECTED`。
+Git 可见的 Markdown、MDX、LaTeX、HTML 会进入候选集。README、文档、疑似生成页、草稿、归档均会单独分类，默认不丢弃；用 `oiblogscore.json`（参见 [示例](config.example.json)）排除目录、补充依赖或配置审查规则文件。`COMPLETE` 不是「没有问题」：它表示配置范围已发现且没有已报告的缺失依赖、适用审查已处理、修复已验证，报告可能仍有 `FAIL` 或 `SUSPECTED`。
 
 ## 算法资料检索
 
@@ -75,8 +75,8 @@ oiblogscore rollback . --path notes/article.md
 ## 开发与边界
 
 - [架构](docs/architecture.md) · [工作流](docs/audit-workflow.md) · [修复政策](docs/repair-policy.md) · [报告字段](docs/report-format.md)
-- [模块化算法知识库](resources/algorithm-catalog/README.md) · [样例审查](examples/dijkstra-review.md) · [贡献指南](CONTRIBUTING.md)
-- `python tools/check_quality.py` 与 `python -m unittest discover -s tests -v`；CI 覆盖 Python 3.8 与 3.12。
+- [模块化算法知识库](resources/algorithm-catalog/README.md) · [样例审查](examples/dijkstra-review.md) · [贡献指南](CONTRIBUTING.md) · [系统审计记录](docs/system-audit.md)
+- `python tools/check_quality.py` 与 `python -m unittest discover -s tests -v`；CI 矩阵配置为 Ubuntu/Windows 与 Python 3.8/3.12。
 - 发现和依赖提取是启发式的，不解析所有生成器、动态引用、复杂 YAML/MDX 或所有构建依赖；请配置隐式依赖。技术结论依赖实际审查证据。文风统计只供参考，不自动生成替换句子。
 
 受 [CPscore](https://github.com/SemsueZhang/CPscore) 的独立 Skills、共享 Reference 和可选确定性脚本架构启发。详见 [工程验收与覆盖范围](docs/engineering-quality.md)。项目原创软件和资料采用 MIT License；第三方收录内容沿用原许可。

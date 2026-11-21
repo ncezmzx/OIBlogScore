@@ -1,0 +1,20 @@
+{
+  "A25": {
+    "knuth-window": {
+      "disposition": "PASS",
+      "basis": "只在已经证明 opt 单调的前提下使用候选区间；不是反推充分条件。"
+    },
+    "resort": {
+      "disposition": "FAIL",
+      "basis": "在 n=2^h 上各层 Θ(n(h−d))，求和 Θ(nh²)。"
+    },
+    "product-type": {
+      "disposition": "CONDITIONAL",
+      "basis": "赋值目标不控制计算类型。若为 32 位有符号 int，例如 50000×50000 会溢出；类型和范围未给，不能断言每种实现均溢出。"
+    },
+    "unknown-preprocess": {
+      "disposition": "NOT_CHECKED",
+      "basis": "缺操作模型、输入规模和实现，不能判定线性。"
+    }
+  }
+}

@@ -159,7 +159,7 @@
     "claims": [
       {
         "claim_id": "chmin-only-amortization",
-        "statement": "区间 chmin 与区间和的序列总时间是 O((n+m)log(n+1))。",
+        "statement": "长度 n≥1 的数组上，m 次区间 chmin 与区间和操作的总时间为 O((n+m)log(n+1))。",
         "status": "project-analysis",
         "assumptions": [
           "无区间 add/chmax",
@@ -171,8 +171,8 @@
             "location": "区间最值操作（区间取最小值的基本模型）"
           }
         ],
-        "derivation": "全覆盖强制下探合并至少两种值；部分覆盖节点每层至多两个且各只新增 x，按所有节点不同值数的总势能收费。",
-        "counterexample": "部分覆盖 add 可把一段不同值一起平移并同时引入多种新值，不满足每项 +1。"
+        "derivation": "初始每层不同值数之和≤n。全覆盖强制下探时阈值 x≤严格次大值，至少两类旧值合并或被至多一类替代，势能至少降 1；其他全覆盖节点也不增。部分覆盖节点每层至多两个，各至多新增 x；求和与惰性下推不改变逻辑数组。访问节点数由边界节点和强制下探节点数控制。",
+        "counterexample": "[1,2,1,2] 的前半加 10 后根节点的不同值数从 2 增至 4；这否定势能增量论证向 add 的直接迁移，不否定 chmin 结论。"
       }
     ]
   },
@@ -304,11 +304,12 @@
     "claims": [
       {
         "claim_id": "opt-monotonicity-inheritance",
-        "statement": "给定标准充分条件时最右最优划分下标满足双侧单调性。",
+        "statement": "令 D(i,i)=0，D(i,j)=C(i,j)+min_{i≤k<j}(D(i,k)+D(k+1,j))。在下列充分条件下，最右最优划分 opt 满足 opt(i,j−1)≤opt(i,j)≤opt(i+1,j)。",
         "status": "needs-review",
         "assumptions": [
-          "区间包含单调",
-          "四边形不等式",
+          "对所有 a≤b≤c≤d，C(b,c)≤C(a,d)",
+          "对所有 a≤b≤c≤d，C(a,c)+C(b,d)≤C(a,d)+C(b,c)",
+          "单元素区间取 opt(i,i)=i",
           "选最右最优"
         ],
         "evidence": [
@@ -382,6 +383,28 @@
     ],
     "related": [
       "matching"
+    ]
+  },
+  "parallel-binary-search": {
+    "status": "project-analysis",
+    "evidence": "original-derivation",
+    "sources": [
+      "oi-wiki:misc/parallel-binsearch.md"
+    ],
+    "model": "给定 U 次插入，无删除；每条查询 (L,R,k) 求最早插入前缀，使坐标区间 [L,R] 的插入次数至少 k。坐标（原值可为负数或零）已按序离散到 M 个位置；只统计单位插入次数，k≥1。无解记 U+1。",
+    "preconditions": "插入贡献非负，谓词对前缀时间单调。第 0 时刻为空。每轮 Fenwick 树从空状态开始；U+1 是哨兵，不能作为真实时刻重放访问。",
+    "invariant": "每条查询的真实答案始终在候选闭区间 [lo,hi]；处理某个 mid 时，Fenwick 树准确包含前 mid 次插入。同一 mid 的所有查询复用该状态。",
+    "proof": "若区间计数≥k，真实答案≤mid，令 hi=mid；否则真实答案>mid，令 lo=mid+1。lo<hi 时 mid≤U，哨兵从不重放。闭区间长度严格减小；收敛时唯一候选为真实答案或无解。将未收敛查询按 mid 分桶并从小到大重放，既不改变查询谓词，又使同轮每次插入最多执行一次。",
+    "complexity": "Q 条查询，U≥1、M≥1。每轮分桶与扫描 O(U+Q)，不重排序，不递归、不回滚；插入和两次前缀查询 O((U+Q)log(M+1))，清零 O(M)；最多 ceil(log₂(U+2)) 轮。总 O((M+(U+Q)log(M+1))log(U+1)+Q)，不含离散化排序；存储 O(M+U+Q)。U=0 可直接返回全体无解。",
+    "witness": "单点区间，时间 1 插入、2 删除、3 再插入，k=1，谓词为真、假、真。初始 [0,4] 的 mid=2 测得假而丢掉正确答案 1。该反例否定加删混用，不否定插入模型。",
+    "checks": [
+      "不能用哨兵 U+1 去读 updates[U]；明确 mid=0 与未插入任何事件。",
+      "每轮清空或精确逆操作，不允许上一轮贡献残留；同一坐标的多次插入应累计。"
+    ],
+    "related": [
+      "binary-search",
+      "fenwick-tree",
+      "cdq"
     ]
   }
 }

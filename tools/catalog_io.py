@@ -3,6 +3,19 @@ import json
 from pathlib import PureWindowsPath
 
 
+TEXT_LIMIT = 8 * 1024 * 1024
+
+
+def read_text(path):
+    if not path.is_file():
+        raise FileNotFoundError(f'Catalog text is not a regular file: {path}')
+    with path.open('rb') as stream:
+        data = stream.read(TEXT_LIMIT + 1)
+    if len(data) > TEXT_LIMIT:
+        raise ValueError(f'Catalog text exceeds {TEXT_LIMIT} bytes: {path}')
+    return data.decode('utf-8')
+
+
 def read(path):
     def unique(pairs):
         obj = {}
@@ -15,7 +28,7 @@ def read(path):
     def reject_constant(value):
         raise ValueError(f'{path}: non-JSON constant {value}')
 
-    return json.loads(path.read_text(encoding='utf-8'), object_pairs_hook=unique, parse_constant=reject_constant)
+    return json.loads(read_text(path), object_pairs_hook=unique, parse_constant=reject_constant)
 
 
 def unique_rows(rows, label):
@@ -43,6 +56,6 @@ def local_path(root, relative):
     target = root
     for part in parts:
         target = target / part
-        if target.is_symlink() or target.resolve().parent != target.parent:
+        if target.is_symlink() or target.resolve() != target:
             raise ValueError(f'Catalog path is a link or escapes root: {relative}')
     return target

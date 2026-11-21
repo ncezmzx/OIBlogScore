@@ -1,12 +1,177 @@
 {
- "A01":{"verdict":"PASS","issue":"none","algorithm":"shortest-paths","basis":"非负后缀保证交换界，另按规格处理不可达点。"},
- "A02":{"verdict":"FAIL","issue":"negative-edge","algorithm":"shortest-paths","basis":"s→u=1,s→v=2,v→u=−2；u 过早定点。"},
- "A03":{"verdict":"FAIL","issue":"equivalence-direction","algorithm":null,"basis":"反向不成立，x=−1。"},
- "A04":{"verdict":"FAIL","issue":"complexity","algorithm":null,"basis":"逐层求和 n(log n−d)，总 Θ(n log² n)。"},
- "A05":{"verdict":"PASS","issue":"none","algorithm":"shortest-paths","basis":"不用 0-1 BFS 仍正确，不能将非最优误报为错误。"},
- "A06":{"verdict":"FAIL","issue":"leading-zero","algorithm":"digit-dp","basis":"N=10 时真实只包括 10；01–09 的补零不是普通表示。"},
- "A07":{"verdict":"FAIL","issue":"duplicates","algorithm":null,"basis":"[2,2] 得长度 2；严格版要 lower_bound。"},
- "A08":{"verdict":"FAIL","issue":"overflow","algorithm":"convex-hull-geometry","basis":"a.x=−2×10⁹,b.x=2×10⁹ 时减法先在 int 中溢出，乘前转换太晚。"},
- "A09":{"verdict":"FAIL","issue":"monotonicity","algorithm":"fenwick-tree","basis":"前缀 3,−2,2，真、假、真。"},
- "A10":{"verdict":"NOT_CHECKED","issue":"missing-spec","algorithm":null,"basis":"没有可核验规格，不编造引用。"}
+  "A01": {
+    "verdict": "PASS",
+    "issue": "none",
+    "algorithm": "shortest-paths",
+    "basis": "非负后缀保证交换界，另按规格处理不可达点。",
+    "dimension": "proof"
+  },
+  "A02": {
+    "verdict": "FAIL",
+    "issue": "negative-edge",
+    "algorithm": "shortest-paths",
+    "basis": "s→u=1,s→v=2,v→u=−2；u 过早定点。",
+    "dimension": "algorithm"
+  },
+  "A03": {
+    "verdict": "FAIL",
+    "issue": "equivalence-direction",
+    "algorithm": null,
+    "basis": "反向不成立，x=−1。",
+    "dimension": "proof"
+  },
+  "A04": {
+    "verdict": "FAIL",
+    "issue": "complexity",
+    "algorithm": null,
+    "basis": "逐层求和 n(log n−d)，总 Θ(n log² n)。",
+    "dimension": "complexity"
+  },
+  "A05": {
+    "verdict": "PASS",
+    "issue": "none",
+    "algorithm": "shortest-paths",
+    "basis": "不用 0-1 BFS 仍正确，不能将非最优误报为错误。",
+    "dimension": "algorithm"
+  },
+  "A06": {
+    "verdict": "FAIL",
+    "issue": "leading-zero",
+    "algorithm": "digit-dp",
+    "basis": "N=10 时真实只包括 10；01–09 的补零不是普通表示。",
+    "dimension": "algorithm"
+  },
+  "A07": {
+    "verdict": "FAIL",
+    "issue": "duplicates",
+    "algorithm": null,
+    "basis": "[2,2] 得长度 2；严格版要 lower_bound。",
+    "dimension": "code"
+  },
+  "A08": {
+    "verdict": "FAIL",
+    "issue": "overflow",
+    "algorithm": "convex-hull-geometry",
+    "basis": "a.x=−2×10⁹,b.x=2×10⁹ 时减法先在 int 中溢出，乘前转换太晚。",
+    "dimension": "code"
+  },
+  "A09": {
+    "verdict": "FAIL",
+    "issue": "monotonicity",
+    "algorithm": "fenwick-tree",
+    "basis": "前缀 3,−2,2，真、假、真。",
+    "dimension": "proof"
+  },
+  "A10": {
+    "verdict": "NOT_CHECKED",
+    "issue": "missing-spec",
+    "algorithm": null,
+    "basis": "没有可核验规格，不编造引用。",
+    "dimension": "complexity"
+  },
+  "A11": {
+    "verdict": "FAIL",
+    "issue": "strict-ties",
+    "algorithm": "cdq",
+    "dimension": "proof",
+    "basis": "两个点 (0,0),(0,1) 切开后计一对，真实为零；同 x 的贡献必须排除。"
+  },
+  "A12": {
+    "verdict": "FAIL",
+    "issue": "time-monotonicity",
+    "algorithm": "parallel-binary-search",
+    "dimension": "algorithm",
+    "basis": "插入、删除、插入得到真、假、真；假时丢弃左半漏掉第一个真。"
+  },
+  "A13": {
+    "verdict": "FAIL",
+    "issue": "potential-model",
+    "algorithm": "segment-tree-beats",
+    "dimension": "complexity",
+    "basis": "[1,2,1,2] 前半 +10 后根由两种值变成四种，增加不是至多一。"
+  },
+  "A14": {
+    "verdict": "FAIL",
+    "issue": "pending-reversal",
+    "algorithm": "link-cut-tree",
+    "dimension": "code",
+    "basis": "祖先挂起反转可改变父子方向；未推标记时根据局部孩子槽判型与逻辑方向不符。应核对标记语义后自顶向下 push。"
+  },
+  "A15": {
+    "verdict": "FAIL",
+    "issue": "residual-reverse",
+    "algorithm": "min-cost-flow",
+    "dimension": "proof",
+    "basis": "给费用 3 的单条正向边增广 1，反向残量边容量为 1、费用为 -3；需要维护约化费用或使用允许负边的方法。"
+  },
+  "A16": {
+    "verdict": "FAIL",
+    "issue": "dfs-not-dominance",
+    "algorithm": "dominator-tree",
+    "dimension": "proof",
+    "basis": "s→a、a→b、s→b，先访问 a，则 b 的 DFS 父亲为 a，但 s→b 绕过 a。"
+  },
+  "A17": {
+    "verdict": "PASS",
+    "issue": "conditional-optimization",
+    "algorithm": "knuth-optimization",
+    "dimension": "complexity",
+    "basis": "两侧相邻区间同属上一层；宽度和等于末端 opt 减首端 opt 再加区间数，每层 O(n)，单调性已作为前提。"
+  },
+  "A18": {
+    "verdict": "FAIL",
+    "issue": "slope-multiplicity",
+    "algorithm": "slope-trick",
+    "dimension": "algorithm",
+    "basis": "a=b=0 时 f(1)=2，合并成单个斜率增量得 1。位置可合并，斜率增量不能丢。"
+  },
+  "A19": {
+    "verdict": "FAIL",
+    "issue": "parallel-edges",
+    "algorithm": "dynamic-connectivity",
+    "dimension": "algorithm",
+    "basis": "依次加两条 u-v、删第一条、查询 u-v；第二条仍有效，应连通。"
+  },
+  "A20": {
+    "verdict": "FAIL",
+    "issue": "clone-is-not-new-endpoint",
+    "algorithm": "suffix-automaton",
+    "dimension": "algorithm",
+    "basis": "abbb 会产生 clone；clone 并非新前缀末端，计 1 会虚增其及祖先的 endpos 计数。"
+  },
+  "A21": {
+    "verdict": "FAIL",
+    "issue": "suffix-aggregation",
+    "algorithm": "palindromic-tree",
+    "dimension": "algorithm",
+    "basis": "输入 aa，两次最长回文后缀为 a、aa；a 实际出现两次。"
+  },
+  "A22": {
+    "verdict": "PASS",
+    "issue": "geometric-expectation",
+    "algorithm": null,
+    "dimension": "complexity",
+    "basis": "P(T>k)=2^{-k}，尾和为 2；任意 k 都有正概率超过。"
+  },
+  "A23": {
+    "verdict": "PASS",
+    "issue": "construction-spec",
+    "algorithm": null,
+    "dimension": "algorithm",
+    "basis": "不同的无序点对恰有 C(n,2) 个，取其长度 k 的前缀即满足规格。"
+  },
+  "A24": {
+    "verdict": "NOT_CHECKED",
+    "issue": "uncovered-online-variant",
+    "algorithm": null,
+    "dimension": "proof",
+    "basis": "现有离线证明不适用；没有在线实现无法判定其正确性，也不能断言不存在其他在线算法。"
+  },
+  "A25": {
+    "verdict": "FAIL",
+    "issue": "composite",
+    "algorithm": null,
+    "basis": "重排序每层贡献 Θ(n(log n−d))；详细逐项判据见私有 targets。",
+    "dimension": "complexity"
+  }
 }

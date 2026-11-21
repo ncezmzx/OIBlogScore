@@ -1,6 +1,7 @@
 {
   "exclude": ["public/**", "vendor/**"],
   "dependencies": {"notes/example.md": ["solutions/helper.hpp"]},
+  "dependency_resolutions": {"notes/example.mdx": {"import(dynamicName)": ["components/chart.js"]}},
   "rule_paths": ["skills", "resources"],
   "rule_version": "1"
 }

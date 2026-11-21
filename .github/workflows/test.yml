@@ -5,16 +5,33 @@ permissions:
 jobs:
   unittest:
     # The setup-python catalog has Python 3.8 builds for Ubuntu 22.04, not 26.04.
-    runs-on: ubuntu-22.04
+    runs-on: ${{ matrix.os }}
+    env:
+      PYTHONUTF8: 1
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-22.04, windows-2022]
         python: ['3.8', '3.12']
     steps:
+      - run: git config --global core.autocrlf false
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
-      - run: python -m pip install .
+      - run: python -m pip wheel --no-deps --wheel-dir wheelhouse .
+      - run: python -m pip install --no-index --find-links wheelhouse oiblogscore
+      - run: oiblogscore --help
+        working-directory: ${{ runner.temp }}
       - run: python tools/check_quality.py
-      - run: python -m unittest discover -s tests -v
+      - run: python tools/catalog.py stats
+      - name: Run unit tests
+        shell: bash
+        run: |
+          if python -m unittest discover -s tests -v > unittest.log 2>&1; then
+            cat unittest.log
+          else
+            cat unittest.log
+            python -c 'from pathlib import Path; s = Path("unittest.log").read_text(encoding="utf-8", errors="replace"); s = s[s.find("======================================================================"):]; print("::error::" + s[:5500].replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A"))'
+            exit 1
+          fi

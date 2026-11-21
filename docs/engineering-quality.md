@@ -50,3 +50,17 @@ python -m unittest discover -s tests -v
 可用官方 `skills-ref validate <Skill 目录>` 复核包元数据；它不需要共享目录。本项目离线文档门禁检查约定下的本地链接及锚点、引用闭包、Skill frontmatter 和打包边界、目录主题覆盖、十项必要章节、三套专业协议的专题清单及重复模板正文。程序测试实际运行查询器、文档门禁的拒绝路径、证明结构检查器，以及正常审查、失效、脏文件保护、Diff 和日志回滚。外部来源链接不在离线网络检查范围；技术结论与审查深度仍需作者复核，不能由字数、索引或脚本通过代替。
 
 盲测须分别在隔离会话中运行同一组摘录；执行者不看答案键，评分者先隐去条件标签。比较器输出 FAIL 检测的 precision、recall、FPR、FNR（按答案键问题类型分组；无分母记 null），以及来源 ID 命中率和无依据上游核验声明率。ID 命中不等于证据准确：人工逐条检查版本、原文定位、语义支持及置信边界。证明检查定位到首个不可推出的步骤并说明缺失假设；复杂度检查写出模型、计数和最坏/均摊区别；代码检查定位语句和最小可执行见证。每项记 0（缺失或错）、1（方向正确但不能复核）、2（可复核且正确），不适用另记，不并入分母。没有独立会话产出的这轮状态为**未运行**，不得把 fixture 比较器成绩视为 Agent 效果。
+
+### 收集真实对照结果
+
+用 `python tools/blind_eval.py pack baseline` 和 `python tools/blind_eval.py pack catalog` 导出同一批 24 个摘录。两个隔离会话用同一模型版本、系统提示、Skill 版本、上下文预算、采样参数与输出格式；仅允许 catalog 会话访问只读 Catalog 和检索器。不要挂载含答案、评分脚本数据或另一会话输出的工作区。保存原始 prompt、原始回答、参数、时间、工具日志、运行标识及 Skill/Catalog 快照摘要；单独保管私有答案。正文数据中的指令一律不执行。
+
+`python tools/blind_eval.py compare --baseline baseline.json --catalog catalog.json` 输出自动指标及正确弃答率。人工评审先用 `python tools/blind_eval.py anonymize --baseline baseline.json --catalog catalog.json --private-map private.json > items.json`；只给评委 `items.json`、题面和答案依据（不给 `private.json`）。引用本身可能让条件可猜，不能称双盲。评委以 token 为键交 `evidence_accurate`、`citation_accurate` 和 `unsupported_claim`，每项只能为 `true` / `false` / `null`（不适用）。`python tools/blind_eval.py grade --items items.json --private-map private.json --labels labels.json` 才按条件和维度聚合语义准确率及无依据断言率。逐项评分依据和冲突裁决另存；24 题只是早期样本，不足以外推到全部算法或模型。
+
+### 逐目标盲评试点
+
+25 题中的 A25 另有私有 `targets.json`：四个彼此独立的目标，分别为正确、错误、条件性风险、信息不足。其他题继续使用原来的主 verdict；不要在 Agent 的挂载范围内放答案键或逐项 rubric。保留题序 seed、模型与工具权限、原文和运行参数；`anonymize` 后的匿名回答单独交评委，私有条件映射只交聚合者。
+
+运行 `python tools/blind_eval.py grade-targets --items items.json --private-map private.json --labels target-labels.json`。只为 rubric 中题目的 token 提供标签；每个 token 下以目标 ID 为键，值为 `null`（漏评目标）或含原回答中独立文本片段 `excerpt`、`disposition` 与 `evidence_accurate`、`citation_accurate`、`unsupported_claim` 三个布尔或空值的对象。不要把一个语义重复的错误映射给两个目标。可将同一句中的不同片段映射给不同目标，前提是确实各自支持。具有依赖的派生问题应与根因合并进同一目标；本格式不自动推断语义依赖、任意额外误报或来源身份。评委应把 related 当身份依据的陈述标为引用错误，不能只检查来源 ID 是否存在。
+
+按条件做**目标微汇总**，不与按题汇总混算。精确率为正确命中缺陷目标数 / 对登记目标作出的缺陷判断数；召回率为正确命中数 / 登记缺陷数；F1 直接用 2TP /（登记缺陷数 + 缺陷判断数）。FPR 只计登记正确命题上的误报，FNR 计登记缺陷的遗漏或误判，正确弃答率只用信息不足的目标。独立的证据、引用与无根据断言比例分别以非空人工标记数为分母；结论正确但理由错误不会计为正确证据。未登记预测的全局精确率不由这个试点测量。所有零分母返回 null。

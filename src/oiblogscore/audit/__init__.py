@@ -2,7 +2,7 @@
 import uuid
 
 
-from .results import DIMENSIONS, SEVERITIES, VERDICTS, submit
+from .results import DIMENSIONS, PENDING, SEVERITIES, VERDICTS, load_state, submit
 
 
 def fresh(article):
@@ -10,10 +10,13 @@ def fresh(article):
 
 
 def schedule(repo, manifest, mode='incremental', paths=(), types=(), categories=(), dimensions=DIMENSIONS):
-    state = repo.read('audit.json', {'tasks': {}, 'commit': ''})
+    state = load_state(repo)
     changed = repo.changed(state['commit'])
     if mode == 'resume':
         paths, types, categories, dimensions = state.get('scope', [[], [], [], list(DIMENSIONS)])
+    dimensions = tuple(dict.fromkeys(dimensions))
+    if not dimensions or set(dimensions) - set(DIMENSIONS):
+        raise ValueError('Invalid audit dimensions')
     state['scope'] = [list(paths), list(types), list(categories), list(dimensions)]
     tasks, work = state['tasks'], []
     for name in list(tasks):
@@ -34,8 +37,8 @@ def schedule(repo, manifest, mode='incremental', paths=(), types=(), categories=
             if mode == 'full' or dim not in record:
                 record[dim] = fresh(article)
             item = record[dim]
-            if item.get('result', {}).get('verdict', 'NOT_CHECKED') == 'NOT_CHECKED':
-                work.append(dict(path=name, dimension=dim, ticket=item['ticket'], fingerprint=item['fingerprint'], inputs=article['inputs'], unresolved_dependencies=article['unresolved_dependencies']))
+            if item.get('result', {}).get('verdict', 'NOT_CHECKED') in PENDING:
+                work.append(dict(path=name, dimension=dim, ticket=item['ticket'], fingerprint=item['fingerprint'], inputs=article['inputs'], dependency_edges=article['dependency_edges'], unresolved_dependencies=article['unresolved_dependencies']))
     state['commit'] = manifest['commit']
     repo.save('audit.json', state)
     repo.save('queue.json', {'root': str(repo.root), 'tasks': work})

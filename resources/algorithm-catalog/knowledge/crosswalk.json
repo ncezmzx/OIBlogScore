@@ -483,7 +483,7 @@
       {
         "source": "oi-wiki:misc/cdq-divide.md",
         "relation": "related",
-        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+        "basis": "外部资料提供 CDQ 的跨半区贡献模型；具体文章还须按题意核对严格比较、同键批处理和撤销顺序。"
       }
     ]
   },
@@ -494,7 +494,7 @@
       {
         "source": "oi-wiki:misc/parallel-binsearch.md",
         "relation": "related",
-        "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+        "basis": "外部资料介绍多询问分治和题目示例；本地 Review 使用按时间中点分桶的变体，重点检查单调谓词。"
       }
     ]
   },
@@ -1180,6 +1180,11 @@
         "source": "cp-algorithms:graph/bridge-searching-online.md",
         "relation": "related",
         "basis": "上一版将此资料作为审稿参考；保留弱关联，未核对整页与算法实体是否等价。"
+      },
+      {
+        "source": "atcoder:abc264-4583",
+        "relation": "variant",
+        "basis": "只删边的离线专门模型可倒序做单调合并；不等同于任意增删的时间分治或在线维护。"
       }
     ]
   },
