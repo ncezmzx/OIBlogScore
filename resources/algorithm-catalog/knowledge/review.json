@@ -155,6 +155,25 @@
     ],
     "related": [
       "segment-tree"
+    ],
+    "claims": [
+      {
+        "claim_id": "chmin-only-amortization",
+        "statement": "区间 chmin 与区间和的序列总时间是 O((n+m)log(n+1))。",
+        "status": "project-analysis",
+        "assumptions": [
+          "无区间 add/chmax",
+          "采用严格次大值剪枝；查询是标准区间和"
+        ],
+        "evidence": [
+          {
+            "source": "oi-wiki:ds/seg-beats.md",
+            "location": "区间最值操作（区间取最小值的基本模型）"
+          }
+        ],
+        "derivation": "全覆盖强制下探合并至少两种值；部分覆盖节点每层至多两个且各只新增 x，按所有节点不同值数的总势能收费。",
+        "counterexample": "部分覆盖 add 可把一段不同值一起平移并同时引入多种新值，不满足每项 +1。"
+      }
     ]
   },
   "dominator-tree": {
@@ -281,6 +300,25 @@
     ],
     "related": [
       "divide-conquer-dp"
+    ],
+    "claims": [
+      {
+        "claim_id": "opt-monotonicity-inheritance",
+        "statement": "给定标准充分条件时最右最优划分下标满足双侧单调性。",
+        "status": "needs-review",
+        "assumptions": [
+          "区间包含单调",
+          "四边形不等式",
+          "选最右最优"
+        ],
+        "evidence": [
+          {
+            "source": "cp-algorithms:dynamic_programming/knuth-optimization.md",
+            "location": "Conditions"
+          }
+        ],
+        "status_reason": "本地只证明使用双侧单调性之后的候选区间求和，未重证继承定理。"
+      }
     ]
   },
   "slope-trick": {

@@ -1,12 +1,12 @@
 """Audit provenance, local evidence separation and immutable source packaging."""
-from collections import Counter
 from datetime import date
 import hashlib
 import re
 from urllib.parse import quote, urlsplit
 
-from catalog_schema import LICENSES, check_record, matches_url, safe_path, terms
-from catalog_data import RELATIONS, build, normalize, read, sources
+from catalog_io import local_path
+from catalog_schema import LICENSES, check_claims, check_record, matches_url, safe_path, terms
+from catalog_data import EXTRA, RELATIONS, category, name_key, normalize, read, sources
 
 
 HEX = re.compile(r'[0-9a-f]{64}')
@@ -25,16 +25,14 @@ def checksum(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def check_sources(root):
+def _check_sources(root, issues):
     directory = root / 'sources'
     if not directory.is_dir():
-        return ['Missing sources layer']
+        issues.append('Missing sources layer')
+        return issues
     providers, records = sources(root)
-    policy = read(directory / 'import-policy.json')
-    approvals = read(directory / 'approved-verbatim.json')
-    notes = read(root / 'knowledge/review.json')
-    crosswalk = read(root / 'knowledge/crosswalk.json')
-    issues = []
+    policy = read(local_path(root, 'sources/import-policy.json'))
+    approvals = read(local_path(root, 'sources/approved-verbatim.json'))
     expected_assets = {'upstream/cp-algorithms/LICENSE.txt'}
     for pid, profile in providers.items():
         if not ID.fullmatch(pid) or not https(profile['url']) or profile.get('license') not in LICENSES:
@@ -55,7 +53,6 @@ def check_sources(root):
         if profile.get('repository') and (not safe_path(profile['policy_path']) or profile['policy_url'] != 'https://github.com/{repository}/blob/{revision}/'.format(**profile) + quote(profile['policy_path'])):
             issues.append(pid + ': license policy URL does not match pinned path')
     ids, urls, digests = set(), set(), {}
-    cohort = read(root / 'knowledge/triage-baseline.json')
     allowlisted_copies = set(policy['cp-algorithms'])
     observed_copies = set()
     for row in records:
@@ -69,6 +66,10 @@ def check_sources(root):
             issues.extend(f'{row.get("id", pid)}: {error}' for error in errors)
             continue
         key = row['id']
+        try:
+            category(row)
+        except ValueError as exc:
+            issues.append(str(exc))
         if row.get('metadata_evidence') and not https(row['metadata_evidence']):
             issues.append(key + ': malformed metadata evidence URL')
         if pid == 'codeforces' and (not re.fullmatch(r'codeforces:[0-9]+', key) or urlsplit(row['url']).path != '/blog/entry/' + key.split(':',1)[1]
@@ -111,71 +112,119 @@ def check_sources(root):
                 continue
             expected_assets.add(relative)
             observed_copies.add(rel)
-            path = directory / relative
+            path = local_path(root, "sources/" + relative)
             if not path.is_file() or path.is_symlink() or checksum(path) != row['sha256']:
                 issues.append(key + ': missing or modified upstream text')
         elif row['mode'] != 'external-index' or 'text_path' in row:
             issues.append(key + ': disallowed redistribution mode')
-    if not re.fullmatch('[0-9a-f]{40}', cohort['revision']) or len(cohort['source_ids']) != len(set(cohort['source_ids'])) or set(cohort['source_ids']) - ids:
-        issues.append('Invalid baseline cohort')
     assets = {p.relative_to(directory).as_posix() for p in (directory/'upstream').rglob('*') if p.is_file()}
     if assets != expected_assets or observed_copies != allowlisted_copies or observed_copies != approvals.keys():
         issues.append('Untracked or missing upstream assets/allowlist entries')
     license_file = directory / 'upstream/cp-algorithms/LICENSE.txt'
     if license_file.exists() and checksum(license_file) != providers['cp-algorithms']['policy_sha256']:
         issues.append('Bundled CC BY-SA license differs from pinned original')
-    collisions = Counter(row['id'] for row in crosswalk)
-    if any(count != 1 for count in collisions.values()):
-        issues.append('Duplicate canonical algorithm ID')
-    for row in crosswalk:
-        key = row['id']
-        refs = [a['source'] for a in row['sources']]
-        if not ID.fullmatch(key) or not refs or len(refs) != len(set(refs)) or set(refs) - ids:
-            issues.append(key + ': missing, repeated or unresolved evidence links')
-    owners = {}
-    for row in crosswalk:
-        for a in row['sources']:
-            if set(a) != {'source', 'relation', 'basis'} or a['relation'] not in RELATIONS or not a['basis'].strip():
-                issues.append(row['id'] + ': invalid association or missing rationale')
-            if a['relation'] in {'exact', 'alias'}:
-                previous = owners.setdefault(a['source'], row['id'])
-                if previous != row['id']:
-                    issues.append(a['source'] + ': conflicting identity claims: ' + previous + ', ' + row['id'])
-    if issues:
-        return issues
-    data = build(root)
-    aliases = {}
-    for key, card in data['algorithms'].items():
-        if card['category'] not in data['categories']:
-            issues.append(key + ': unknown category')
-        if card.get('identity') == 'upstream-candidate':
+    return issues
+
+
+def check_knowledge(root, issues):
+    manifest = read(local_path(root, 'index.json'))
+    crosswalk = read(local_path(root, 'knowledge/crosswalk.json'))
+    notes = read(local_path(root, 'knowledge/review.json'))
+    cohort = read(local_path(root, 'knowledge/triage-baseline.json'))
+    try:
+        _, raw = sources(root)
+        sources_by_id = {row['id']: row for row in raw}  # sources() rejects duplicates first
+    except (OSError, ValueError, KeyError, TypeError, AttributeError):
+        # Source validation has its own diagnostic. Continue local checks.
+        sources_by_id = None
+    ids = None if sources_by_id is None else set(sources_by_id)
+    baseline = cohort['source_ids']
+    if (not re.fullmatch('[0-9a-f]{40}', cohort['revision']) or not isinstance(baseline, list)
+            or len(baseline) != len(set(baseline)) or (ids is not None and set(baseline) - ids)):
+        issues.append('Invalid baseline cohort')
+    categories = set(manifest['categories']) | set(EXTRA)
+    cards, owners, names = {}, {}, {}
+    for topic in manifest['topics']:
+        key = topic['id']
+        if key in cards or not ID.fullmatch(key):
+            issues.append(key + ': invalid or duplicate legacy algorithm ID')
             continue
-        for alias in (key, card['title'], *card['aliases']):
-            norm = normalize(alias)
-            if not norm or norm in aliases and aliases[norm] != key:
+        cards[key] = dict(topic, refs=[], legacy=True)
+    seen = set()
+    for row in crosswalk:
+        if not isinstance(row, dict) or not isinstance(row.get('id'), str):
+            issues.append('Malformed crosswalk record')
+            continue
+        key = row['id']
+        if key in seen or not ID.fullmatch(key):
+            issues.append(key + ': invalid or duplicate ID in Crosswalk')
+            continue
+        seen.add(key)
+        base = cards.get(key)
+        fields = {'id','aliases','sources'} | (set() if base else {'title','category'})
+        if set(row) != fields or not isinstance(row['aliases'], list) or not isinstance(row['sources'], list):
+            issues.append(key + ': malformed crosswalk fields or legacy metadata override')
+            continue
+        if base is None:
+            base = cards[key] = dict(title=row['title'], category=row['category'], aliases=[], refs=[])
+        base['aliases'] = base['aliases'] + row['aliases']
+        for edge in row['sources']:
+            if (not isinstance(edge, dict) or set(edge) != {'source','relation','basis'}
+                    or any(not isinstance(v, str) or not v.strip() for v in edge.values())
+                    or edge['relation'] not in RELATIONS):
+                issues.append(key + ': invalid association or missing rationale')
+                continue
+            sid = edge['source']
+            if sid in base['refs'] or (ids is not None and sid not in ids):
+                issues.append(key + ': missing, repeated or unresolved evidence links: ' + sid)
+            base['refs'].append(sid)
+            if edge['relation'] in {'exact','alias'}:
+                previous = owners.setdefault(sid, key)
+                if previous != key:
+                    issues.append(sid + ': conflicting identity claims: ' + previous + ', ' + key)
+    for key, card in cards.items():
+        if not isinstance(card['category'], str) or card['category'] not in categories:
+            issues.append(key + ': unknown category')
+        aliases = card['aliases']
+        if not isinstance(aliases, list) or any(not isinstance(a,str) or not a.strip() for a in aliases):
+            issues.append(key + ': invalid aliases')
+            aliases = []
+        normalized = [name_key(a) for a in aliases]
+        if len(set(normalized)) != len(normalized):
+            issues.append(key + ': duplicate normalized alias within algorithm')
+        title = card['title']
+        if not isinstance(title,str) or not title.strip():
+            issues.append(key + ': invalid canonical title')
+            title = ''
+        for alias in aliases:
+            norm = name_key(alias)
+            if not norm or names.setdefault(norm, key) != key or (normalize(alias) in cards and normalize(alias) != key):
                 issues.append(key + ': duplicate/empty canonical name: ' + alias)
-            aliases[norm] = key
-        if not card['sources']:
+        if not card['refs']:
             issues.append(key + ': no traceable sources')
-        if card.get('path') and (root/card['path']).is_file():
-            body = (root/card['path']).read_text(encoding='utf-8')
-            urls = set(re.findall(r'\]\((https://[^)]+)\)', body))
-            known = {data['sources'][sid]['url'] for sid in card['sources']}
-            if urls - known:
-                issues.append(key + ': local citation missing provenance: ' + ', '.join(sorted(urls - known)))
+        if card.get('path') and sources_by_id is not None:
+            try:
+                body = local_path(root, card['path']).read_text(encoding='utf-8')
+                urls = set(re.findall(r'\]\((https://[^)]+)\)', body))
+                known = {sources_by_id[sid]['url'] for sid in card['refs'] if sid in sources_by_id}
+                if urls - known:
+                    issues.append(key + ': local citation missing provenance: ' + ', '.join(sorted(urls - known)))
+            except (OSError, ValueError) as exc:
+                issues.append(key + ': unreadable local topic: ' + str(exc))
     used = set()
     fields = {'status','evidence','sources','model','preconditions','invariant','proof','complexity','witness','checks','related'}
     prose = ('model','preconditions','invariant','proof','complexity','witness')
     for key, note in notes.items():
-        card = data['algorithms'].get(key, {})
-        if (not isinstance(note, dict) or set(note) != fields or not card or card.get('identity')
+        card = cards.get(key, {})
+        if (not isinstance(note, dict) or (fields - note.keys() or note.keys() - fields - {'claims'}) or not card or card.get('identity')
                 or note['status'] not in {'project-analysis','needs-review'} or note['evidence'] != 'original-derivation'
-                or not note['sources'] or set(note['sources']) - set(card['sources'])
+                or not note['sources'] or set(note['sources']) - set(card['refs'])
                 or not isinstance(note['checks'], list) or any(not isinstance(v, str) or not v.strip() for v in note['checks'])
                 or len(set(note['checks'])) < 2
-                or set(note['related']) - data['algorithms'].keys() or key in note['related']):
+                or set(note['related']) - cards.keys() or key in note['related']):
             issues.append(key + ': incomplete or untraceable project reasoning')
             continue
+        issues.extend(f'{key}: {error}' for error in check_claims(note.get('claims', []), set(note['sources'])))
         for field in prose:
             value = note[field]
             if not isinstance(value, str) or not value.strip() or normalize(value) in {'todo','tbd','待补','略','未完成','n/a'}:
@@ -186,4 +235,14 @@ def check_sources(root):
                 used.add(normalize(value))
         if not re.search(r'O\(|Θ\(|Ω\(|ceil|floor|Σ', note['complexity']):
             issues.append(key + ': complexity requires an explicit bound or work expression')
+    return issues
+
+
+def check_sources(root):
+    issues = []
+    for phase in (_check_sources, check_knowledge):
+        try:
+            phase(root, issues)
+        except (OSError, ValueError, KeyError, TypeError, AttributeError) as exc:
+            issues.append(f'{phase.__name__}: {exc}')
     return issues

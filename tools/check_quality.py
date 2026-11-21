@@ -150,6 +150,7 @@ def check(root):
             catalog_section = sections(text).get('Catalog 检索', '')
             contract = {
                 '触发': ('审查',), '检索': ('python tools/catalog.py find', 'refs <id>', 'review <id>'),
+                '消歧': ('matching_fields','canonical ID','无覆盖'),
                 '证据层': ('upstream-unreviewed','project-analysis','needs-review'),
                 '缺证处理': ('NOT_CHECKED','PASS'), '引用': ('来源 ID','版本','推导','VERIFIED'),
             }
@@ -167,12 +168,21 @@ def check(root):
     for relative, names in PROTOCOL_SECTIONS.items():
         require_sections(skills / relative, names, 35)
 
-    index = load(catalog)
-    if set(index) != {'version','categories','topics'} or type(index['version']) is not int or index['version'] != 1 or set(index['categories']) != CATEGORIES or not isinstance(index['topics'], list):
-        issues.append('Wrong catalog version or categories')
+    try:
+        index = load(catalog)
+        if (not isinstance(index, dict) or set(index) != {'version','categories','topics'}
+                or type(index['version']) is not int or index['version'] != 1
+                or not isinstance(index['categories'], dict) or set(index['categories']) != CATEGORIES
+                or not isinstance(index['topics'], list)):
+            raise ValueError('Wrong catalog version or categories')
+    except (OSError, ValueError) as exc:
+        issues.append(f'{catalog}/index.json: {exc}')
+        index = {'topics': []}
     ids, paths, aliases, bodies, per_category = set(), set(), {}, {}, Counter()
     for item in index['topics']:
-        if not isinstance(item, dict) or set(item) != {'id','category','path','title','aliases'} or not isinstance(item.get('aliases'), list):
+        if (not isinstance(item, dict) or set(item) != {'id','category','path','title','aliases'} or not isinstance(item.get('aliases'), list)
+                or any(not isinstance(item[k], str) or not item[k].strip() for k in ('id','category','path','title'))
+                or any(not isinstance(alias, str) for alias in item['aliases'])):
             issues.append('Malformed Markdown topic manifest entry')
             continue
         key, cat, rel = item['id'], item['category'], item['path']

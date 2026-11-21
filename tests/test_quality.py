@@ -37,7 +37,7 @@ class Quality(unittest.TestCase):
                 self.assertIn(diagnostic, p.stderr)
 
     def test_catalog_alias_and_single_reference_lookup(self):
-        p = run('tools/catalog.py', 'find', 'ＣＤＱ', '--category', 'divide-and-conquer', '--json')
+        p = run('tools/catalog.py', 'find', 'ＣＤＱ', '--exact', '--category', 'divide-and-conquer', '--json')
         self.assertEqual(p.returncode, 0, p.stderr)
         self.assertEqual([item['id'] for item in json.loads(p.stdout)], ['cdq'])
         body = run('tools/catalog.py', 'show', 'cdq')

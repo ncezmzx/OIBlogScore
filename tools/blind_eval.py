@@ -23,7 +23,8 @@ def score(rows, key, data, condition):
     if not isinstance(rows, list):
         raise ValueError('Responses must be an array')
     seen, failures, invalid, unchecked, misses = set(), set(), [], [], Counter()
-    false_positives, unsupported_verified, correct = 0, 0, 0
+    false_positives, unsupported_verified, correct, cited = 0, 0, 0, 0
+    dimensions = {}
     for row in rows:
         if not isinstance(row, dict) or set(row) != {'id','verdict','reason','source_ids','upstream_verified'}:
             raise ValueError('Invalid response fields')
@@ -33,6 +34,10 @@ def score(rows, key, data, condition):
             raise ValueError('Duplicate, unknown or invalid response: ' + str(case))
         seen.add(case)
         expected = key[case]
+        counts = dimensions.setdefault(expected['issue'], Counter())
+        counts[('tp' if verdict == 'FAIL' else 'fn') if expected['verdict'] == 'FAIL'
+               else ('fp' if verdict == 'FAIL' else 'tn')] += 1
+        cited += len(set(citations))
         if verdict == expected['verdict']:
             correct += 1
         if verdict == 'FAIL':
@@ -53,10 +58,23 @@ def score(rows, key, data, condition):
         raise ValueError('Missing cases: ' + ', '.join(sorted(key.keys() - seen)))
     positives = sum(r['verdict'] == 'FAIL' for r in key.values())
     negatives = len(key) - positives
+    def ratio(a, b):
+        return a / b if b else None
+
+    def metrics(counts):
+        tp, fp, fn, tn = (counts[k] for k in ('tp', 'fp', 'fn', 'tn'))
+        return dict(tp=tp, fp=fp, fn=fn, tn=tn, precision=ratio(tp, tp+fp), recall=ratio(tp, tp+fn),
+                    false_positive_rate=ratio(fp, fp+tn), false_negative_rate=ratio(fn, fn+tp))
+
     return dict(total=len(key), verdicts_correct=correct, true_positives=len(failures), positives=positives,
-                detection_rate=len(failures)/positives, false_positives=false_positives, negatives=negatives,
-                false_positive_rate=false_positives/negatives, missed_issues=dict(misses), unchecked=sorted(unchecked),
+                detection_rate=ratio(len(failures), positives), false_positives=false_positives, negatives=negatives,
+                false_positive_rate=ratio(false_positives, negatives), missed_issues=dict(misses), unchecked=sorted(unchecked),
                 citations_for_manual_review=sorted(invalid, key=lambda item: (item['case'],item['source'])),
+                by_fixture_issue={issue: metrics(counts) for issue, counts in sorted(dimensions.items())},
+                defect_metrics=metrics(Counter(tp=len(failures), fp=false_positives,
+                                               fn=positives-len(failures), tn=negatives-false_positives)),
+                citation_id_match_rate=ratio(cited-len(invalid), cited),
+                unsupported_upstream_verification_claim_rate=ratio(unsupported_verified, len(key)),
                 unsupported_upstream_verification_claims=unsupported_verified,
                 manual_review='Read reasons for semantic correctness; a matching source ID or verdict is not evidence that the reasoning is sound.')
 

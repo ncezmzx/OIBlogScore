@@ -6,18 +6,17 @@ import json
 from pathlib import Path
 import re
 import subprocess
+import shutil
+from tempfile import TemporaryDirectory
 import sys
 from urllib.parse import quote
 
+from catalog_schema import LAYOUTS
+from catalog_io import local_path, read as load, unique_rows
+
 
 ROOT = Path(__file__).resolve().parents[1] / 'resources' / 'algorithm-catalog' / 'sources'
-LAYOUTS = {'oi-wiki': 'docs/', 'cp-algorithms': 'src/', 'usaco-guide': 'content/',
-           'library-checker': '', 'kactl': 'content/'}
 OI_GROUPS = set('basic contest dp ds geometry graph lang math misc search string topic'.split())
-
-
-def load(path):
-    return json.loads(path.read_text(encoding='utf-8'))
 
 
 def sha(data):
@@ -120,11 +119,41 @@ def records(provider, config, checkout, policy):
 
 
 def changes(old, new):
-    a = {row['id']: row for row in old}
-    b = {row['id']: row for row in new}
-    return {'added': sorted(b.keys() - a.keys()), 'removed': sorted(a.keys() - b.keys()),
+    a = unique_rows(old, 'Current source snapshot')
+    b = unique_rows(new, 'Candidate source snapshot')
+    added, removed = sorted(b.keys() - a.keys()), sorted(a.keys() - b.keys())
+    old_hash, new_hash = {}, {}
+    for key in removed:
+        old_hash.setdefault(a[key]['sha256'], []).append(key)
+    for key in added:
+        new_hash.setdefault(b[key]['sha256'], []).append(key)
+    renames = [dict(old=keys[0], new=new_hash[d][0]) for d, keys in old_hash.items()
+               if len(keys) == 1 and len(new_hash.get(d, [])) == 1]
+    return {'added': added, 'removed': removed,
+            'possible_renames': sorted(renames, key=lambda item: item['old']),
             'content_changed': sorted(k for k in a.keys() & b.keys() if a[k]['sha256'] != b[k]['sha256']),
             'metadata_changed': sorted(k for k in a.keys() & b.keys() if a[k] != b[k] and a[k]['sha256'] == b[k]['sha256'])}
+
+
+def broken_references(knowledge, removed):
+    missing = set(removed)
+    crosswalk = load(knowledge / 'crosswalk.json')
+    notes = load(knowledge / 'review.json')
+    baseline = load(knowledge / 'triage-baseline.json')['source_ids']
+    return {'crosswalk': sorted((row['id'], a['source']) for row in crosswalk for a in row['sources'] if a['source'] in missing),
+            'review': sorted((key, sid) for key, note in notes.items() for sid in note['sources'] if sid in missing),
+            'triage_baseline': sorted(missing.intersection(baseline))}
+
+
+def require_valid(root):
+    from catalog_quality import check_sources
+    issues = check_sources(root)
+    if issues:
+        raise ValueError('Catalog validation failed:\n' + '\n'.join(issues))
+
+
+def encoded(value):
+    return (json.dumps(value, ensure_ascii=False, indent=2) + '\n').encode('utf-8')
 
 
 def main(argv=None):
@@ -138,21 +167,48 @@ def main(argv=None):
     try:
         if args.output and args.output.exists():
             raise ValueError('Output already exists; use a fresh staging directory')
+        if args.output and ROOT.parent in (args.output.resolve(), *args.output.resolve().parents):
+            raise ValueError('Output must be outside the catalog')
+        require_valid(ROOT.parent)
         config = load(args.providers)[args.provider]
+        current_config = load(ROOT / 'providers.json')[args.provider]
+        permitted = {'revision','policy_sha256','policy_url','retrieved'}
+        if {k:v for k,v in config.items() if k not in permitted} != {k:v for k,v in current_config.items() if k not in permitted}:
+            raise ValueError('Candidate changes provider identity or licensing policy; review the policy separately')
+        if config['policy_url'] != 'https://github.com/{repository}/blob/{revision}/'.format(**config) + quote(config['policy_path']):
+            raise ValueError('Candidate policy URL does not match the pinned policy path')
         rows, assets = records(args.provider, config, args.checkout, load(ROOT/'import-policy.json'))
         name = args.provider + '.json'
         old = ROOT / name
-        print(json.dumps(changes(load(old) if old.exists() else [], rows), indent=2))
+        plan = changes(load(old) if old.exists() else [], rows)
+        broken = broken_references(ROOT.parent / 'knowledge', plan['removed'])
+        plan['reference_conflicts'] = broken
+        print(json.dumps(plan, indent=2))
+        if any(broken.values()):
+            raise ValueError('Candidate snapshot would break local references; review and migrate IDs explicitly')
+        candidate_profiles = load(ROOT / 'providers.json')
+        candidate_profiles[args.provider] = config
+        files = {name: encoded(rows), **assets}
+        if args.provider == 'cp-algorithms':
+            approved = load(args.approvals)
+            imported = {r['id'].split(':', 1)[1]: r['sha256'] for r in rows if r['mode'] == 'verbatim'}
+            if imported != approved:
+                raise ValueError('Verbatim payloads changed; inspect diff, attribution and license before approving new digests')
+            files['approved-verbatim.json'] = encoded(approved)
+        if candidate_profiles != load(ROOT / 'providers.json'):
+            files['providers.json'] = encoded(candidate_profiles)
+        with TemporaryDirectory(prefix='oi-catalog-') as temp:
+            candidate = Path(temp) / 'catalog'
+            shutil.copytree(ROOT.parent, candidate, symlinks=True)
+            for relative, data in files.items():
+                p = local_path(candidate, 'sources/' + relative)
+                p.parent.mkdir(parents=True, exist_ok=True)
+                p.write_bytes(data)
+            require_valid(candidate)
         if args.output:
-            if args.provider == 'cp-algorithms':
-                approved = load(args.approvals)
-                imported = {r['id'].split(':', 1)[1]: r['sha256'] for r in rows if r['mode'] == 'verbatim'}
-                if imported != approved:
-                    raise ValueError('Verbatim payloads changed; inspect diff, attribution and license before approving new digests')
             args.output.mkdir(parents=False, exist_ok=False)
-            payload = (json.dumps(rows, ensure_ascii=False, indent=2) + '\n').encode()
-            for relative, data in {name: payload, **assets}.items():
-                p = args.output / relative
+            for relative, data in files.items():
+                p = local_path(args.output, relative)
                 p.parent.mkdir(parents=True, exist_ok=True)
                 with p.open('xb') as stream:
                     stream.write(data)

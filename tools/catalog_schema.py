@@ -3,7 +3,8 @@ from pathlib import PurePosixPath
 import re
 from urllib.parse import quote, urlsplit
 
-from sync_catalog import LAYOUTS
+LAYOUTS = {'oi-wiki': 'docs/', 'cp-algorithms': 'src/', 'usaco-guide': 'content/',
+           'library-checker': '', 'kactl': 'content/'}
 
 LICENSES = {
     'CC-BY-SA-4.0': ('conditional', 'required', 'required'),
@@ -74,3 +75,53 @@ def check_record(row, profile):
         if row['metadata_status'] == 'indexed-from-secondary-directory' and not row.get('metadata_evidence'):
             return ['secondary metadata requires provenance']
     return []
+
+
+CLAIM_STATES = {'project-analysis', 'independently-verified', 'needs-review', 'disputed', 'deprecated'}
+
+
+def check_claims(claims, allowed_sources):
+    """Validate evidence shape, not reviewer identity or mathematical validity."""
+    if not isinstance(claims, list):
+        return ['claims must be an array']
+    seen, errors = set(), []
+    required = {'claim_id','statement','status','assumptions','evidence'}
+    optional = {'derivation','counterexample','reviewer','reviewed_at','verification','status_reason'}
+    for claim in claims:
+        if not isinstance(claim, dict) or required - claim.keys() or claim.keys() - required - optional:
+            errors.append('Malformed claim')
+            continue
+        key = claim['claim_id']
+        if not isinstance(key, str) or not re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*', key) or key in seen:
+            errors.append('Invalid or duplicate claim ID')
+            continue
+        seen.add(key)
+        status = claim['status']
+        if not isinstance(status, str) or status not in CLAIM_STATES:
+            errors.append(key + ': invalid claim state')
+            continue
+        if not isinstance(claim['statement'],str) or not claim['statement'].strip() or not isinstance(claim['assumptions'],list) or any(not isinstance(a,str) or not a.strip() for a in claim['assumptions']):
+            errors.append(key + ': missing statement or invalid assumptions')
+        evidence = claim['evidence']
+        if (not isinstance(evidence, list) or not evidence or any(not isinstance(e, dict) or set(e) != {'source','location'}
+                or not isinstance(e['source'], str) or e['source'] not in allowed_sources
+                or not isinstance(e['location'], str) or not e['location'].strip() for e in evidence)):
+            errors.append(key + ': missing or untraceable claim evidence')
+        def text(field):
+            return isinstance(claim.get(field), str) and bool(claim[field].strip())
+        if status in {'project-analysis','independently-verified'} and not text('derivation'):
+            errors.append(key + ': missing independent derivation')
+        if status in {'needs-review','disputed','deprecated'} and not text('status_reason'):
+            errors.append(key + ': missing state rationale')
+        if status == 'independently-verified':
+            from datetime import date
+            if not all(text(k) for k in ('reviewer', 'reviewed_at', 'verification')):
+                errors.append(key + ': independent verification requires reviewer, date and reproducible method')
+            else:
+                try:
+                    date.fromisoformat(claim['reviewed_at'])
+                except ValueError:
+                    errors.append(key + ': invalid verification date')
+        elif {'reviewer','reviewed_at','verification'} & claim.keys():
+            errors.append(key + ': verification metadata does not match state')
+    return errors
