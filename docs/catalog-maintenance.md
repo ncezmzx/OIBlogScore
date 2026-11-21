@@ -36,3 +36,5 @@ python tools/blind_eval.py compare --baseline /tmp/baseline-answers.json --catal
 ```
 
 使用同一模型、指令骨架、预算，两次隔离运行；baseline 不提供仓库、Catalog 或工具，Catalog 条件提供工具和其快照，但两边均不交付答案文件。保存原始响应及模型和变量。比较器输出问题检出率、误报率、遗漏类型、可疑引用、无根据的核验声明；引用是否能支撑某条结论、reason 是否正确仍由盲评者审读。本轮只运行工具和合成响应验证，**未执行真实 Agent 对照评测**。
+
+同步默认只输出计划。它读取固定 Git commit，先检查当前 Source/Knowledge，再在临时副本叠加候选快照并重跑这些检查。删除只报告；`possible_renames` 是一对一相同摘要的提示，不是迁移依据。删除若影响 Crosswalk、Review 或固定分流样本，必须人工处理引用，不能通过 `--output` 绕过。申请候选 pin 时不允许顺带更换 Provider 身份或许可配置；verbatim 批准及许可文件仍需人工核验。`--output` 必须是 Catalog 以外尚不存在的目录；输出供审阅，不会覆盖仓库内容。应用后再运行完整 `python tools/check_quality.py`（还包括 Markdown、文档和 Skills）。

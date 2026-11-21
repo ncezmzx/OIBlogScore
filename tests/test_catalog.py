@@ -30,7 +30,7 @@ class CatalogTests(unittest.TestCase):
                                   (['斜率优化','Convex Hull Trick'],'convex-hull'),
                                   (['线段树优化 DP','Segment Tree Optimized DP'],'segment-tree-dp')]:
             for alias in aliases:
-                run = command('catalog.py', 'find', alias, '--json')
+                run = command('catalog.py', 'find', alias, '--exact', '--json')
                 self.assertEqual(run.returncode, 0, run.stderr)
                 self.assertEqual([r['id'] for r in json.loads(run.stdout)], [expected])
 

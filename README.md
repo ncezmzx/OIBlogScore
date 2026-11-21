@@ -80,3 +80,5 @@ oiblogscore rollback . --path notes/article.md
 - 发现和依赖提取是启发式的，不解析所有生成器、动态引用、复杂 YAML/MDX 或所有构建依赖；请配置隐式依赖。技术结论依赖实际审查证据。文风统计只供参考，不自动生成替换句子。
 
 受 [CPscore](https://github.com/SemsueZhang/CPscore) 的独立 Skills、共享 Reference 和可选确定性脚本架构启发。详见 [工程验收与覆盖范围](docs/engineering-quality.md)。项目原创软件和资料采用 MIT License；第三方收录内容沿用原许可。
+
+Catalog 返回的是检索线索和分层证据，不是自动审查结论。`python tools/catalog.py find SAM --json` 可查看命中字段和相似条目；消歧后用 canonical ID 查 `refs` 和 `review`。`python tools/check_quality.py` 同时检查写作资源、Skills 和 Catalog 数据完整性，不认证算法证明。

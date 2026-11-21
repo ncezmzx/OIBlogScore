@@ -210,7 +210,6 @@
     "title": "链剖动态树",
     "aliases": [
       "Link-Cut Tree",
-      "Link Cut Tree",
       "LCT",
       "动态树"
     ],
@@ -501,9 +500,7 @@
   },
   {
     "id": "centroid",
-    "aliases": [
-      "点分治"
-    ],
+    "aliases": [],
     "sources": [
       {
         "source": "oi-wiki:graph/tree-divide.md",
@@ -571,10 +568,7 @@
   },
   {
     "id": "heavy-light",
-    "aliases": [
-      "树链剖分",
-      "Heavy Light Decomposition"
-    ],
+    "aliases": [],
     "sources": [
       {
         "source": "oi-wiki:graph/hld.md",
@@ -623,7 +617,6 @@
   {
     "id": "treap",
     "aliases": [
-      "FHQ Treap",
       "无旋 Treap"
     ],
     "sources": [
@@ -757,9 +750,7 @@
   },
   {
     "id": "scc",
-    "aliases": [
-      "强连通分量"
-    ],
+    "aliases": [],
     "sources": [
       {
         "source": "oi-wiki:graph/scc.md",
@@ -1495,9 +1486,7 @@
   },
   {
     "id": "convex-hull",
-    "aliases": [
-      "Convex Hull Optimization"
-    ],
+    "aliases": [],
     "sources": [
       {
         "source": "oi-wiki:dp/opt/slope.md",
@@ -2277,8 +2266,7 @@
     "category": "geometry",
     "title": "半平面交",
     "aliases": [
-      "Half-Plane Intersection",
-      "Half Plane Intersection"
+      "Half-Plane Intersection"
     ],
     "sources": [
       {

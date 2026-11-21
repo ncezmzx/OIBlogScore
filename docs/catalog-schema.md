@@ -20,3 +20,7 @@
 - `exact` 是同一对象，`alias` 是同一定义的另一个名称，`implementation` 是具体实现，`variant` 带不同操作集、模型或实现策略，`related` 是背景、应用或仅部分涵盖，`unclassified` 不算归并。每条边需写依据。同一来源不能对多个算法做 `exact/alias` 身份声明；多个 `related` 边允许。多个条目共享一篇资料只是弱关联，`related` 命令另列 `shared_source`。
 - 旧有宽泛关联按 `related` 迁移，直到逐条确认更强关系。`stats.triage.by_relation` 按基线来源去重，若一来源带多种关系，各子计数可能重叠；`identity_targets` 只数 对基线有 `exact/alias` 的规范实体。`review` 的分类互斥：一个 ID 有 Markdown 和新笔记时，优先显示笔记；`show` 仍读取旧 Markdown。
 - `upstream-unreviewed` 指原文结论未独立核验。`project-analysis` 指作者独立写出限定范围的推导，不等于有人复核整个算法；`needs-review` 显式记录关键缺口。`indexed-from-secondary-directory` 只说明标题和作者可追溯到资料目录，不能证明原页面或数学正确性。
+
+### 声明级证据（可选）
+
+Review 的 `claims` 为可选数组，仅在需要追踪单个结论或区分其核验状态时填写。每项包含条目内唯一 `claim_id`、`statement`、`status`、`assumptions` 和 `evidence`（本条已关联的 `source` 与原文 `location`）。自有分析和独立核验都要求 `derivation`；确有反例时可填 `counterexample`，不要求凑字段。`needs-review`、`disputed`、`deprecated` 要求 `status_reason`。`independently-verified` 额外要求 `reviewer`、`reviewed_at`、`verification`（可复现的核验方法）；门禁只检查记录形状与关联，不认证签名、身份或推导。`upstream-unreviewed` 是来源状态，不能用作本地声明的核验证明；没有 `claims` 的旧笔记不自动获得独立核验状态。
